@@ -55,14 +55,4 @@ public abstract class AbstractStatusEffectNote extends AbstractNote implements
 	public final String getBriefDesc() {
 		return myBriefDesc;
 	}
-
-	@Override
-	public abstract String toFullString();
-
-	@Override
-	public abstract String toString();
-
-	@Override
-	public abstract void edit();
-
 }
