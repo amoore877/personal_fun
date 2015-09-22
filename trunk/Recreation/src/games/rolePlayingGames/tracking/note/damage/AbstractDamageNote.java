@@ -140,13 +140,4 @@ public abstract class AbstractDamageNote extends AbstractNote implements
 	 *            heal this amount.
 	 */
 	public abstract void heal(final int iHeal);
-
-	@Override
-	public abstract void edit();
-
-	@Override
-	abstract public String toString();
-
-	@Override
-	abstract public String toFullString();
 }

@@ -42,14 +42,4 @@ public abstract class AbstractNote implements IFullDescNote {
 			myBriefDesc = iFullDesc;
 		}
 	}
-
-	@Override
-	public abstract void edit();
-
-	@Override
-	public abstract String toString();
-
-	@Override
-	public abstract String toFullString();
-
 }
