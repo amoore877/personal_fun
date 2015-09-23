@@ -3,7 +3,7 @@ package games.rolePlayingGames.tracking.trackable.item;
 import games.rolePlayingGames.tracking.trackable.ITrackable;
 
 /**
- * A trackable item. Marker class.
+ * A trackable item.
  * 
  * @author Andrew
  */
