@@ -52,6 +52,9 @@ public abstract class AbstractStatusEffectNote extends AbstractNote implements
 	}
 
 	@Override
+	public abstract String toString();
+
+	@Override
 	public final String getBriefDesc() {
 		return myBriefDesc;
 	}

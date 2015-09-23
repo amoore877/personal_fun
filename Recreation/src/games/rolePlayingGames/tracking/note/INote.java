@@ -1,11 +1,13 @@
 package games.rolePlayingGames.tracking.note;
 
+import games.rolePlayingGames.tracking.IUniqueObject;
+
 /**
  * BasicNote interface.
  * 
  * @author Andrew
  */
-public interface INote {
+public interface INote extends IUniqueObject {
 
 	/**
 	 * @return Short String representation of the note.

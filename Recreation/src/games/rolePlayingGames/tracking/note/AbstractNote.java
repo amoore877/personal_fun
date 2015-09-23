@@ -1,6 +1,9 @@
 package games.rolePlayingGames.tracking.note;
 
-public abstract class AbstractNote implements IFullDescNote {
+import games.rolePlayingGames.tracking.UniqueObject;
+
+public abstract class AbstractNote extends UniqueObject implements
+		IFullDescNote {
 
 	/**
 	 * The note's string.
@@ -14,6 +17,8 @@ public abstract class AbstractNote implements IFullDescNote {
 	 *            note description.
 	 */
 	public AbstractNote(final String iFullDesc) {
+		super();
+
 		if (iFullDesc == null) {
 			myBriefDesc = "";
 		} else {
@@ -42,4 +47,7 @@ public abstract class AbstractNote implements IFullDescNote {
 			myBriefDesc = iFullDesc;
 		}
 	}
+
+	@Override
+	public abstract String toString();
 }

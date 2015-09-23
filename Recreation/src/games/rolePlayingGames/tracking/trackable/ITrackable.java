@@ -1,12 +1,14 @@
 package games.rolePlayingGames.tracking.trackable;
 
+import games.rolePlayingGames.tracking.IUniqueObject;
+
 /**
  * Trackable object. Does not necessarily have initiative but we want to keep
  * track of its status/existence for some reason.
  * 
  * @author Andrew
  */
-public interface ITrackable {
+public interface ITrackable extends IUniqueObject {
 
 	/**
 	 * @return name of this trackable thing.
@@ -28,4 +30,7 @@ public interface ITrackable {
 	 * Edit the note in a pop-up window.
 	 */
 	void edit();
+
+	@Override
+	boolean equals(Object iObject);
 }

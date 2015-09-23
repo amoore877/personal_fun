@@ -54,4 +54,7 @@ public abstract class AbstractTraitNote extends AbstractNote implements
 	public final String getBriefDesc() {
 		return myBriefDesc;
 	}
+
+	@Override
+	public abstract String toString();
 }
