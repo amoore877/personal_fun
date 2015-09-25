@@ -1,6 +1,7 @@
 package games.rolePlayingGames.shadowrun.dice;
 
 import games.rolePlayingGames.dice.CommonRoller;
+import games.rolePlayingGames.dice.DieType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +23,14 @@ public class ShadowrunRoller {
 	 *            true if edge rules are used, false otherwise.
 	 * @return the resulting rolls.
 	 */
-	public static List<Integer> rollDice(int iDiceCount, boolean iEdge) {
-		List<Integer> oRolls = new ArrayList<Integer>();
+	public static List<Integer> rollDice(final int iDiceCount,
+			final boolean iEdge) {
+		final List<Integer> oRolls = new ArrayList<Integer>();
 
 		int totalDice = iDiceCount;
 
 		for (int dieNumber = 0; dieNumber < totalDice; dieNumber++) {
-			Integer roll = CommonRoller.rollDie(6);
+			final Integer roll = CommonRoller.rollDie(DieType.D6.getValue());
 			oRolls.add(roll);
 
 			if ((iEdge) && (roll.intValue() == 6)) {
