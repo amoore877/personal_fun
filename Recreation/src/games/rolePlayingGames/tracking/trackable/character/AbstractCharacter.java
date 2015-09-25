@@ -163,6 +163,9 @@ public abstract class AbstractCharacter<D extends IDamageNote> extends
 		return oTotalDamage;
 	}
 
+	/**
+	 * Returns clone of damage notes.
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public ArrayList<D> getDamageNotes() {
