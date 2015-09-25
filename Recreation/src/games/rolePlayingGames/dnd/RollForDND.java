@@ -1,6 +1,7 @@
-package games.rolePlayingGames.shadowrun;
+package games.rolePlayingGames.dnd;
 
-import games.rolePlayingGames.shadowrun.dice.ShadowrunRoller;
+import games.rolePlayingGames.dice.DieType;
+import games.rolePlayingGames.dnd.dice.DnDRoller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,12 +9,12 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 /**
- * Shadowrun dice rolling program.
+ * DND dice rolling program.
  * 
  * @author Andrew
  *
  */
-public class RollForShadowrun {
+public class RollForDND {
 
 	/**
 	 * Main.
@@ -22,7 +23,7 @@ public class RollForShadowrun {
 	 *            arguments (none parsed).
 	 */
 	public static void main(final String[] args) {
-		new RollForShadowrun().start();
+		new RollForDND().start();
 	}
 
 	/**
@@ -46,55 +47,40 @@ public class RollForShadowrun {
 
 				if (diceNum != 0) {
 
-					System.out.println("Edge being used (y/n)?");
+					System.out
+							.println("Enter type of die (2, 4, 6, 8, 10, 12, 20, 99/100)?");
 
-					final String edgeUsedString = reader.readLine();
+					final String dieTypeString = reader.readLine();
 
-					boolean edgeUsed;
+					final DieType dieTypeTemp = DieType.valueOf(Integer
+							.parseInt(dieTypeString));
 
-					if (edgeUsedString.equalsIgnoreCase("y")
-							|| edgeUsedString.equalsIgnoreCase("yes")
-							|| edgeUsedString.equals("1")) {
-						edgeUsed = true;
+					final DieType dieType;
+					if (dieTypeTemp.equals(DieType.D99)) {
+						dieType = DieType.D100;
 					} else {
-						edgeUsed = false;
+						dieType = dieTypeTemp;
 					}
 
-					final List<Integer> rolledResults = ShadowrunRoller
-							.rollDice(diceNum, edgeUsed);
+					final List<Integer> rolledResults = DnDRoller.rollDice(
+							dieType, diceNum);
 
-					int sixes = 0;
-					int fives = 0;
-					int ones = 0;
-					// need at least 1 die to ever be a glitch
-					final int glitchMinimum = Math.max(1,
-							rolledResults.size() / 2);
+					int total = 0;
+
 					for (final Integer rolledResult : rolledResults) {
-						switch (rolledResult) {
-						case 6:
-							sixes++;
-							break;
-						case 5:
-							fives++;
-							break;
-						case 1:
-							ones++;
-							break;
-						}
+						total += rolledResult;
 					}
-
-					final int hits = sixes + fives;
 
 					System.out.println("\n\n\n\n\n\n" + "Result ["
 							+ rolledResults.toString() + "] \n"
 							+ "Dice Rolled: [" + rolledResults.size() + "] \n"
-							+ "Hits: [" + hits + "] \n" + "Ones: [" + ones
-							+ "], Minimum to glitch: [" + glitchMinimum + "]");
-					if (ones >= glitchMinimum) {
-						if (hits == 0) {
-							System.out.println("Critical glitch!");
-						} else {
-							System.out.println("Glitch!");
+							+ "Total: [" + total + "]");
+
+					if (dieType.equals(DieType.D20)) {
+						if (total == 1) {
+							System.out.println("Critical fail!");
+						} else if ((total == 20) && (diceNum == 1)) {
+							System.out.println("Critical success!");
 						}
 					}
 
@@ -110,6 +96,9 @@ public class RollForShadowrun {
 			} catch (final NumberFormatException iException) {
 				System.out
 						.println("Number Format Exception. Expected an integer and a non-integer was given.");
+			} catch (final EnumConstantNotPresentException iException) {
+				System.out
+						.println("Enum Exception. Expected a valid die type.");
 			}
 		}
 
