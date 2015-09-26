@@ -139,7 +139,9 @@ public abstract class AbstractDamageNote extends AbstractNote implements
 	 * @param iHeal
 	 *            heal this amount.
 	 */
-	public abstract void heal(final int iHeal);
+	protected final void heal(final int iHeal) {
+		setHealed(getHealed() + iHeal);
+	}
 
 	@Override
 	public abstract String toString();

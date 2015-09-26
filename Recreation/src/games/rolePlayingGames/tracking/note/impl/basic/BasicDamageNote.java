@@ -48,11 +48,6 @@ public final class BasicDamageNote extends AbstractDamageNote {
 	}
 
 	@Override
-	public final void heal(final int iHeal) {
-		setHealed(getHealed() + iHeal);
-	}
-
-	@Override
 	public final void edit() {
 		// input panel
 		final JPanel editPanel = new JPanel(new GridLayout(0, 1));

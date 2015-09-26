@@ -119,9 +119,9 @@ public abstract class AbstractTrackingControl<C extends ICombatTrackable> {
 	}
 
 	/**
-	 * Add a character.
+	 * Add a trackable.
 	 */
-	public abstract void addCharacter();
+	public abstract void addTrackable();
 
 	/**
 	 * Edit the selected.
