@@ -5,6 +5,6 @@ package games.rolePlayingGames.tracking.note.status.trait;
  * 
  * @author Andrew
  */
-public interface INeutralTrait extends ITraitNote {
+public interface INeutralTraitNote extends ITraitNote {
 
 }

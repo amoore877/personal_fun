@@ -12,7 +12,7 @@ import javax.swing.JTextField;
 import javax.swing.text.NumberFormatter;
 
 /**
- * Shadowrun device damage note.
+ * Shadowrun device/item damage note.
  * 
  * In Shadowrun, device wounds are not really treated distinctly from each
  * other, but it makes for better notes to do so. In addition:
@@ -21,7 +21,7 @@ import javax.swing.text.NumberFormatter;
  * 
  * @author Andrew
  */
-public final class DevicePhysicalDamageNote extends AbstractDeviceDamageNote {
+public final class ItemPhysicalDamageNote extends AbstractDeviceDamageNote {
 
 	/**
 	 * Constructor.
@@ -32,7 +32,7 @@ public final class DevicePhysicalDamageNote extends AbstractDeviceDamageNote {
 	 * @param iDamage
 	 *            amount of damage.
 	 */
-	public DevicePhysicalDamageNote(final String iDesc, final int iDamage) {
+	public ItemPhysicalDamageNote(final String iDesc, final int iDamage) {
 		super(iDesc, iDamage);
 	}
 

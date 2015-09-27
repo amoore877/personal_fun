@@ -1,11 +1,15 @@
-package games.rolePlayingGames.shadowrun.tracking.trackables;
+package games.rolePlayingGames.shadowrun.tracking.trackables.matrix;
+
+import games.rolePlayingGames.tracking.trackable.ICombatTrackable;
 
 /**
- * A Shadowrun device/persona/icon/being that has Attack/Sleaze.
+ * A Shadowrun device/persona/icon/being that has Attack/Sleaze. Can enter
+ * combat.
  * 
  * @author Andrew
  */
-public interface IHackingDevice extends IDevice {
+public interface IHackingBeing extends IMatrixDamageableTrackable,
+		ICombatTrackable {
 
 	/**
 	 * @return attack attribute.
