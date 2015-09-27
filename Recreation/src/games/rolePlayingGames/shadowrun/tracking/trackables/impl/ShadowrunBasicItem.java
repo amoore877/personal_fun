@@ -1,7 +1,7 @@
-package games.rolePlayingGames.tracking.trackable.impl.basic;
+package games.rolePlayingGames.shadowrun.tracking.trackables.impl;
 
-import games.rolePlayingGames.tracking.note.impl.basic.BasicDamageNote;
-import games.rolePlayingGames.tracking.trackable.character.AbstractCharacter;
+import games.rolePlayingGames.shadowrun.tracking.notes.damage.device.ItemPhysicalDamageNote;
+import games.rolePlayingGames.shadowrun.tracking.trackables.item.AbstractShadowrunItem;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -18,20 +18,26 @@ import javax.swing.JTextField;
 import javax.swing.text.NumberFormatter;
 
 /**
- * Basic character.
+ * The most basic Shadowrun item. Something that can be destroyed.
  * 
  * @author Andrew
+ *
  */
-public class BasicCharacter extends AbstractCharacter<BasicDamageNote> {
+public final class ShadowrunBasicItem extends AbstractShadowrunItem {
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param iName
-	 *            name.
+	 *            name of item.
+	 * @param iBody
+	 *            body attribute.
+	 * @param iArmor
+	 *            armor attribute.
 	 */
-	public BasicCharacter(final String iName) {
-		super(iName);
+	public ShadowrunBasicItem(final String iName, final int iBody,
+			final int iArmor) {
+		super(iName, iBody, iArmor);
 	}
 
 	@Override
@@ -40,16 +46,17 @@ public class BasicCharacter extends AbstractCharacter<BasicDamageNote> {
 
 		oResult.append(": Max Health-" + getMaximumHealth());
 
-		for (final BasicDamageNote damageNote : getDamageNotes()) {
+		for (final ItemPhysicalDamageNote damageNote : getDamageNotes()) {
 			oResult.append(", Damage-" + damageNote.toString());
 		}
+
+		oResult.append(" Body: " + getBody() + " Armor: " + getArmor());
 
 		return oResult.toString();
 	}
 
 	@Override
 	public void edit() {
-		// TODO Auto-generated method stub
 		final JPanel editPanel = new JPanel(new GridLayout(0, 1));
 
 		// name
@@ -57,22 +64,26 @@ public class BasicCharacter extends AbstractCharacter<BasicDamageNote> {
 		editPanel.add(new JLabel("Name: "));
 		editPanel.add(nameField);
 
-		// initiative
-		final JFormattedTextField initiativeField = new JFormattedTextField(
+		// body
+		final JFormattedTextField bodyField = new JFormattedTextField(
 				new NumberFormatter(NumberFormat.getIntegerInstance()));
-		initiativeField.setValue(Integer.valueOf(getInitiative()));
-		editPanel.add(new JLabel("Initiative: "));
-		editPanel.add(initiativeField);
+		bodyField.setValue(Integer.valueOf(getBody()));
+		editPanel.add(new JLabel("Body: "));
+		editPanel.add(bodyField);
 
-		// max health
-		final JFormattedTextField maxHealthField = new JFormattedTextField(
+		// armor
+		final JFormattedTextField armorField = new JFormattedTextField(
 				new NumberFormatter(NumberFormat.getIntegerInstance()));
-		maxHealthField.setValue(Integer.valueOf(getMaximumHealth()));
-		editPanel.add(new JLabel("Max Health: "));
-		editPanel.add(maxHealthField);
+		armorField.setValue(Integer.valueOf(getArmor()));
+		editPanel.add(new JLabel("Armor: "));
+		editPanel.add(armorField);
+
+		final int result = JOptionPane.showConfirmDialog(null, editPanel,
+				"Edit this item", JOptionPane.OK_CANCEL_OPTION,
+				JOptionPane.PLAIN_MESSAGE);
 
 		// current damage notes
-		for (final BasicDamageNote damageNote : getDamageNotes()) {
+		for (final ItemPhysicalDamageNote damageNote : getDamageNotes()) {
 			final JButton damageEditButton = new JButton("Edit: "
 					+ damageNote.toString());
 			damageEditButton.addActionListener(new ActionListener() {
@@ -103,14 +114,6 @@ public class BasicCharacter extends AbstractCharacter<BasicDamageNote> {
 			editPanel.add(damageRemoveButton);
 		}
 
-		// new damage notes
-		// TODO probably should count on actions in tracking table for adding
-		// damage notes instead; these Basic classes are all prototypes anyway
-
-		final int result = JOptionPane.showConfirmDialog(null, editPanel,
-				"Edit this note", JOptionPane.OK_CANCEL_OPTION,
-				JOptionPane.PLAIN_MESSAGE);
-
 		if (result == JOptionPane.OK_OPTION) {
 			// name
 			final String newName = nameField.getText();
@@ -121,36 +124,34 @@ public class BasicCharacter extends AbstractCharacter<BasicDamageNote> {
 				System.out.println("Name unchanged: [" + getName() + "]");
 			}
 
-			// initiative
+			// body
 			try {
-				initiativeField.commitEdit();
+				bodyField.commitEdit();
 			} catch (final ParseException iException) {
 				System.err.println(iException.getMessage());
 			}
-			final int newInitiative = Integer.parseInt(initiativeField
-					.getValue().toString());
-
-			if (newInitiative != getInitiative()) {
-				setInitiative(newInitiative);
-			} else {
-				System.out.println("Initiative unchanged: [" + getInitiative()
-						+ "]");
-			}
-
-			// max health
-			try {
-				maxHealthField.commitEdit();
-			} catch (final ParseException iException) {
-				System.err.println(iException.getMessage());
-			}
-			final int newMaxHealth = Integer.parseInt(maxHealthField.getValue()
+			final int newBody = Integer.parseInt(bodyField.getValue()
 					.toString());
 
-			if (newMaxHealth != getMaximumHealth()) {
-				setMaximumHealth(newMaxHealth);
+			if (newBody != getBody()) {
+				setBody(newBody);
 			} else {
-				System.out.println("Max health unchanged: ["
-						+ getMaximumHealth() + "]");
+				System.out.println("Body unchanged: [" + getBody() + "]");
+			}
+
+			// armor
+			try {
+				armorField.commitEdit();
+			} catch (final ParseException iException) {
+				System.err.println(iException.getMessage());
+			}
+			final int newArmor = Integer.parseInt(armorField.getValue()
+					.toString());
+
+			if (newArmor != getArmor()) {
+				setBody(newArmor);
+			} else {
+				System.out.println("Armor unchanged: [" + getArmor() + "]");
 			}
 		} else if (result == JOptionPane.CANCEL_OPTION) {
 			System.out.println("Cancel selected.");
@@ -163,9 +164,10 @@ public class BasicCharacter extends AbstractCharacter<BasicDamageNote> {
 	public String toString() {
 		final StringBuilder oResult = new StringBuilder(getName());
 
-		oResult.append(": " + getTotalDamage() + "/" + getMaximumHealth());
+		if (getTotalDamage() != 0) {
+			oResult.append(" " + getTotalDamage() + "/" + getMaximumHealth());
+		}
 
 		return oResult.toString();
 	}
-
 }

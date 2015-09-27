@@ -8,7 +8,7 @@ public abstract class AbstractNote extends UniqueObject implements
 	/**
 	 * The note's string.
 	 */
-	private String myBriefDesc;
+	private String myFullDesc;
 
 	/**
 	 * Constructor.
@@ -20,15 +20,15 @@ public abstract class AbstractNote extends UniqueObject implements
 		super();
 
 		if (iFullDesc == null) {
-			myBriefDesc = "";
+			myFullDesc = "";
 		} else {
-			myBriefDesc = iFullDesc;
+			myFullDesc = iFullDesc;
 		}
 	}
 
 	@Override
 	public final String getFullDesc() {
-		return myBriefDesc;
+		return myFullDesc;
 	}
 
 	/**
@@ -38,13 +38,13 @@ public abstract class AbstractNote extends UniqueObject implements
 	 *            new description.
 	 */
 	protected final void setFullDesc(final String iFullDesc) {
-		System.out.println("Full Desc changing from [" + myBriefDesc + "] to ["
+		System.out.println("Full Desc changing from [" + myFullDesc + "] to ["
 				+ iFullDesc + "]");
 
 		if (iFullDesc == null) {
-			myBriefDesc = "";
+			myFullDesc = "";
 		} else {
-			myBriefDesc = iFullDesc;
+			myFullDesc = iFullDesc;
 		}
 	}
 
