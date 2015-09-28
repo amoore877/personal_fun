@@ -1,6 +1,6 @@
-package games.rolePlayingGames.tracking.note.impl.basic;
+package games.rolePlayingGames.tracking.note.impl.example;
 
-import games.rolePlayingGames.tracking.note.status.trait.AbstractTraitNote;
+import games.rolePlayingGames.tracking.note.status.AbstractStatusEffectNote;
 
 import java.awt.GridLayout;
 
@@ -10,11 +10,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
- * Basic trait note.
+ * Basic status effect note.
  * 
  * @author Andrew
  */
-public class BasicTraitNote extends AbstractTraitNote {
+public class BasicStatusEffectNote extends AbstractStatusEffectNote {
 
 	/**
 	 * Constructor.
@@ -24,7 +24,7 @@ public class BasicTraitNote extends AbstractTraitNote {
 	 * @param iBriefDesc
 	 *            brief (one or two short words) description of effect.
 	 */
-	public BasicTraitNote(final String iFullDesc, final String iBriefDesc) {
+	public BasicStatusEffectNote(final String iFullDesc, final String iBriefDesc) {
 		super(iFullDesc, iBriefDesc);
 	}
 

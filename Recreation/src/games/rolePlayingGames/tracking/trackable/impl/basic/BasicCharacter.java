@@ -1,6 +1,6 @@
 package games.rolePlayingGames.tracking.trackable.impl.basic;
 
-import games.rolePlayingGames.tracking.note.impl.basic.BasicDamageNote;
+import games.rolePlayingGames.tracking.note.impl.example.BasicDamageNote;
 import games.rolePlayingGames.tracking.trackable.character.AbstractCharacter;
 
 import java.awt.GridLayout;
