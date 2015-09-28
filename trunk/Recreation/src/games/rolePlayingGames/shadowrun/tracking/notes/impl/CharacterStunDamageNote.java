@@ -1,4 +1,6 @@
-package games.rolePlayingGames.shadowrun.tracking.notes.damage.spirit;
+package games.rolePlayingGames.shadowrun.tracking.notes.impl;
+
+import games.rolePlayingGames.shadowrun.tracking.notes.damage.character.AbstractCharacterDamageNote;
 
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
@@ -16,22 +18,24 @@ import javax.swing.JTextField;
 import javax.swing.text.NumberFormatter;
 
 /**
- * Shadowrun spirit physical damage note.
+ * Shadowrun character stun damage note.
  * 
- * In Shadowrun, spirit wounds are treated distinctly from each other. In
+ * In Shadowrun, stun wounds are treated distinctly from each other. In
  * addition:
  * 
- * 1. A wound can only be healed magically, once.
+ * 1. A wound can only be healed physically once.
  * 
- * 2. Wounds from drain (and some other sources) cannot be healed except through
+ * 2. Stun cannot be healed magically.
+ * 
+ * 3. Wounds from drain (and some other sources) cannot be healed except through
  * natural processes.
  * 
  * @author Andrew
  */
-public final class SpiritPhysicalDamageNote extends AbstractSpiritDamageNote {
+public final class CharacterStunDamageNote extends AbstractCharacterDamageNote {
 
 	/**
-	 * Constructor.
+	 * Constructor. Cannot magically heal stun.
 	 * 
 	 * @param iDesc
 	 *            very brief note as to cause of damage (ex. "shot", "manaball",
@@ -42,22 +46,24 @@ public final class SpiritPhysicalDamageNote extends AbstractSpiritDamageNote {
 	 *            true if the wound can only be healed naturally, false
 	 *            otherwise.
 	 */
-	public SpiritPhysicalDamageNote(final String iDesc, final int iDamage,
+	public CharacterStunDamageNote(final String iDesc, final int iDamage,
 			final boolean iNaturalOnly) {
 		super(iDesc, iDamage, iNaturalOnly);
+		// Cannot magically heal stun.
+		setMagicallyHealed(true);
 	}
 
 	@Override
 	public String toFullString() {
 		final StringBuilder oResult = new StringBuilder(getFullDesc());
 
-		oResult.append(" Damage: " + getDamage());
+		oResult.append(" Stun: " + getDamage());
 
 		oResult.append(" Healed: " + getHealed());
 
 		oResult.append(" Natural Heal Only: " + isNaturalOnly());
 
-		oResult.append(" Magically Healed: " + isMagicallyHealed());
+		oResult.append(" Physically Healed: " + isPhysicallyHealed());
 
 		return oResult.toString();
 	}
@@ -65,10 +71,10 @@ public final class SpiritPhysicalDamageNote extends AbstractSpiritDamageNote {
 	/**
 	 * Heal in a pop-up menu.
 	 */
-	public final void heal() {
+	public void heal() {
 		if (getHealed() >= getDamage()) {
 			JOptionPane.showMessageDialog(null,
-					"Damage is already fully healed!", "Cannot heal further",
+					"Stun is already fully healed!", "Cannot heal further",
 					JOptionPane.ERROR_MESSAGE);
 		} else {
 			final JPanel healPanel = new JPanel(new GridLayout(0, 1));
@@ -77,7 +83,7 @@ public final class SpiritPhysicalDamageNote extends AbstractSpiritDamageNote {
 			healPanel.add(new JLabel(getFullDesc()));
 
 			// current damage
-			healPanel.add(new JLabel("Damage: " + getDamage()));
+			healPanel.add(new JLabel("Stun: " + getDamage()));
 
 			// current heal
 			healPanel.add(new JLabel("Healed: " + getHealed()));
@@ -85,22 +91,28 @@ public final class SpiritPhysicalDamageNote extends AbstractSpiritDamageNote {
 			// healing type
 			final JPanel healingTypePanel = new JPanel(new GridLayout(1, 0));
 			healPanel.add(new JLabel("New Healing type:"));
-			final JRadioButton magHealButton = new JRadioButton("Magical");
-			magHealButton.setMnemonic(KeyEvent.VK_M);
+			final JRadioButton physHealButton = new JRadioButton("Physical ");
+			physHealButton.setMnemonic(KeyEvent.VK_P);
+			final JRadioButton aidedHealButton = new JRadioButton("Aided");
+			aidedHealButton.setMnemonic(KeyEvent.VK_A);
 			final JRadioButton naturalHealButton = new JRadioButton("Natural");
 			naturalHealButton.setMnemonic(KeyEvent.VK_N);
 			final ButtonGroup healTypeButtonGroup = new ButtonGroup();
-			healTypeButtonGroup.add(magHealButton);
+			healTypeButtonGroup.add(physHealButton);
+			healTypeButtonGroup.add(aidedHealButton);
 			healTypeButtonGroup.add(naturalHealButton);
 			naturalHealButton.setSelected(true);
 			if (isNaturalOnly()) {
-				magHealButton.setEnabled(false);
-				magHealButton.setToolTipText("Natural healing only.");
-			} else if (isMagicallyHealed()) {
-				magHealButton.setEnabled(false);
-				magHealButton.setToolTipText("Already magically healed.");
+				physHealButton.setEnabled(false);
+				physHealButton.setToolTipText("Natural healing only.");
+				aidedHealButton.setEnabled(false);
+				aidedHealButton.setToolTipText("Natural healing only.");
+			} else if (isPhysicallyHealed()) {
+				physHealButton.setEnabled(false);
+				physHealButton.setToolTipText("Already physically healed.");
 			}
-			healingTypePanel.add(magHealButton);
+			healingTypePanel.add(physHealButton);
+			healingTypePanel.add(aidedHealButton);
 			healingTypePanel.add(naturalHealButton);
 			healPanel.add(healingTypePanel);
 
@@ -129,11 +141,9 @@ public final class SpiritPhysicalDamageNote extends AbstractSpiritDamageNote {
 
 				heal(newHealed);
 
-				if (magHealButton.isSelected()) {
-					// magical healing has been done. Cannot magically heal
-					// more.
-					setMagicallyHealed(true);
-				}
+				// any sort of healing has been done. Cannot physically heal
+				// anymore
+				setPhysicallyHealed(true);
 
 			} else if (result == JOptionPane.CANCEL_OPTION) {
 				System.out.println("Cancel selected.");
@@ -173,10 +183,10 @@ public final class SpiritPhysicalDamageNote extends AbstractSpiritDamageNote {
 		healedPanel.add(healedField);
 		editPanel.add(healedPanel);
 
-		// magically healed
-		final JCheckBox magHealedBox = new JCheckBox("Magic Healed: ",
-				isMagicallyHealed());
-		editPanel.add(magHealedBox);
+		// physically healed
+		final JCheckBox physHealedBox = new JCheckBox("Phys Healed: ",
+				isPhysicallyHealed());
+		editPanel.add(physHealedBox);
 
 		// natural healing only
 		final JCheckBox naturalHealBox = new JCheckBox("Natural Heal Only: ",
@@ -228,13 +238,13 @@ public final class SpiritPhysicalDamageNote extends AbstractSpiritDamageNote {
 				System.out.println("Healed unchanged: [" + getHealed() + "]");
 			}
 
-			// magically healed
-			final boolean newMagHealed = magHealedBox.isSelected();
-			if (newMagHealed != isMagicallyHealed()) {
-				setMagicallyHealed(newMagHealed);
+			// physically healed
+			final boolean newPhysHealed = physHealedBox.isSelected();
+			if (newPhysHealed != isPhysicallyHealed()) {
+				setPhysicallyHealed(newPhysHealed);
 			} else {
-				System.out.println("Magically Healed unchanged: ["
-						+ isMagicallyHealed() + "]");
+				System.out.println("Physically Healed unchanged: ["
+						+ isPhysicallyHealed() + "]");
 			}
 
 			// natural healing only
@@ -258,8 +268,12 @@ public final class SpiritPhysicalDamageNote extends AbstractSpiritDamageNote {
 		final StringBuilder oResult = new StringBuilder(
 				String.valueOf(getDamage()));
 
-		if (isMagicallyHealed() || isNaturalOnly()) {
-			oResult.append("X");
+		if (isPhysicallyHealed() || isNaturalOnly()) {
+			if (isNaturalOnly()) {
+				oResult.append("X");
+			} else if (isPhysicallyHealed()) {
+				oResult.append("x");
+			}
 			oResult.append("(" + getHealed() + ")");
 		}
 

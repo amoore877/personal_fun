@@ -1,6 +1,6 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.matrix;
 
-import games.rolePlayingGames.shadowrun.tracking.notes.damage.device.DeviceMatrixDamageNote;
+import games.rolePlayingGames.shadowrun.tracking.notes.impl.DeviceMatrixDamageNote;
 import games.rolePlayingGames.shadowrun.tracking.trackables.IShadowrunTrackable;
 
 import java.util.ArrayList;

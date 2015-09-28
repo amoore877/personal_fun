@@ -1,4 +1,6 @@
-package games.rolePlayingGames.shadowrun.tracking.notes.damage.spirit;
+package games.rolePlayingGames.shadowrun.tracking.notes.impl;
+
+import games.rolePlayingGames.shadowrun.tracking.notes.damage.device.AbstractDeviceDamageNote;
 
 import java.awt.GridLayout;
 import java.text.NumberFormat;
@@ -12,44 +14,37 @@ import javax.swing.JTextField;
 import javax.swing.text.NumberFormatter;
 
 /**
- * Shadowrun spirit stun damage note.
+ * Shadowrun device/item damage note.
  * 
- * In Shadowrun, spirit wounds are treated distinctly from each other. In
- * addition:
+ * In Shadowrun, device wounds are not really treated distinctly from each
+ * other, but it makes for better notes to do so. In addition:
  * 
- * 1. Spirit stun can only be healed with time.
+ * 1. Physical and Matrix device wounds are healed with hardware tests.
  * 
  * @author Andrew
  */
-public final class SpiritStunDamageNote extends AbstractSpiritDamageNote {
+public final class ItemPhysicalDamageNote extends AbstractDeviceDamageNote {
 
 	/**
-	 * Constructor. Cannot magically heal stun.
+	 * Constructor.
 	 * 
 	 * @param iDesc
 	 *            very brief note as to cause of damage (ex. "shot", "manaball",
 	 *            "stab", etc.).
 	 * @param iDamage
 	 *            amount of damage.
-	 * @param iNaturalOnly
-	 *            true if the wound can only be healed naturally, false
-	 *            otherwise.
 	 */
-	public SpiritStunDamageNote(final String iDesc, final int iDamage) {
-		super(iDesc, iDamage, true);
-		// Cannot magically heal stun.
-		setMagicallyHealed(true);
+	public ItemPhysicalDamageNote(final String iDesc, final int iDamage) {
+		super(iDesc, iDamage);
 	}
 
 	@Override
 	public String toFullString() {
 		final StringBuilder oResult = new StringBuilder(getFullDesc());
 
-		oResult.append(" Stun: " + getDamage());
+		oResult.append(" Damage: " + getDamage());
 
 		oResult.append(" Healed: " + getHealed());
-
-		oResult.append(" Natural Heal Only: " + isNaturalOnly());
 
 		return oResult.toString();
 	}
@@ -60,7 +55,7 @@ public final class SpiritStunDamageNote extends AbstractSpiritDamageNote {
 	public void heal() {
 		if (getHealed() >= getDamage()) {
 			JOptionPane.showMessageDialog(null,
-					"Stun is already fully healed!", "Cannot heal further",
+					"Damage is already fully healed!", "Cannot heal further",
 					JOptionPane.ERROR_MESSAGE);
 		} else {
 			final JPanel healPanel = new JPanel(new GridLayout(0, 1));
@@ -69,7 +64,7 @@ public final class SpiritStunDamageNote extends AbstractSpiritDamageNote {
 			healPanel.add(new JLabel(getFullDesc()));
 
 			// current damage
-			healPanel.add(new JLabel("Stun: " + getDamage()));
+			healPanel.add(new JLabel("Damage: " + getDamage()));
 
 			// current heal
 			healPanel.add(new JLabel("Healed: " + getHealed()));
@@ -193,8 +188,6 @@ public final class SpiritStunDamageNote extends AbstractSpiritDamageNote {
 	public String toString() {
 		final StringBuilder oResult = new StringBuilder(
 				String.valueOf(getDamage()));
-
-		oResult.append("X");
 
 		oResult.append("(" + getHealed() + ")");
 

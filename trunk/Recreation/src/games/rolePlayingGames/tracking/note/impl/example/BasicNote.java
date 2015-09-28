@@ -1,4 +1,4 @@
-package games.rolePlayingGames.tracking.note.impl.basic;
+package games.rolePlayingGames.tracking.note.impl.example;
 
 import games.rolePlayingGames.tracking.note.AbstractNote;
 

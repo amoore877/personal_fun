@@ -1,6 +1,6 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.item;
 
-import games.rolePlayingGames.shadowrun.tracking.notes.damage.device.ItemPhysicalDamageNote;
+import games.rolePlayingGames.shadowrun.tracking.notes.impl.ItemPhysicalDamageNote;
 import games.rolePlayingGames.tracking.trackable.IDestructibleTrackable;
 import games.rolePlayingGames.tracking.trackable.item.IItem;
 

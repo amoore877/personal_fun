@@ -2,7 +2,8 @@ package games.rolePlayingGames.shadowrun.tracking.trackables.impl;
 
 import games.rolePlayingGames.shadowrun.tracking.ShadowrunTrackingUtil;
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.ItemPhysicalDamageNote;
-import games.rolePlayingGames.shadowrun.tracking.trackables.item.AbstractShadowrunItem;
+import games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment.AbstractShadowrunEquipment;
+import games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment.IShadowrunArmor;
 
 import java.awt.GridLayout;
 import java.text.ParseException;
@@ -13,26 +14,27 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
- * The most basic Shadowrun item. Something that can be destroyed.
+ * Shadowrun Armor. Has armor value and description. Body is assumed to be same
+ * as armor, following rules of structures.
  * 
  * @author Andrew
  *
  */
-public final class ShadowrunBasicItem extends AbstractShadowrunItem {
+public final class Armor extends AbstractShadowrunEquipment implements
+		IShadowrunArmor {
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param iName
 	 *            name of item.
-	 * @param iBody
-	 *            body attribute.
 	 * @param iArmor
 	 *            armor attribute.
+	 * @param iBenefits
+	 *            description of any other benefits beyond being armor.
 	 */
-	public ShadowrunBasicItem(final String iName, final int iBody,
-			final int iArmor) {
-		super(iName, iBody, iArmor);
+	public Armor(final String iName, final int iArmor, final String iBenefits) {
+		super(iName, iArmor, iArmor, iBenefits);
 	}
 
 	@Override
@@ -47,6 +49,8 @@ public final class ShadowrunBasicItem extends AbstractShadowrunItem {
 
 		oResult.append(" Body: " + getBody() + " Armor: " + getArmor());
 
+		oResult.append(" Benefits: " + getBenefits());
+
 		return oResult.toString();
 	}
 
@@ -58,19 +62,19 @@ public final class ShadowrunBasicItem extends AbstractShadowrunItem {
 		final JTextField nameField = ShadowrunTrackingUtil.addStringField(
 				editPanel, "Name", getName());
 
-		// body
-		final JFormattedTextField bodyField = ShadowrunTrackingUtil
-				.addIntField(editPanel, "Body", getBody());
-
 		// armor
 		final JFormattedTextField armorField = ShadowrunTrackingUtil
 				.addIntField(editPanel, "Armor", getArmor());
+
+		// benefits
+		final JTextField benefitsField = ShadowrunTrackingUtil.addStringField(
+				editPanel, "Benefits", getBenefits());
 
 		// current damage notes
 		ShadowrunTrackingUtil.addDamageButtons(editPanel, this);
 
 		final int result = JOptionPane.showConfirmDialog(null, editPanel,
-				"Edit this item", JOptionPane.OK_CANCEL_OPTION,
+				"Edit this armor", JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
@@ -83,21 +87,6 @@ public final class ShadowrunBasicItem extends AbstractShadowrunItem {
 				System.out.println("Name unchanged: [" + getName() + "]");
 			}
 
-			// body
-			try {
-				bodyField.commitEdit();
-			} catch (final ParseException iException) {
-				System.err.println(iException.getMessage());
-			}
-			final int newBody = Integer.parseInt(bodyField.getValue()
-					.toString());
-
-			if (newBody != getBody()) {
-				setBody(newBody);
-			} else {
-				System.out.println("Body unchanged: [" + getBody() + "]");
-			}
-
 			// armor
 			try {
 				armorField.commitEdit();
@@ -108,9 +97,20 @@ public final class ShadowrunBasicItem extends AbstractShadowrunItem {
 					.toString());
 
 			if (newArmor != getArmor()) {
+				setBody(newArmor);
 				setArmor(newArmor);
 			} else {
 				System.out.println("Armor unchanged: [" + getArmor() + "]");
+			}
+
+			// benefits
+			final String newBenefits = benefitsField.getText();
+
+			if (!newBenefits.equals(getName())) {
+				setBenefits(newBenefits);
+			} else {
+				System.out.println("Benefits unchanged: [" + getBenefits()
+						+ "]");
 			}
 		} else if (result == JOptionPane.CANCEL_OPTION) {
 			System.out.println("Cancel selected.");
@@ -121,10 +121,11 @@ public final class ShadowrunBasicItem extends AbstractShadowrunItem {
 
 	@Override
 	public String toString() {
-		final StringBuilder oResult = new StringBuilder(getName());
+		final StringBuilder oResult = new StringBuilder(getName() + ": "
+				+ getArmor());
 
 		if (getTotalDamage() != 0) {
-			oResult.append(" " + getTotalDamage() + "/" + getMaximumHealth());
+			oResult.append(" DAMAGED");
 		}
 
 		return oResult.toString();
