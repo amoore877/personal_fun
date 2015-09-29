@@ -3,7 +3,7 @@ package games.rolePlayingGames.tracking.note;
 import games.rolePlayingGames.tracking.IUniqueObject;
 
 /**
- * BasicNote interface.
+ * ShadowrunBasicNote interface.
  * 
  * @author Andrew
  */

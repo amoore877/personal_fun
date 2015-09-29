@@ -181,6 +181,7 @@ public final class ProjectileWeapon extends AbstractAmmoFedWeapon {
 			if (newDamageElement == null) {
 				newDamageElement = DamageElement.REGULAR;
 			}
+
 			if (!getDamageElement().equals(newDamageElement)) {
 				setDamageElement(newDamageElement);
 			} else {

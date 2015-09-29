@@ -1,16 +1,16 @@
-package games.rolePlayingGames.shadowrun.tracking.notes.quality;
+package games.rolePlayingGames.shadowrun.tracking.notes.impl;
 
+import games.rolePlayingGames.shadowrun.tracking.ShadowrunTrackingUtil;
+import games.rolePlayingGames.shadowrun.tracking.notes.quality.IShadowrunQualityNote;
+import games.rolePlayingGames.shadowrun.tracking.notes.quality.QualityType;
 import games.rolePlayingGames.tracking.note.AbstractNote;
 
 import java.awt.GridLayout;
-import java.awt.event.KeyEvent;
 
-import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 /**
@@ -86,44 +86,22 @@ public final class QualityNote extends AbstractNote implements
 	public void edit() {
 		final JPanel editPanel = new JPanel(new GridLayout(0, 1));
 
-		final JTextField fullDescriptionField = new JTextField(getFullDesc());
-		editPanel.add(new JLabel("Full Description: "));
-		editPanel.add(fullDescriptionField);
+		final JTextField fullDescriptionField = ShadowrunTrackingUtil
+				.addStringField(editPanel, "Full Desc", getFullDesc());
 
-		final JTextField briefDescriptionField = new JTextField(getBriefDesc());
-		editPanel.add(new JLabel("Brief Description: "));
-		editPanel.add(briefDescriptionField);
+		final JTextField briefDescriptionField = ShadowrunTrackingUtil
+				.addStringField(editPanel, "Brief Desc", getBriefDesc());
 
 		final JCheckBox combatQualityBox = new JCheckBox("Combat Quality: ",
 				isCombatQuality());
 		editPanel.add(combatQualityBox);
 
-		final JPanel qualityTypePanel = new JPanel(new GridLayout(1, 0));
-		editPanel.add(new JLabel("Quality type:"));
-		final JRadioButton positiveButton = new JRadioButton("Positive");
-		positiveButton.setMnemonic(KeyEvent.VK_P);
-		final JRadioButton negativeButton = new JRadioButton("Negative");
-		negativeButton.setMnemonic(KeyEvent.VK_N);
-		final JRadioButton neutralButton = new JRadioButton("Neutral");
-		neutralButton.setMnemonic(KeyEvent.VK_U);
-		final ButtonGroup qualityTypeButtonGroup = new ButtonGroup();
-		qualityTypeButtonGroup.add(positiveButton);
-		qualityTypeButtonGroup.add(negativeButton);
-		qualityTypeButtonGroup.add(neutralButton);
-		if (QualityType.POSITIVE.equals(getQualityType())) {
-			positiveButton.setSelected(true);
-		} else if (QualityType.NEGATIVE.equals(getQualityType())) {
-			negativeButton.setSelected(true);
-		} else {
-			neutralButton.setSelected(true);
-		}
-		qualityTypePanel.add(positiveButton);
-		qualityTypePanel.add(negativeButton);
-		qualityTypePanel.add(neutralButton);
-		editPanel.add(qualityTypePanel);
+		final JComboBox<QualityType> qualityTypeBox = ShadowrunTrackingUtil
+				.addEnumComboBox(editPanel, "Type", QualityType.values(),
+						getQualityType());
 
 		final int result = JOptionPane.showConfirmDialog(null, editPanel,
-				"Edit this note", JOptionPane.OK_CANCEL_OPTION,
+				"Edit this quality", JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
@@ -153,12 +131,9 @@ public final class QualityNote extends AbstractNote implements
 						+ isCombatQuality() + "]");
 			}
 
-			QualityType newQualityType;
-			if (positiveButton.isSelected()) {
-				newQualityType = QualityType.POSITIVE;
-			} else if (negativeButton.isSelected()) {
-				newQualityType = QualityType.NEGATIVE;
-			} else {
+			QualityType newQualityType = (QualityType) qualityTypeBox
+					.getSelectedItem();
+			if (newQualityType == null) {
 				newQualityType = QualityType.NEUTRAL;
 			}
 

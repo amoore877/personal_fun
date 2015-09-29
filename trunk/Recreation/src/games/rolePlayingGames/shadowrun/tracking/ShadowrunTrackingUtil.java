@@ -3,12 +3,14 @@ package games.rolePlayingGames.shadowrun.tracking;
 import games.rolePlayingGames.shadowrun.tracking.notes.damage.IShadowrunDamageNote;
 import games.rolePlayingGames.tracking.trackable.IDestructibleTrackable;
 
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -26,6 +28,27 @@ public class ShadowrunTrackingUtil {
 	}
 
 	/**
+	 * Create a panel to hold the component and its label, and add to the parent
+	 * panel.
+	 * 
+	 * @param iGrandParentPanel
+	 *            grandparent panel for new components.
+	 * @param iComponent
+	 *            component we are ultimately interested in.
+	 * @param iLabel
+	 *            label for the component.
+	 */
+	private static void addComponentAndLabel(final JPanel iGrandParentPanel,
+			final JComponent iComponent, final JLabel iLabel) {
+		final JPanel panel = new JPanel(new GridLayout(1, 0));
+
+		panel.add(iLabel);
+		panel.add(iComponent);
+
+		iGrandParentPanel.add(panel);
+	}
+
+	/**
 	 * Construct a text field and label for some String value and insert into
 	 * the panel.
 	 * 
@@ -40,8 +63,8 @@ public class ShadowrunTrackingUtil {
 	public static JTextField addStringField(final JPanel iParentPanel,
 			final String iValueName, final String iValue) {
 		final JTextField oField = new JTextField(iValue);
-		iParentPanel.add(new JLabel(iValueName + ":"));
-		iParentPanel.add(oField);
+
+		addComponentAndLabel(iParentPanel, oField, new JLabel(iValueName + ":"));
 
 		return oField;
 	}
@@ -63,8 +86,8 @@ public class ShadowrunTrackingUtil {
 		final JFormattedTextField oField = new JFormattedTextField(
 				new NumberFormatter(NumberFormat.getIntegerInstance()));
 		oField.setValue(iValue);
-		iParentPanel.add(new JLabel(iValueName + ":"));
-		iParentPanel.add(oField);
+
+		addComponentAndLabel(iParentPanel, oField, new JLabel(iValueName + ":"));
 
 		return oField;
 	}
@@ -131,11 +154,12 @@ public class ShadowrunTrackingUtil {
 	public static <E extends Enum<E>> JComboBox<E> addEnumComboBox(
 			final JPanel iParentPanel, final String iValueName,
 			final E[] iAllValues, final E iCurrentValue) {
-		final JComboBox<E> enumBox = new JComboBox<E>(iAllValues);
-		enumBox.setSelectedItem(iCurrentValue);
-		iParentPanel.add(new JLabel(iValueName + ":"));
-		iParentPanel.add(enumBox);
+		final JComboBox<E> oEnumBox = new JComboBox<E>(iAllValues);
+		oEnumBox.setSelectedItem(iCurrentValue);
 
-		return enumBox;
+		addComponentAndLabel(iParentPanel, oEnumBox,
+				new JLabel(iValueName + ":"));
+
+		return oEnumBox;
 	}
 }

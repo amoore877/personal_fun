@@ -1,5 +1,6 @@
 package games.rolePlayingGames.shadowrun.tracking.notes.impl;
 
+import games.rolePlayingGames.shadowrun.tracking.ShadowrunTrackingUtil;
 import games.rolePlayingGames.shadowrun.tracking.notes.damage.character.AbstractCharacterDamageNote;
 
 import java.awt.GridLayout;
@@ -178,44 +179,31 @@ public final class CharacterPhysicalDamageNote extends
 		final JPanel editPanel = new JPanel(new GridLayout(0, 1));
 
 		// desc
-		final JPanel descPanel = new JPanel(new GridLayout(1, 0));
-		final JTextField descriptionField = new JTextField(getFullDesc());
-		descPanel.add(new JLabel("Description: "));
-		descPanel.add(descriptionField);
-		editPanel.add(descPanel);
+		final JTextField descriptionField = ShadowrunTrackingUtil
+				.addStringField(editPanel, "Description", getFullDesc());
 
 		// damage
-		final JPanel damagePanel = new JPanel(new GridLayout(1, 0));
-		final JFormattedTextField damageField = new JFormattedTextField(
-				new NumberFormatter(NumberFormat.getIntegerInstance()));
-		damageField.setValue(getDamage());
-		damagePanel.add(new JLabel("Damage: "));
-		damagePanel.add(damageField);
-		editPanel.add(damagePanel);
+		final JFormattedTextField damageField = ShadowrunTrackingUtil
+				.addIntField(editPanel, "Damage", getDamage());
 
 		// healed
-		final JPanel healedPanel = new JPanel(new GridLayout(1, 0));
-		final JFormattedTextField healedField = new JFormattedTextField(
-				new NumberFormatter(NumberFormat.getIntegerInstance()));
-		healedField.setValue(getHealed());
-		healedPanel.add(new JLabel("Healed: "));
-		healedPanel.add(healedField);
-		editPanel.add(healedPanel);
+		final JFormattedTextField healedField = ShadowrunTrackingUtil
+				.addIntField(editPanel, "Healed", getHealed());
 
 		// physically healed
 		final JCheckBox physHealedBox = new JCheckBox("Phys Healed: ",
 				isPhysicallyHealed());
 		editPanel.add(physHealedBox);
 
-		// magically healed
-		final JCheckBox magHealedBox = new JCheckBox("Magic Healed: ",
-				isMagicallyHealed());
-		editPanel.add(magHealedBox);
-
 		// natural healing only
 		final JCheckBox naturalHealBox = new JCheckBox("Natural Heal Only: ",
 				isNaturalOnly());
 		editPanel.add(naturalHealBox);
+
+		// magically healed
+		final JCheckBox magHealedBox = new JCheckBox("Magic Healed: ",
+				isMagicallyHealed());
+		editPanel.add(magHealedBox);
 
 		final int result = JOptionPane.showConfirmDialog(null, editPanel,
 				"Edit this note", JOptionPane.OK_CANCEL_OPTION,
