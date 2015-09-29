@@ -1,15 +1,15 @@
-package games.rolePlayingGames.shadowrun.tracking.notes.ability;
+package games.rolePlayingGames.shadowrun.tracking.notes.impl;
+
+import games.rolePlayingGames.shadowrun.tracking.ShadowrunTrackingUtil;
+import games.rolePlayingGames.shadowrun.tracking.notes.ability.AbstractAbility;
 
 import java.awt.GridLayout;
-import java.text.NumberFormat;
 import java.text.ParseException;
 
 import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.text.NumberFormatter;
 
 /**
  * A skill or active soft.
@@ -62,15 +62,11 @@ public final class Skill extends AbstractAbility {
 	public void edit() {
 		final JPanel editPanel = new JPanel(new GridLayout(0, 1));
 
-		final JTextField nameField = new JTextField(getFullDesc());
-		editPanel.add(new JLabel("Name: "));
-		editPanel.add(nameField);
+		final JTextField nameField = ShadowrunTrackingUtil.addStringField(
+				editPanel, "Name", getFullDesc());
 
-		final JFormattedTextField levelField = new JFormattedTextField(
-				new NumberFormatter(NumberFormat.getIntegerInstance()));
-		levelField.setValue(Integer.valueOf(getLevel()));
-		editPanel.add(new JLabel("Level: "));
-		editPanel.add(levelField);
+		final JFormattedTextField levelField = ShadowrunTrackingUtil
+				.addIntField(editPanel, "Level", getLevel());
 
 		final int result = JOptionPane.showConfirmDialog(null, editPanel,
 				"Edit this skill", JOptionPane.OK_CANCEL_OPTION,

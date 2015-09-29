@@ -1,8 +1,10 @@
-package games.rolePlayingGames.shadowrun.tracking.notes.ability;
+package games.rolePlayingGames.shadowrun.tracking.notes.impl;
+
+import games.rolePlayingGames.shadowrun.tracking.ShadowrunTrackingUtil;
+import games.rolePlayingGames.shadowrun.tracking.notes.ability.AbstractAbility;
 
 import java.awt.GridLayout;
 
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -67,13 +69,11 @@ public final class Spell extends AbstractAbility {
 	public void edit() {
 		final JPanel editPanel = new JPanel(new GridLayout(0, 1));
 
-		final JTextField fullDescField = new JTextField(getFullDesc());
-		editPanel.add(new JLabel("Full Desc: "));
-		editPanel.add(fullDescField);
+		final JTextField fullDescField = ShadowrunTrackingUtil.addStringField(
+				editPanel, "Full Desc", getFullDesc());
 
-		final JTextField briefDescField = new JTextField(getBriefDesc());
-		editPanel.add(new JLabel("Brief Desc: "));
-		editPanel.add(briefDescField);
+		final JTextField briefDescField = ShadowrunTrackingUtil.addStringField(
+				editPanel, "Brief Desc", getBriefDesc());
 
 		final int result = JOptionPane.showConfirmDialog(null, editPanel,
 				"Edit this spell", JOptionPane.OK_CANCEL_OPTION,

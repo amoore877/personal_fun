@@ -1,16 +1,16 @@
-package games.rolePlayingGames.shadowrun.tracking.notes.status;
+package games.rolePlayingGames.shadowrun.tracking.notes.impl;
 
+import games.rolePlayingGames.shadowrun.tracking.ShadowrunTrackingUtil;
+import games.rolePlayingGames.shadowrun.tracking.notes.status.IShadowrunStatusEffectNote;
+import games.rolePlayingGames.shadowrun.tracking.notes.status.StatusEffectType;
 import games.rolePlayingGames.tracking.note.AbstractNote;
 
 import java.awt.GridLayout;
-import java.awt.event.KeyEvent;
 
-import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 /**
@@ -87,44 +87,22 @@ public final class StatusEffectNote extends AbstractNote implements
 	public void edit() {
 		final JPanel editPanel = new JPanel(new GridLayout(0, 1));
 
-		final JTextField fullDescriptionField = new JTextField(getFullDesc());
-		editPanel.add(new JLabel("Full Description: "));
-		editPanel.add(fullDescriptionField);
+		final JTextField fullDescriptionField = ShadowrunTrackingUtil
+				.addStringField(editPanel, "Full Desc", getFullDesc());
 
-		final JTextField briefDescriptionField = new JTextField(getBriefDesc());
-		editPanel.add(new JLabel("Brief Description: "));
-		editPanel.add(briefDescriptionField);
+		final JTextField briefDescriptionField = ShadowrunTrackingUtil
+				.addStringField(editPanel, "Brief Desc", getBriefDesc());
 
 		final JCheckBox combatStatusEffectBox = new JCheckBox(
 				"Combat Status Effect: ", isCombatStatusEffect());
 		editPanel.add(combatStatusEffectBox);
 
-		final JPanel statusEffectTypePanel = new JPanel(new GridLayout(1, 0));
-		editPanel.add(new JLabel("Status Effect type:"));
-		final JRadioButton positiveButton = new JRadioButton("Positive");
-		positiveButton.setMnemonic(KeyEvent.VK_P);
-		final JRadioButton negativeButton = new JRadioButton("Negative");
-		negativeButton.setMnemonic(KeyEvent.VK_N);
-		final JRadioButton neutralButton = new JRadioButton("Neutral");
-		neutralButton.setMnemonic(KeyEvent.VK_U);
-		final ButtonGroup qualityTypeButtonGroup = new ButtonGroup();
-		qualityTypeButtonGroup.add(positiveButton);
-		qualityTypeButtonGroup.add(negativeButton);
-		qualityTypeButtonGroup.add(neutralButton);
-		if (StatusEffectType.POSITIVE.equals(getStatusEffectType())) {
-			positiveButton.setSelected(true);
-		} else if (StatusEffectType.NEGATIVE.equals(getStatusEffectType())) {
-			negativeButton.setSelected(true);
-		} else {
-			neutralButton.setSelected(true);
-		}
-		statusEffectTypePanel.add(positiveButton);
-		statusEffectTypePanel.add(negativeButton);
-		statusEffectTypePanel.add(neutralButton);
-		editPanel.add(statusEffectTypePanel);
+		final JComboBox<StatusEffectType> statusEffectTypeBox = ShadowrunTrackingUtil
+				.addEnumComboBox(editPanel, "Type", StatusEffectType.values(),
+						getStatusEffectType());
 
 		final int result = JOptionPane.showConfirmDialog(null, editPanel,
-				"Edit this note", JOptionPane.OK_CANCEL_OPTION,
+				"Edit this status effect", JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
@@ -154,12 +132,10 @@ public final class StatusEffectNote extends AbstractNote implements
 						+ isCombatStatusEffect() + "]");
 			}
 
-			StatusEffectType newStatusEffectType;
-			if (positiveButton.isSelected()) {
-				newStatusEffectType = StatusEffectType.POSITIVE;
-			} else if (negativeButton.isSelected()) {
-				newStatusEffectType = StatusEffectType.NEGATIVE;
-			} else {
+			StatusEffectType newStatusEffectType = (StatusEffectType) statusEffectTypeBox
+					.getSelectedItem();
+
+			if (newStatusEffectType == null) {
 				newStatusEffectType = StatusEffectType.NEUTRAL;
 			}
 
