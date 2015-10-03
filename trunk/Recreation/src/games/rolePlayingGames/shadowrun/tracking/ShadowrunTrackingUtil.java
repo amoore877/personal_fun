@@ -71,7 +71,7 @@ public class ShadowrunTrackingUtil {
 
 	/**
 	 * Construct a text field and label for some int value and insert into the
-	 * panel.
+	 * panel. Assume minimum of 0 and no maximum.
 	 * 
 	 * @param iParentPanel
 	 *            parent panel for new components.
@@ -83,8 +83,52 @@ public class ShadowrunTrackingUtil {
 	 */
 	public static JFormattedTextField addIntField(final JPanel iParentPanel,
 			final String iValueName, final int iValue) {
-		final JFormattedTextField oField = new JFormattedTextField(
-				new NumberFormatter(NumberFormat.getIntegerInstance()));
+		return addIntField(iParentPanel, iValueName, iValue, 0);
+	}
+
+	/**
+	 * Construct a text field and label for some int value and insert into the
+	 * panel. Assume no maximum.
+	 * 
+	 * @param iParentPanel
+	 *            parent panel for new components.
+	 * @param iValueName
+	 *            name of the int value.
+	 * @param iValue
+	 *            initial value.
+	 * @param iMinimum
+	 *            minimum value.
+	 * @return text field for the value that is part of the panel.
+	 */
+	public static JFormattedTextField addIntField(final JPanel iParentPanel,
+			final String iValueName, final int iValue, final Integer iMinimum) {
+		return addIntField(iParentPanel, iValueName, iValue, iMinimum, null);
+	}
+
+	/**
+	 * Construct a text field and label for some int value and insert into the
+	 * panel.
+	 * 
+	 * @param iParentPanel
+	 *            parent panel for new components.
+	 * @param iValueName
+	 *            name of the int value.
+	 * @param iValue
+	 *            initial value.
+	 * @param iMinimum
+	 *            minimum value.
+	 * @param iMaximum
+	 *            maximum value.
+	 * @return text field for the value that is part of the panel.
+	 */
+	public static JFormattedTextField addIntField(final JPanel iParentPanel,
+			final String iValueName, final int iValue, final Integer iMinimum,
+			final Integer iMaximum) {
+		final NumberFormatter numberFormatter = new NumberFormatter(
+				NumberFormat.getIntegerInstance());
+		numberFormatter.setMinimum(iMinimum);
+		numberFormatter.setMaximum(iMaximum);
+		final JFormattedTextField oField = new JFormattedTextField();
 		oField.setValue(iValue);
 
 		addComponentAndLabel(iParentPanel, oField, new JLabel(iValueName + ":"));
@@ -157,8 +201,8 @@ public class ShadowrunTrackingUtil {
 		final JComboBox<E> oEnumBox = new JComboBox<E>(iAllValues);
 		oEnumBox.setSelectedItem(iCurrentValue);
 
-		addComponentAndLabel(iParentPanel, oEnumBox,
-				new JLabel(iValueName + ":"));
+		addComponentAndLabel(iParentPanel, oEnumBox, new JLabel(iValueName
+				+ ":"));
 
 		return oEnumBox;
 	}

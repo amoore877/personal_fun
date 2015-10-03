@@ -66,7 +66,7 @@ public final class Skill extends AbstractAbility {
 				editPanel, "Name", getFullDesc());
 
 		final JFormattedTextField levelField = ShadowrunTrackingUtil
-				.addIntField(editPanel, "Level", getLevel());
+				.addIntField(editPanel, "Level", getLevel(), 0, 13);
 
 		final int result = JOptionPane.showConfirmDialog(null, editPanel,
 				"Edit this skill", JOptionPane.OK_CANCEL_OPTION,

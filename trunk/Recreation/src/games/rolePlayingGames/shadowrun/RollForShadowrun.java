@@ -1,11 +1,11 @@
 package games.rolePlayingGames.shadowrun;
 
+import games.rolePlayingGames.shadowrun.dice.ShadowrunRollResult;
 import games.rolePlayingGames.shadowrun.dice.ShadowrunRoller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
 
 /**
  * Shadowrun dice rolling program.
@@ -60,42 +60,21 @@ public class RollForShadowrun {
 						edgeUsed = false;
 					}
 
-					final List<Integer> rolledResults = ShadowrunRoller
-							.rollDice(diceNum, edgeUsed);
+					final ShadowrunRollResult rollResult = new ShadowrunRollResult(
+							ShadowrunRoller.rollDice(diceNum, edgeUsed));
 
-					int sixes = 0;
-					int fives = 0;
-					int ones = 0;
-					// need at least half dice as 1 to be a glitch
-					final int glitchMinimum = (rolledResults.size() / 2)
-							+ (rolledResults.size() % 2);
-					for (final Integer rolledResult : rolledResults) {
-						switch (rolledResult) {
-						case 6:
-							sixes++;
-							break;
-						case 5:
-							fives++;
-							break;
-						case 1:
-							ones++;
-							break;
-						}
-					}
-
-					final int hits = sixes + fives;
+					final int hits = rollResult.getHits();
 
 					System.out.println("\n\n\n\n\n\n" + "Result ["
-							+ rolledResults.toString() + "] \n"
-							+ "Dice Rolled: [" + rolledResults.size() + "] \n"
-							+ "Hits: [" + hits + "] \n" + "Ones: [" + ones
-							+ "], Minimum to glitch: [" + glitchMinimum + "]");
-					if (ones >= glitchMinimum) {
-						if (hits == 0) {
-							System.out.println("Critical glitch!");
-						} else {
-							System.out.println("Glitch!");
-						}
+							+ rollResult.toString() + "] \n" + "Dice Rolled: ["
+							+ rollResult.getTotalDice() + "] \n" + "Hits: ["
+							+ hits + "] \n" + "Ones: [" + rollResult.getOnes()
+							+ "], Minimum to glitch: ["
+							+ rollResult.getGlitchMinimum() + "]");
+					if (rollResult.isCriticalGlitch()) {
+						System.out.println("Critical glitch!");
+					} else if (rollResult.isGlitch()) {
+						System.out.println("Glitch!");
 					}
 
 					System.out.println("\n\n\n\n\n\n");
