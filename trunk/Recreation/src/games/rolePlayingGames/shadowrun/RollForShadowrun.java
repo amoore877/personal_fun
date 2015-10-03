@@ -66,9 +66,9 @@ public class RollForShadowrun {
 					int sixes = 0;
 					int fives = 0;
 					int ones = 0;
-					// need at least 1 die to ever be a glitch
-					final int glitchMinimum = Math.max(1,
-							rolledResults.size() / 2);
+					// need at least half dice as 1 to be a glitch
+					final int glitchMinimum = (rolledResults.size() / 2)
+							+ (rolledResults.size() % 2);
 					for (final Integer rolledResult : rolledResults) {
 						switch (rolledResult) {
 						case 6:

@@ -5,7 +5,7 @@ package games.rolePlayingGames.shadowrun.util;
  * 
  * @author Andrew
  */
-public enum FiringModes {
+public enum FiringMode {
 
 	/**
 	 * Single shot. Must use simple action to rechamber. Can only fire single

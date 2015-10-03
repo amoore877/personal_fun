@@ -1,9 +1,8 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.impl;
 
 import games.rolePlayingGames.shadowrun.tracking.ShadowrunTrackingUtil;
-import games.rolePlayingGames.shadowrun.tracking.notes.impl.ItemPhysicalDamageNote;
-import games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment.AbstractShadowrunEquipment;
-import games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment.IShadowrunArmor;
+import games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment.weapon.AbstractMeleeWeapon;
+import games.rolePlayingGames.shadowrun.util.DamageElement;
 
 import java.awt.GridLayout;
 
@@ -12,42 +11,62 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
- * Shadowrun Armor. Has armor value and description. Body is assumed to be same
- * as armor, following rules of structures.
+ * Non-charge melee weapon.
  * 
  * @author Andrew
- *
  */
-public final class Armor extends AbstractShadowrunEquipment implements
-		IShadowrunArmor {
+public final class MeleeWeapon extends AbstractMeleeWeapon {
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param iName
-	 *            name of item.
-	 * @param iArmor
-	 *            armor attribute.
+	 *            name of the weapon.
 	 * @param iBenefits
-	 *            description of any other benefits beyond being armor.
+	 *            benefits of weapon, beyond being a weapon.
+	 * @param iAccuracy
+	 *            accuracy.
+	 * @param iDamageValue
+	 *            damage value.
+	 * @param iArmorPiercing
+	 *            armor piercing.
+	 * @param iDamageElement
+	 *            damage element.
+	 * @param iReach
+	 *            reach of the weapon.
 	 */
-	public Armor(final String iName, final int iArmor, final String iBenefits) {
-		super(iName, iArmor, iArmor, iBenefits);
+	public MeleeWeapon(final String iName, final String iBenefits,
+			final int iAccuracy, final int iDamageValue,
+			final int iArmorPiercing, final DamageElement iDamageElement,
+			final int iReach) {
+		super(iName, iBenefits, iAccuracy, iDamageValue, iArmorPiercing,
+				iDamageElement, iReach);
+	}
+
+	@Override
+	public void use() {
+		// TODO unimplemented?
 	}
 
 	@Override
 	public String toFullString() {
 		final StringBuilder oResult = new StringBuilder(getName());
 
-		oResult.append(": Max Health-" + getMaximumHealth());
+		oResult.append(" Acc:" + getAccuracy());
 
-		for (final ItemPhysicalDamageNote damageNote : getDamageNotes()) {
-			oResult.append(", Damage-" + damageNote.toString());
+		oResult.append(" DV:" + getDamageValue());
+
+		oResult.append(" AP:" + getArmorPiercing());
+
+		oResult.append(" Reach:" + getReach());
+
+		if (!getBenefits().isEmpty()) {
+			oResult.append(" Extra: " + getBenefits());
 		}
 
-		oResult.append(" Body: " + getBody() + " Armor: " + getArmor());
-
-		oResult.append(" Benefits: " + getBenefits());
+		if (!getDamageElement().equals(DamageElement.REGULAR)) {
+			oResult.append(" Element:" + getDamageElement().toString());
+		}
 
 		return oResult.toString();
 	}
@@ -68,7 +87,7 @@ public final class Armor extends AbstractShadowrunEquipment implements
 		ShadowrunTrackingUtil.addDamageButtons(editPanel, this);
 
 		final int result = JOptionPane.showConfirmDialog(null, editPanel,
-				"Edit this armor", JOptionPane.OK_CANCEL_OPTION,
+				"Edit this weapon", JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
@@ -99,13 +118,25 @@ public final class Armor extends AbstractShadowrunEquipment implements
 
 	@Override
 	public String toString() {
-		final StringBuilder oResult = new StringBuilder(getName() + ": "
-				+ getArmor());
+		final StringBuilder oResult = new StringBuilder(getName());
 
 		if (getTotalDamage() != 0) {
 			oResult.append(" DAMAGED");
+		} else {
+			oResult.append(" Acc:" + getAccuracy());
+
+			oResult.append(" DV:" + getDamageValue());
+
+			oResult.append(" AP:" + getArmorPiercing());
+
+			oResult.append(" Reach:" + getReach());
+
+			if (!getDamageElement().equals(DamageElement.REGULAR)) {
+				oResult.append(" Element:" + getDamageElement().toString());
+			}
 		}
 
 		return oResult.toString();
 	}
+
 }

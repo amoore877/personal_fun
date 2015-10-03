@@ -1,5 +1,6 @@
-package games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment;
+package games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment.weapon;
 
+import games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment.IShadowrunEquipment;
 import games.rolePlayingGames.shadowrun.util.DamageElement;
 import games.rolePlayingGames.tracking.trackable.item.IWeapon;
 

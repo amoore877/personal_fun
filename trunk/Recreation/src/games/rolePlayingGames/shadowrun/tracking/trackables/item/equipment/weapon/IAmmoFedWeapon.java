@@ -1,4 +1,4 @@
-package games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment;
+package games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment.weapon;
 
 /**
  * A weapon that is itself consumable, has charge, or uses bullets, etc.

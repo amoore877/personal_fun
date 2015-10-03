@@ -1,37 +1,38 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.impl;
 
 import games.rolePlayingGames.shadowrun.tracking.ShadowrunTrackingUtil;
-import games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment.weapon.AbstractAmmoFedWeapon;
-import games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment.weapon.IRangedWeapon;
+import games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment.weapon.AbstractMeleeWeapon;
+import games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment.weapon.IAmmoFedWeapon;
 import games.rolePlayingGames.shadowrun.util.DamageElement;
-import games.rolePlayingGames.shadowrun.util.RangedWeaponType;
 
 import java.awt.GridLayout;
 import java.text.ParseException;
-import java.util.Set;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-/**
- * A thrown/slow-moving projectile weapon in Shadowrun. It is assumed that clip
- * capacity is 1.
- * 
- * @author Andrew
- *
- */
-public final class ProjectileWeapon extends AbstractAmmoFedWeapon implements
-		IRangedWeapon {
+public final class ChargedMeleeWeapon extends AbstractMeleeWeapon implements
+		IAmmoFedWeapon {
 
 	/**
-	 * Ranged weapon types for this weapon.
+	 * Capacity of clip.
 	 */
-	private final Set<RangedWeaponType> myRangedWeaponTypes;
+	private final int myClipCapacity;
 
 	/**
-	 * Constructor. Clip capacity assumed to be 1.
+	 * Ammo in current clip.
+	 */
+	private int myAmmoInClip;
+
+	/**
+	 * Spare clips.
+	 */
+	private int mySpareClips;
+
+	/**
+	 * Constructor.
 	 * 
 	 * @param iName
 	 *            name of the weapon.
@@ -45,19 +46,69 @@ public final class ProjectileWeapon extends AbstractAmmoFedWeapon implements
 	 *            armor piercing.
 	 * @param iDamageElement
 	 *            damage element.
+	 * @param iReach
+	 *            reach of the weapon.
+	 * @param iClipCapacity
+	 *            clip capacity.
 	 * @param iSpareClips
 	 *            spare clips available.
-	 * @param iRangedWeaponTypes
-	 *            ranged weapon types for this weapon.
 	 */
-	public ProjectileWeapon(final String iName, final String iBenefits,
+	public ChargedMeleeWeapon(final String iName, final String iBenefits,
 			final int iAccuracy, final int iDamageValue,
 			final int iArmorPiercing, final DamageElement iDamageElement,
-			final int iSpareClips,
-			final Set<RangedWeaponType> iRangedWeaponTypes) {
+			final int iReach, final int iClipCapacity, final int iSpareClips) {
 		super(iName, iBenefits, iAccuracy, iDamageValue, iArmorPiercing,
-				iDamageElement, 1, iSpareClips);
-		myRangedWeaponTypes = iRangedWeaponTypes;
+				iDamageElement, iReach);
+		myClipCapacity = iClipCapacity;
+		myAmmoInClip = iClipCapacity;
+		mySpareClips = iSpareClips;
+	}
+
+	@Override
+	public final int getClipCapacity() {
+		return myClipCapacity;
+	}
+
+	@Override
+	public final int getAmmoInClip() {
+		return myAmmoInClip;
+	}
+
+	/**
+	 * Set ammo in clip.
+	 * 
+	 * @param iAmmoInClip
+	 *            new ammo in clip.
+	 */
+	private void setAmmoInClip(final int iAmmoInClip) {
+		myAmmoInClip = iAmmoInClip;
+	}
+
+	@Override
+	public final int getSpareClips() {
+		return mySpareClips;
+	}
+
+	/**
+	 * Set spare clips.
+	 * 
+	 * @param iSpareClips
+	 *            new spare clips.
+	 */
+	private void setSpareClips(final int iSpareClips) {
+		mySpareClips = iSpareClips;
+	}
+
+	@Override
+	public final void reload() {
+		mySpareClips--;
+		myAmmoInClip = myClipCapacity;
+	}
+
+	@Override
+	public void use() {
+		// TODO more?
+		setAmmoInClip(getAmmoInClip() - 1);
 	}
 
 	@Override
@@ -69,6 +120,8 @@ public final class ProjectileWeapon extends AbstractAmmoFedWeapon implements
 		oResult.append(" DV:" + getDamageValue());
 
 		oResult.append(" AP:" + getArmorPiercing());
+
+		oResult.append(" Reach:" + getReach());
 
 		if (!getBenefits().isEmpty()) {
 			oResult.append(" Extra: " + getBenefits());
@@ -170,10 +223,7 @@ public final class ProjectileWeapon extends AbstractAmmoFedWeapon implements
 	public String toString() {
 		final StringBuilder oResult = new StringBuilder(getName());
 
-		if (getAmmoInClip() == 0 && getSpareClips() == 0) {
-			// no ammo left
-			oResult.append(" EMPTY");
-		} else if (getTotalDamage() != 0) {
+		if (getTotalDamage() != 0) {
 			oResult.append(" DAMAGED");
 		} else {
 			oResult.append(" Acc:" + getAccuracy());
@@ -182,26 +232,19 @@ public final class ProjectileWeapon extends AbstractAmmoFedWeapon implements
 
 			oResult.append(" AP:" + getArmorPiercing());
 
+			oResult.append(" Reach:" + getReach());
+
 			if (!getDamageElement().equals(DamageElement.REGULAR)) {
 				oResult.append(" Element:" + getDamageElement().toString());
+			}
+
+			if (getAmmoInClip() == 0 && getSpareClips() == 0) {
+				// no ammo left
+				oResult.append(" EMPTY");
 			}
 		}
 
 		return oResult.toString();
 	}
 
-	/**
-	 * Reduce ammo in clip by 1. Should ensure that ammo is available
-	 * beforehand.
-	 */
-	@Override
-	public void use() {
-		// TODO more?
-		setAmmoInClip(getAmmoInClip() - 1);
-	}
-
-	@Override
-	public Set<RangedWeaponType> getRangedWeaponTypes() {
-		return myRangedWeaponTypes;
-	}
 }

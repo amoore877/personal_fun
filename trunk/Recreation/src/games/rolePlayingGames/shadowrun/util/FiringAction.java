@@ -6,7 +6,7 @@ package games.rolePlayingGames.shadowrun.util;
  * @author Andrew
  *
  */
-public enum FiringActions {
+public enum FiringAction {
 
 	/**
 	 * Single shot. Simple action. Must be SS weapon. Must rechamber afterwards.
@@ -39,7 +39,7 @@ public enum FiringActions {
 	FA_SIMPLE,
 	/**
 	 * Complex full auto. Complex action. Must be FA weapon. Fires 10 rounds for
-	 * -5 dodge.
+	 * -9 dodge.
 	 */
 	FA_COMPLEX,
 	/**
