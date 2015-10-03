@@ -1,5 +1,7 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.impl;
 
+import games.rolePlayingGames.shadowrun.dice.ShadowrunRollResult;
+import games.rolePlayingGames.shadowrun.dice.ShadowrunRoller;
 import games.rolePlayingGames.shadowrun.tracking.ShadowrunTrackingUtil;
 import games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment.weapon.AbstractAmmoFedWeapon;
 import games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment.weapon.IFirearm;
@@ -23,6 +25,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -274,26 +277,117 @@ public final class FirearmWeapon extends AbstractAmmoFedWeapon implements
 					accuracyPenalty = 0;
 				}
 
-				// subtract bullets from ammo in clip
-				setAmmoInClip(getAmmoInClip() - realBulletUsage);
-				/**
-				 * display, based on options, Acc, DV, AP, Attack penalty, Dodge
-				 * penalty, Benefits
-				 */
-				// TODO
-				// bring up rolling option, with note on attack penalty
-
-				/**
-				 * display roll results, in non-modal dialog, true roll (limit
-				 * on Acc), DV, AP, Element, Dodge penalty, benefits
-				 */
-				// TODO
+				displayAttackPanel(rangePenalty, realBulletUsage, realRecoil,
+						damagePenalty, accuracyPenalty, realDodgePenalty);
 
 			} else if (result == JOptionPane.CANCEL_OPTION) {
 				System.out.println("Cancel selected.");
 			} else {
 				System.err.println("Unknown option selected.");
 			}
+		}
+	}
+
+	/**
+	 * Show attack panel.
+	 * 
+	 * @param iRangePenalty
+	 *            range penalty.
+	 * @param iBulletUsage
+	 *            bullet usage.
+	 * @param iRecoil
+	 *            recoil.
+	 * @param iDamagePenalty
+	 *            damage penalty.
+	 * @param iAccuracyPenalty
+	 *            accuracy penalty.
+	 * @param iDodgePenalty
+	 *            dodge penalty.
+	 */
+	private void displayAttackPanel(final int iRangePenalty,
+			final int iBulletUsage, final int iRecoil,
+			final int iDamagePenalty, final int iAccuracyPenalty,
+			final int iDodgePenalty) {
+		// subtract bullets from ammo in clip
+		setAmmoInClip(getAmmoInClip() - iBulletUsage);
+		/**
+		 * display, based on options, Acc, DV, AP, Attack penalty, Dodge
+		 * penalty, Benefits
+		 */
+		final int realAccuracy = getAccuracy() + iAccuracyPenalty;
+		final int realDamage = getDamageValue() + iDamagePenalty;
+		final int armorPiercing = getArmorPiercing();
+		final int attackPenalty = iRangePenalty + iRecoil;
+		// bring up rolling option
+		final JPanel attackPanel = new JPanel(new GridLayout(0, 1));
+
+		final StringBuilder attackString = new StringBuilder();
+		attackString.append("<html>");
+		attackString.append("Acc: " + realAccuracy + "<br>");
+		attackString.append("DV: " + realDamage + "<br>");
+		attackString.append("AP: " + armorPiercing + "<br>");
+		attackString.append("Attack penalty: " + attackPenalty + "<br>");
+		attackString.append("Dodge penalty: " + iDodgePenalty + "<br>");
+		attackString.append("Benefits: " + getBenefits());
+		attackString.append("</html>");
+
+		attackPanel.add(new JLabel(attackString.toString()));
+
+		final JFormattedTextField diceToRollField = ShadowrunTrackingUtil
+				.addIntField(attackPanel, "Dice to roll:", 1, 1);
+
+		final int result = JOptionPane.showConfirmDialog(null, attackPanel,
+				"Firing " + getName(), JOptionPane.OK_CANCEL_OPTION,
+				JOptionPane.PLAIN_MESSAGE);
+
+		if (result == JOptionPane.OK_OPTION) {
+			final int numOfDice = Integer.parseInt(diceToRollField.getValue()
+					.toString());
+
+			final ShadowrunRollResult rollResult = new ShadowrunRollResult(
+					ShadowrunRoller.rollDice(numOfDice, false));
+			/**
+			 * display roll results, in non-modal dialog, true roll (limit on
+			 * Acc), DV, AP, Element, Dodge penalty, benefits
+			 */
+			final JPanel attackResultPanel = new JPanel(new GridLayout(0, 1));
+
+			final StringBuilder attackResultString = new StringBuilder();
+			attackResultString.append("<html>");
+			if (rollResult.isCriticalGlitch()) {
+				attackResultString.append("CRITICAL GLITCH!");
+			} else {
+				if (rollResult.isGlitch()) {
+					attackResultString.append("GLITCH");
+				}
+				attackResultString
+						.append("Hits: "
+								+ Math.min(realAccuracy, rollResult.getHits())
+								+ "<br>");
+				attackResultString.append("DV: " + realDamage + "<br>");
+				attackResultString.append("AP: " + armorPiercing + "<br>");
+				if (!DamageElement.REGULAR.equals(getDamageElement())) {
+					attackResultString.append("Element: " + getDamageElement());
+				}
+				attackResultString.append("Dodge penalty: " + iDodgePenalty
+						+ "<br>");
+				attackResultString.append("Benefits: " + getBenefits());
+			}
+			attackResultString.append("</html>");
+
+			attackResultPanel.add(new JLabel(attackResultString.toString()));
+
+			final JOptionPane attackResultPane = new JOptionPane(
+					attackResultPanel, JOptionPane.INFORMATION_MESSAGE,
+					JOptionPane.OK_CANCEL_OPTION);
+			final JDialog attackResultDialog = attackResultPane.createDialog(
+					null, "Results for firing " + getName());
+			attackResultDialog.setModal(false);
+			attackResultDialog.setVisible(true);
+		} else if (result == JOptionPane.CANCEL_OPTION) {
+			System.out.println("Cancel selected.");
+		} else {
+			System.err.println("Unknown option selected.");
 		}
 	}
 
@@ -335,7 +429,8 @@ public final class FirearmWeapon extends AbstractAmmoFedWeapon implements
 
 		// ammo in clip
 		final JFormattedTextField ammoInClipField = ShadowrunTrackingUtil
-				.addIntField(editPanel, "Ammo In Clip", getAmmoInClip());
+				.addIntField(editPanel, "Ammo In Clip", getAmmoInClip(), 0,
+						getClipCapacity());
 
 		// spare clips
 		final JFormattedTextField spareClipsField = ShadowrunTrackingUtil
