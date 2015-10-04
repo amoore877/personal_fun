@@ -1,35 +1,21 @@
-package games.rolePlayingGames.shadowrun.tracking.trackables.impl;
+package games.rolePlayingGames.shadowrun.tracking.trackables.impl.equipment;
 
 import games.rolePlayingGames.shadowrun.tracking.ShadowrunTrackingUtil;
 import games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment.weapon.AbstractMeleeWeapon;
-import games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment.weapon.IAmmoFedWeapon;
 import games.rolePlayingGames.shadowrun.util.DamageElement;
 
 import java.awt.GridLayout;
-import java.text.ParseException;
 
-import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public final class ChargedMeleeWeapon extends AbstractMeleeWeapon implements
-		IAmmoFedWeapon {
-
-	/**
-	 * Capacity of clip.
-	 */
-	private final int myClipCapacity;
-
-	/**
-	 * Ammo in current clip.
-	 */
-	private int myAmmoInClip;
-
-	/**
-	 * Spare clips.
-	 */
-	private int mySpareClips;
+/**
+ * Non-charge melee weapon.
+ * 
+ * @author Andrew
+ */
+public final class MeleeWeapon extends AbstractMeleeWeapon {
 
 	/**
 	 * Constructor.
@@ -48,67 +34,18 @@ public final class ChargedMeleeWeapon extends AbstractMeleeWeapon implements
 	 *            damage element.
 	 * @param iReach
 	 *            reach of the weapon.
-	 * @param iClipCapacity
-	 *            clip capacity.
-	 * @param iSpareClips
-	 *            spare clips available.
 	 */
-	public ChargedMeleeWeapon(final String iName, final String iBenefits,
+	public MeleeWeapon(final String iName, final String iBenefits,
 			final int iAccuracy, final int iDamageValue,
 			final int iArmorPiercing, final DamageElement iDamageElement,
-			final int iReach, final int iClipCapacity, final int iSpareClips) {
+			final int iReach) {
 		super(iName, iBenefits, iAccuracy, iDamageValue, iArmorPiercing,
 				iDamageElement, iReach);
-		myClipCapacity = iClipCapacity;
-		myAmmoInClip = iClipCapacity;
-		mySpareClips = iSpareClips;
-	}
-
-	@Override
-	public final int getClipCapacity() {
-		return myClipCapacity;
-	}
-
-	@Override
-	public final int getAmmoInClip() {
-		return myAmmoInClip;
-	}
-
-	/**
-	 * Set ammo in clip.
-	 * 
-	 * @param iAmmoInClip
-	 *            new ammo in clip.
-	 */
-	private void setAmmoInClip(final int iAmmoInClip) {
-		myAmmoInClip = iAmmoInClip;
-	}
-
-	@Override
-	public final int getSpareClips() {
-		return mySpareClips;
-	}
-
-	/**
-	 * Set spare clips.
-	 * 
-	 * @param iSpareClips
-	 *            new spare clips.
-	 */
-	private void setSpareClips(final int iSpareClips) {
-		mySpareClips = iSpareClips;
-	}
-
-	@Override
-	public final void reload() {
-		mySpareClips--;
-		myAmmoInClip = myClipCapacity;
 	}
 
 	@Override
 	public void use() {
-		// TODO more?
-		setAmmoInClip(getAmmoInClip() - 1);
+		// TODO unimplemented?
 	}
 
 	@Override
@@ -142,14 +79,6 @@ public final class ChargedMeleeWeapon extends AbstractMeleeWeapon implements
 		final JTextField nameField = ShadowrunTrackingUtil.addStringField(
 				editPanel, "Name", getName());
 
-		// ammo in clip
-		final JFormattedTextField ammoInClipField = ShadowrunTrackingUtil
-				.addIntField(editPanel, "Ammo In Clip", getAmmoInClip());
-
-		// spare clips
-		final JFormattedTextField spareClipsField = ShadowrunTrackingUtil
-				.addIntField(editPanel, "Spare Clips", getSpareClips());
-
 		// benefits
 		final JTextField benefitsField = ShadowrunTrackingUtil.addStringField(
 				editPanel, "Benefits", getBenefits());
@@ -169,38 +98,6 @@ public final class ChargedMeleeWeapon extends AbstractMeleeWeapon implements
 				setName(newName);
 			} else {
 				System.out.println("Name unchanged: [" + getName() + "]");
-			}
-
-			// ammo in clip
-			try {
-				ammoInClipField.commitEdit();
-			} catch (final ParseException iException) {
-				System.err.println(iException.getMessage());
-			}
-			final int newAmmoInClip = Integer.parseInt(ammoInClipField
-					.getValue().toString());
-
-			if (newAmmoInClip != getAmmoInClip()) {
-				setAmmoInClip(newAmmoInClip);
-			} else {
-				System.out.println("Ammo in Clip unchanged: ["
-						+ getAmmoInClip() + "]");
-			}
-
-			// spare clips
-			try {
-				spareClipsField.commitEdit();
-			} catch (final ParseException iException) {
-				System.err.println(iException.getMessage());
-			}
-			final int newSpareClips = Integer.parseInt(spareClipsField
-					.getValue().toString());
-
-			if (newSpareClips != getSpareClips()) {
-				setSpareClips(newSpareClips);
-			} else {
-				System.out.println("Spare Clips unchanged: [" + getSpareClips()
-						+ "]");
 			}
 
 			// benefits
@@ -236,11 +133,6 @@ public final class ChargedMeleeWeapon extends AbstractMeleeWeapon implements
 
 			if (!getDamageElement().equals(DamageElement.REGULAR)) {
 				oResult.append(" Element:" + getDamageElement().toString());
-			}
-
-			if (getAmmoInClip() == 0 && getSpareClips() == 0) {
-				// no ammo left
-				oResult.append(" EMPTY");
 			}
 		}
 

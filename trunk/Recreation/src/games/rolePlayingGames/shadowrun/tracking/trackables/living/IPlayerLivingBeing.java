@@ -10,4 +10,19 @@ import games.rolePlayingGames.shadowrun.tracking.trackables.IPlayer;
  */
 public interface IPlayerLivingBeing extends IPlayer {
 
+	/**
+	 * @return number of dice to con with.
+	 */
+	int getCon();
+
+	/**
+	 * @return number of dice to resist con with.
+	 */
+	int getConResist();
+
+	/**
+	 * @return physical limit. If damage taken from one attack exceeds this (or
+	 *         damage is at least 10), then character is knocked down.
+	 */
+	int getPhysicalLimit();
 }

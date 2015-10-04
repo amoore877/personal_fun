@@ -1,4 +1,4 @@
-package games.rolePlayingGames.shadowrun.tracking.trackables.impl;
+package games.rolePlayingGames.shadowrun.tracking.trackables.impl.equipment;
 
 import games.rolePlayingGames.shadowrun.dice.ShadowrunRollResult;
 import games.rolePlayingGames.shadowrun.dice.ShadowrunRoller;
