@@ -1,4 +1,4 @@
-package games.rolePlayingGames.shadowrun.tracking.trackables.impl;
+package games.rolePlayingGames.shadowrun.tracking.trackables.impl.equipment;
 
 import games.rolePlayingGames.shadowrun.tracking.ShadowrunTrackingUtil;
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.ItemPhysicalDamageNote;
