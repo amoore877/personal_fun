@@ -111,6 +111,19 @@ public final class ShadowrunRollResult {
 	}
 
 	/**
+	 * @return sum of the rolls.
+	 */
+	public int getSum() {
+		int oSum = 0;
+
+		for (final int roll : rolledDice) {
+			oSum += roll;
+		}
+
+		return oSum;
+	}
+
+	/**
 	 * @return string list of rolled dice.
 	 */
 	@Override
