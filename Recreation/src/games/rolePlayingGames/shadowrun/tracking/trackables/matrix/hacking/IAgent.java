@@ -1,4 +1,4 @@
-package games.rolePlayingGames.shadowrun.tracking.trackables.matrix;
+package games.rolePlayingGames.shadowrun.tracking.trackables.matrix.hacking;
 
 /**
  * An agent/program/sprite/host. Some hacking-capable being that exists solely

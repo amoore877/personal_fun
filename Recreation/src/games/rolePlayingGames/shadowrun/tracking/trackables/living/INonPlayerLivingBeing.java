@@ -1,13 +1,13 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.living;
 
-import games.rolePlayingGames.shadowrun.tracking.trackables.IAbleActor;
+import games.rolePlayingGames.shadowrun.tracking.trackables.INonPlayer;
 
 /**
  * A Shadowrun NPC living being. Need details.
  * 
  * @author Andrew
  */
-public interface INonPlayerLivingBeing extends IAbleActor {
+public interface INonPlayerLivingBeing extends INonPlayer {
 
 	/**
 	 * @return physical limit.
