@@ -1,6 +1,7 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.matrix.device;
 
 import games.rolePlayingGames.shadowrun.tracking.trackables.item.IShadowrunItem;
+import games.rolePlayingGames.shadowrun.tracking.trackables.matrix.IMatrixBeing;
 import games.rolePlayingGames.shadowrun.tracking.trackables.matrix.IMatrixDamageableTrackable;
 
 /**
@@ -9,6 +10,7 @@ import games.rolePlayingGames.shadowrun.tracking.trackables.matrix.IMatrixDamage
  * 
  * @author Andrew
  */
-public interface IDevice extends IShadowrunItem, IMatrixDamageableTrackable {
+public interface IDevice extends IShadowrunItem, IMatrixDamageableTrackable,
+		IMatrixBeing {
 
 }

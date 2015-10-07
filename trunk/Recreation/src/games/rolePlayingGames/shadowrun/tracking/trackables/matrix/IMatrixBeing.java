@@ -11,4 +11,8 @@ import games.rolePlayingGames.shadowrun.tracking.trackables.IShadowrunTrackable;
  */
 public interface IMatrixBeing extends IShadowrunTrackable {
 
+	/**
+	 * @return device/agent rating.
+	 */
+	int getRating();
 }

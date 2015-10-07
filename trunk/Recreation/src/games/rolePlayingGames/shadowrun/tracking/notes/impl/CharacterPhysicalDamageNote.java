@@ -212,70 +212,31 @@ public final class CharacterPhysicalDamageNote extends
 		// results
 		if (result == JOptionPane.OK_OPTION) {
 			// desc
-			final String newDesc = descriptionField.getText();
-
-			if (!newDesc.equals(getFullDesc())) {
-				setFullDesc(newDesc);
-			} else {
-				System.out.println("Desc unchanged: [" + getFullDesc() + "]");
-			}
+			ShadowrunTrackingUtil.examineChangedString(descriptionField,
+					"Desc", (s) -> setFullDesc(s), () -> getFullDesc());
 
 			// damage
-			try {
-				damageField.commitEdit();
-			} catch (final ParseException iException) {
-				System.err.println(iException.getMessage());
-			}
-			final int newDamage = Integer.parseInt(damageField.getValue()
-					.toString());
-
-			if (newDamage != getDamage()) {
-				setDamage(newDamage);
-			} else {
-				System.out.println("Damage unchanged: [" + getDamage() + "]");
-			}
+			ShadowrunTrackingUtil.examineChangedInt(damageField, "Damage",
+					(i) -> setDamage(i), () -> getDamage());
 
 			// healed
-			try {
-				healedField.commitEdit();
-			} catch (final ParseException iException) {
-				System.err.println(iException.getMessage());
-			}
-			final int newHealed = Integer.parseInt(healedField.getValue()
-					.toString());
-
-			if (newHealed != getHealed()) {
-				setHealed(newHealed);
-			} else {
-				System.out.println("Healed unchanged: [" + getHealed() + "]");
-			}
+			ShadowrunTrackingUtil.examineChangedInt(healedField, "Healed",
+					(i) -> setHealed(i), () -> getHealed());
 
 			// physically healed
-			final boolean newPhysHealed = physHealedBox.isSelected();
-			if (newPhysHealed != isPhysicallyHealed()) {
-				setPhysicallyHealed(newPhysHealed);
-			} else {
-				System.out.println("Physically Healed unchanged: ["
-						+ isPhysicallyHealed() + "]");
-			}
+			ShadowrunTrackingUtil.examineChangedBoolean(physHealedBox,
+					"Physically Healed", (b) -> setPhysicallyHealed(b),
+					() -> isPhysicallyHealed());
 
 			// magically healed
-			final boolean newMagHealed = magHealedBox.isSelected();
-			if (newMagHealed != isMagicallyHealed()) {
-				setMagicallyHealed(newMagHealed);
-			} else {
-				System.out.println("Magically Healed unchanged: ["
-						+ isMagicallyHealed() + "]");
-			}
+			ShadowrunTrackingUtil.examineChangedBoolean(magHealedBox,
+					"Magically Healed", (b) -> setMagicallyHealed(b),
+					() -> isMagicallyHealed());
 
 			// natural healing only
-			final boolean newNaturalHealOnly = naturalHealBox.isSelected();
-			if (newNaturalHealOnly != isNaturalOnly()) {
-				setNaturalOnly(newNaturalHealOnly);
-			} else {
-				System.out.println("Natural Heal only unchanged: ["
-						+ isNaturalOnly() + "]");
-			}
+			ShadowrunTrackingUtil.examineChangedBoolean(naturalHealBox,
+					"Natural Heal only", (b) -> setNaturalOnly(b),
+					() -> isNaturalOnly());
 
 		} else if (result == JOptionPane.CANCEL_OPTION) {
 			System.out.println("Cancel selected.");

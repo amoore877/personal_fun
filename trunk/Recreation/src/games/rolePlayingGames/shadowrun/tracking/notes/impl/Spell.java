@@ -80,23 +80,11 @@ public final class Spell extends AbstractAbility {
 				JOptionPane.PLAIN_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
-			final String newFullDesc = fullDescField.getText();
+			ShadowrunTrackingUtil.examineChangedString(fullDescField,
+					"Full Desc", (s) -> setFullDesc(s), () -> getFullDesc());
 
-			if (!newFullDesc.equals(getFullDesc())) {
-				setFullDesc(newFullDesc);
-			} else {
-				System.out.println("Full Desc unchanged: [" + getFullDesc()
-						+ "]");
-			}
-
-			final String newBriefDesc = briefDescField.getText();
-
-			if (!newBriefDesc.equals(getBriefDesc())) {
-				setBriefDesc(newBriefDesc);
-			} else {
-				System.out.println("Brief Desc unchanged: [" + getBriefDesc()
-						+ "]");
-			}
+			ShadowrunTrackingUtil.examineChangedString(briefDescField,
+					"Brief Desc", (s) -> setBriefDesc(s), () -> getBriefDesc());
 
 		} else if (result == JOptionPane.CANCEL_OPTION) {
 			System.out.println("Cancel selected.");
