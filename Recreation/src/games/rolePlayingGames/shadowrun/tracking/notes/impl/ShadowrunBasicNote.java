@@ -52,13 +52,8 @@ public final class ShadowrunBasicNote extends AbstractNote {
 				JOptionPane.PLAIN_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
-			final String newFullDesc = descriptionField.getText();
-
-			if (!newFullDesc.equals(getFullDesc())) {
-				setFullDesc(newFullDesc);
-			} else {
-				System.out.println("Desc unchanged: [" + getFullDesc() + "]");
-			}
+			ShadowrunTrackingUtil.examineChangedString(descriptionField,
+					"Desc", (s) -> setFullDesc(s), () -> getFullDesc());
 		} else if (result == JOptionPane.CANCEL_OPTION) {
 			System.out.println("Cancel selected.");
 		} else {

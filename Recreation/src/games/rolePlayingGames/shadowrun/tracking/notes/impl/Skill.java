@@ -4,7 +4,6 @@ import games.rolePlayingGames.shadowrun.tracking.ShadowrunTrackingUtil;
 import games.rolePlayingGames.shadowrun.tracking.notes.ability.AbstractAbility;
 
 import java.awt.GridLayout;
-import java.text.ParseException;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
@@ -73,27 +72,11 @@ public final class Skill extends AbstractAbility {
 				JOptionPane.PLAIN_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
-			final String newName = nameField.getText();
+			ShadowrunTrackingUtil.examineChangedString(nameField, "Name",
+					(s) -> setFullDesc(s), () -> getFullDesc());
 
-			if (!newName.equals(getFullDesc())) {
-				setFullDesc(newName);
-			} else {
-				System.out.println("Name unchanged: [" + getFullDesc() + "]");
-			}
-
-			try {
-				levelField.commitEdit();
-			} catch (final ParseException iException) {
-				System.err.println(iException.getMessage());
-			}
-			final int newLevel = Integer.parseInt(levelField.getValue()
-					.toString());
-
-			if (newLevel != getLevel()) {
-				setLevel(newLevel);
-			} else {
-				System.out.println("Level unchanged: [" + getLevel() + "]");
-			}
+			ShadowrunTrackingUtil.examineChangedInt(levelField, "Level",
+					(i) -> setLevel(i), () -> getLevel());
 		} else if (result == JOptionPane.CANCEL_OPTION) {
 			System.out.println("Cancel selected.");
 		} else {

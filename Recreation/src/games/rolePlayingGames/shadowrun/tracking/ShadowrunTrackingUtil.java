@@ -1,14 +1,18 @@
 package games.rolePlayingGames.shadowrun.tracking;
 
 import games.rolePlayingGames.shadowrun.tracking.notes.damage.IShadowrunDamageNote;
+import games.rolePlayingGames.shadowrun.tracking.notes.impl.DeviceMatrixDamageNote;
+import games.rolePlayingGames.shadowrun.tracking.trackables.matrix.IMatrixDamageableTrackable;
 import games.rolePlayingGames.tracking.trackable.IDestructibleTrackable;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
+import java.text.ParseException;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
@@ -182,6 +186,52 @@ public class ShadowrunTrackingUtil {
 	}
 
 	/**
+	 * Add matrix damage note editing buttons to the given panel based on the
+	 * given matrix trackable.
+	 * 
+	 * @param iParentPanel
+	 *            parent panel for new components.
+	 * @param iTrackableToEdit
+	 *            the matrix trackable to edit damage for; likely the class
+	 *            calling this function.
+	 */
+	public static <D extends IShadowrunDamageNote> void addMatrixDamageButtons(
+			final JPanel iParentPanel,
+			final IMatrixDamageableTrackable iTrackableToEdit) {
+		for (final DeviceMatrixDamageNote damageNote : iTrackableToEdit
+				.getMatrixDamageNotes()) {
+			final JButton damageEditButton = new JButton("Edit: "
+					+ damageNote.toString());
+			damageEditButton.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(final ActionEvent iEvent) {
+					damageNote.edit();
+					damageEditButton.setText("Edit: " + damageNote.toString());
+				}
+			});
+			iParentPanel.add(damageEditButton);
+
+			final JButton damageRemoveButton = new JButton("Remove: "
+					+ damageNote.toString());
+			damageRemoveButton.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(final ActionEvent iEvent) {
+					System.out.println("Removing damage note: "
+							+ damageNote.toFullString());
+
+					iTrackableToEdit.removeMatrixDamageNote(damageNote);
+
+					iParentPanel.remove(damageEditButton);
+					iParentPanel.remove(damageRemoveButton);
+				}
+			});
+			iParentPanel.add(damageRemoveButton);
+		}
+	}
+
+	/**
 	 * Construct a combox and label for some enum value and insert into the
 	 * panel.
 	 * 
@@ -205,5 +255,89 @@ public class ShadowrunTrackingUtil {
 				+ ":"));
 
 		return oEnumBox;
+	}
+
+	/**
+	 * Examine the text field and determine if a change has been made (and needs
+	 * to be applied) or not.
+	 * 
+	 * @param iTextField
+	 *            text field to examine.
+	 * @param iName
+	 *            name of the value being examined.
+	 * @param iWorker
+	 *            worker to set value.
+	 * @param iProducer
+	 *            producer to get value.
+	 */
+	public static void examineChangedString(final JTextField iTextField,
+			final String iName, final IEditStringWorker iWorker,
+			final IEditStringProducer iProducer) {
+		final String newString = iTextField.getText();
+
+		if (!newString.equals(iProducer.getString())) {
+			iWorker.setString(newString);
+		} else {
+			System.out.println(iName + " unchanged: [" + iProducer.getString()
+					+ "]");
+		}
+	}
+
+	/**
+	 * Examine the formatted text field and determine if a change has been made
+	 * (and needs to be applied) or not.
+	 * 
+	 * @param iFormattedTextField
+	 *            text field to examine.
+	 * @param iName
+	 *            name of the value being examined.
+	 * @param iWorker
+	 *            worker to set value.
+	 * @param iProducer
+	 *            producer to get value.
+	 */
+	public static void examineChangedInt(
+			final JFormattedTextField iFormattedTextField, final String iName,
+			final IEditIntWorker iWorker, final IEditIntProducer iProducer) {
+		try {
+			iFormattedTextField.commitEdit();
+		} catch (final ParseException iException) {
+			System.err.println(iException.getMessage());
+		}
+		final int newValue = Integer.parseInt(iFormattedTextField.getValue()
+				.toString());
+
+		if (newValue != iProducer.getInt()) {
+			iWorker.setInt(newValue);
+		} else {
+			System.out.println(iName + " unchanged: [" + iProducer.getInt()
+					+ "]");
+		}
+	}
+
+	/**
+	 * Examine the checkbox and determine if a change has been made (and needs
+	 * to be applied) or not.
+	 * 
+	 * @param iCheckBox
+	 *            checkbox to examine.
+	 * @param iName
+	 *            name of the value being examined.
+	 * @param iWorker
+	 *            worker to set value.
+	 * @param iProducer
+	 *            producer to get value.
+	 */
+	public static void examineChangedBoolean(final JCheckBox iCheckBox,
+			final String iName, final IEditBoolWorker iWorker,
+			final IEditBoolProducer iProducer) {
+		final boolean newBool = iCheckBox.isSelected();
+
+		if (newBool != iProducer.getBoolean()) {
+			iWorker.setBoolean(newBool);
+		} else {
+			System.out.println(iName + " unchanged: [" + iProducer.getBoolean()
+					+ "]");
+		}
 	}
 }

@@ -105,31 +105,15 @@ public final class QualityNote extends AbstractNote implements
 				JOptionPane.PLAIN_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
-			final String newFullDesc = fullDescriptionField.getText();
+			ShadowrunTrackingUtil.examineChangedString(fullDescriptionField,
+					"Full Desc", (s) -> setFullDesc(s), () -> getFullDesc());
 
-			if (!newFullDesc.equals(getFullDesc())) {
-				setFullDesc(newFullDesc);
-			} else {
-				System.out.println("Full Desc unchanged: [" + getFullDesc()
-						+ "]");
-			}
+			ShadowrunTrackingUtil.examineChangedString(briefDescriptionField,
+					"Brief Desc", (s) -> setBriefDesc(s), () -> getBriefDesc());
 
-			final String newBriefDesc = briefDescriptionField.getText();
-
-			if (!newBriefDesc.equals(getBriefDesc())) {
-				setBriefDesc(newBriefDesc);
-			} else {
-				System.out.println("Brief Desc unchanged: [" + getBriefDesc()
-						+ "]");
-			}
-
-			final boolean newCombatQuality = combatQualityBox.isSelected();
-			if (newCombatQuality != isCombatQuality()) {
-				setCombatQuality(newCombatQuality);
-			} else {
-				System.out.println("Combat Quality unchanged: ["
-						+ isCombatQuality() + "]");
-			}
+			ShadowrunTrackingUtil.examineChangedBoolean(combatQualityBox,
+					"Combat Quality", (b) -> setCombatQuality(b),
+					() -> isCombatQuality());
 
 			QualityType newQualityType = (QualityType) qualityTypeBox
 					.getSelectedItem();

@@ -127,43 +127,16 @@ public final class DeviceMatrixDamageNote extends AbstractDeviceDamageNote {
 		// results
 		if (result == JOptionPane.OK_OPTION) {
 			// desc
-			final String newDesc = descriptionField.getText();
-
-			if (!newDesc.equals(getFullDesc())) {
-				setFullDesc(newDesc);
-			} else {
-				System.out.println("Desc unchanged: [" + getFullDesc() + "]");
-			}
+			ShadowrunTrackingUtil.examineChangedString(descriptionField,
+					"Desc", (s) -> setFullDesc(s), () -> getFullDesc());
 
 			// damage
-			try {
-				damageField.commitEdit();
-			} catch (final ParseException iException) {
-				System.err.println(iException.getMessage());
-			}
-			final int newDamage = Integer.parseInt(damageField.getValue()
-					.toString());
-
-			if (newDamage != getDamage()) {
-				setDamage(newDamage);
-			} else {
-				System.out.println("Damage unchanged: [" + getDamage() + "]");
-			}
+			ShadowrunTrackingUtil.examineChangedInt(damageField, "Damage",
+					(i) -> setDamage(i), () -> getDamage());
 
 			// healed
-			try {
-				healedField.commitEdit();
-			} catch (final ParseException iException) {
-				System.err.println(iException.getMessage());
-			}
-			final int newHealed = Integer.parseInt(healedField.getValue()
-					.toString());
-
-			if (newHealed != getHealed()) {
-				setHealed(newHealed);
-			} else {
-				System.out.println("Healed unchanged: [" + getHealed() + "]");
-			}
+			ShadowrunTrackingUtil.examineChangedInt(healedField, "Healed",
+					(i) -> setHealed(i), () -> getHealed());
 
 		} else if (result == JOptionPane.CANCEL_OPTION) {
 			System.out.println("Cancel selected.");
