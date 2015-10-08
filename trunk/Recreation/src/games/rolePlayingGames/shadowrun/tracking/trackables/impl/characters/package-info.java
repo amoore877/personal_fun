@@ -1,5 +1,5 @@
 /**
- * Implementations of Shadowrun beings/characters.
+ * Implementations of Shadowrun beings/characters/combatables.
  * @author Andrew
  *
  */

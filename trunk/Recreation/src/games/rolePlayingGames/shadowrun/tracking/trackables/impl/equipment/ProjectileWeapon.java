@@ -15,7 +15,6 @@ import games.rolePlayingGames.shadowrun.util.RangedWeaponType;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -123,55 +122,22 @@ public final class ProjectileWeapon extends AbstractAmmoFedWeapon implements
 
 		if (result == JOptionPane.OK_OPTION) {
 			// name
-			final String newName = nameField.getText();
-
-			if (!newName.equals(getName())) {
-				setName(newName);
-			} else {
-				System.out.println("Name unchanged: [" + getName() + "]");
-			}
+			ShadowrunTrackingUtil.examineChangedString(nameField, "Name",
+					(s) -> setName(s), () -> getName());
 
 			// ammo in clip
-			try {
-				ammoInClipField.commitEdit();
-			} catch (final ParseException iException) {
-				System.err.println(iException.getMessage());
-			}
-			final int newAmmoInClip = Integer.parseInt(ammoInClipField
-					.getValue().toString());
-
-			if (newAmmoInClip != getAmmoInClip()) {
-				setAmmoInClip(newAmmoInClip);
-			} else {
-				System.out.println("Ammo in Clip unchanged: ["
-						+ getAmmoInClip() + "]");
-			}
+			ShadowrunTrackingUtil.examineChangedInt(ammoInClipField,
+					"Ammo in Clip", (i) -> setAmmoInClip(i),
+					() -> getAmmoInClip());
 
 			// spare clips
-			try {
-				spareClipsField.commitEdit();
-			} catch (final ParseException iException) {
-				System.err.println(iException.getMessage());
-			}
-			final int newSpareClips = Integer.parseInt(spareClipsField
-					.getValue().toString());
-
-			if (newSpareClips != getSpareClips()) {
-				setSpareClips(newSpareClips);
-			} else {
-				System.out.println("Spare Clips unchanged: [" + getSpareClips()
-						+ "]");
-			}
+			ShadowrunTrackingUtil.examineChangedInt(spareClipsField,
+					"Spare Clips", (i) -> setSpareClips(i),
+					() -> getSpareClips());
 
 			// benefits
-			final String newBenefits = benefitsField.getText();
-
-			if (!newBenefits.equals(getName())) {
-				setBenefits(newBenefits);
-			} else {
-				System.out.println("Benefits unchanged: [" + getBenefits()
-						+ "]");
-			}
+			ShadowrunTrackingUtil.examineChangedString(benefitsField,
+					"Benefits", (s) -> setBenefits(s), () -> getBenefits());
 		} else if (result == JOptionPane.CANCEL_OPTION) {
 			System.out.println("Cancel selected.");
 		} else {

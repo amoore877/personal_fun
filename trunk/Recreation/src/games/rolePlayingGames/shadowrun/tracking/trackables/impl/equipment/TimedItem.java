@@ -6,7 +6,6 @@ import games.rolePlayingGames.shadowrun.tracking.trackables.item.AbstractShadowr
 import games.rolePlayingGames.shadowrun.tracking.trackables.item.ITimedItem;
 
 import java.awt.GridLayout;
-import java.text.ParseException;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
@@ -83,9 +82,6 @@ public final class TimedItem extends AbstractShadowrunItem implements
 		final JTextField nameField = ShadowrunTrackingUtil.addStringField(
 				editPanel, "Name", getName());
 
-		// current damage notes
-		ShadowrunTrackingUtil.addDamageButtons(editPanel, this);
-
 		// initiative
 		final JFormattedTextField initiativeField = ShadowrunTrackingUtil
 				.addIntField(editPanel, "Initiative", getInitiative());
@@ -94,44 +90,26 @@ public final class TimedItem extends AbstractShadowrunItem implements
 		final JTextField effectField = ShadowrunTrackingUtil.addStringField(
 				editPanel, "Effect", getEffect());
 
+		// current damage notes
+		ShadowrunTrackingUtil.addDamageButtons(editPanel, this);
+
 		final int result = JOptionPane.showConfirmDialog(null, editPanel,
 				"Edit this item", JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
 			// name
-			final String newName = nameField.getText();
-
-			if (!newName.equals(getName())) {
-				setName(newName);
-			} else {
-				System.out.println("Name unchanged: [" + getName() + "]");
-			}
+			ShadowrunTrackingUtil.examineChangedString(nameField, "Name",
+					(s) -> setName(s), () -> getName());
 
 			// initiative
-			try {
-				initiativeField.commitEdit();
-			} catch (final ParseException iException) {
-				System.err.println(iException.getMessage());
-			}
-			final int newInitiative = Integer.parseInt(initiativeField
-					.getValue().toString());
-
-			if (newInitiative != getInitiative()) {
-				setInitiative(newInitiative);
-			} else {
-				System.out.println("Initiative unchanged: [" + getInitiative()
-						+ "]");
-			}
+			ShadowrunTrackingUtil.examineChangedInt(initiativeField,
+					"Initiative", (i) -> setInitiative(i),
+					() -> getInitiative());
 
 			// effect
-			final String newEffect = effectField.getText();
-
-			if (!newEffect.equals(getEffect())) {
-				setEffect(newEffect);
-			} else {
-				System.out.println("Effect unchanged: [" + getEffect() + "]");
-			}
+			ShadowrunTrackingUtil.examineChangedString(effectField, "Effect", (
+					s) -> setEffect(s), () -> getEffect());
 		} else if (result == JOptionPane.CANCEL_OPTION) {
 			System.out.println("Cancel selected.");
 		} else {

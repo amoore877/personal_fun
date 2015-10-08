@@ -1,9 +1,7 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.matrix.device;
 
-import games.rolePlayingGames.shadowrun.tracking.notes.status.IShadowrunStatusEffectNote;
 import games.rolePlayingGames.shadowrun.tracking.trackables.item.IShadowrunItem;
 import games.rolePlayingGames.tracking.trackable.ICombatTrackable;
-import games.rolePlayingGames.tracking.trackable.IEffectableTrackable;
 import games.rolePlayingGames.tracking.trackable.IInventoryManageableTrackable;
 
 /**
@@ -13,7 +11,6 @@ import games.rolePlayingGames.tracking.trackable.IInventoryManageableTrackable;
  * @author Andrew
  */
 public interface IAutoPilotDevice extends IDevice, ICombatTrackable,
-		IInventoryManageableTrackable<IShadowrunItem>,
-		IEffectableTrackable<IShadowrunStatusEffectNote> {
+		IInventoryManageableTrackable<IShadowrunItem> {
 
 }

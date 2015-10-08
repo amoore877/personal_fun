@@ -92,23 +92,12 @@ public final class MeleeWeapon extends AbstractMeleeWeapon {
 
 		if (result == JOptionPane.OK_OPTION) {
 			// name
-			final String newName = nameField.getText();
-
-			if (!newName.equals(getName())) {
-				setName(newName);
-			} else {
-				System.out.println("Name unchanged: [" + getName() + "]");
-			}
+			ShadowrunTrackingUtil.examineChangedString(nameField, "Name",
+					(s) -> setName(s), () -> getName());
 
 			// benefits
-			final String newBenefits = benefitsField.getText();
-
-			if (!newBenefits.equals(getName())) {
-				setBenefits(newBenefits);
-			} else {
-				System.out.println("Benefits unchanged: [" + getBenefits()
-						+ "]");
-			}
+			ShadowrunTrackingUtil.examineChangedString(benefitsField,
+					"Benefits", (s) -> setBenefits(s), () -> getBenefits());
 		} else if (result == JOptionPane.CANCEL_OPTION) {
 			System.out.println("Cancel selected.");
 		} else {

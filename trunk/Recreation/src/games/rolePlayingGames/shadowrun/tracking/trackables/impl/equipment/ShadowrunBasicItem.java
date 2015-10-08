@@ -65,13 +65,8 @@ public final class ShadowrunBasicItem extends AbstractShadowrunItem {
 
 		if (result == JOptionPane.OK_OPTION) {
 			// name
-			final String newName = nameField.getText();
-
-			if (!newName.equals(getName())) {
-				setName(newName);
-			} else {
-				System.out.println("Name unchanged: [" + getName() + "]");
-			}
+			ShadowrunTrackingUtil.examineChangedString(nameField, "Name",
+					(s) -> setName(s), () -> getName());
 		} else if (result == JOptionPane.CANCEL_OPTION) {
 			System.out.println("Cancel selected.");
 		} else {
