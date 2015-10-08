@@ -1,6 +1,7 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.matrix.device;
 
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.DeviceMatrixDamageNote;
+import games.rolePlayingGames.shadowrun.tracking.notes.impl.StatusEffectNote;
 import games.rolePlayingGames.shadowrun.tracking.trackables.item.AbstractShadowrunItem;
 import games.rolePlayingGames.shadowrun.util.ShadowrunCommonUtils;
 
@@ -19,6 +20,11 @@ public abstract class AbstractDevice extends AbstractShadowrunItem implements
 	 * List of matrix damage notes.
 	 */
 	private final ArrayList<DeviceMatrixDamageNote> myMatrixDamageNotes = new ArrayList<DeviceMatrixDamageNote>();
+
+	/**
+	 * Status effects.
+	 */
+	private final ArrayList<StatusEffectNote> myStatusEffects = new ArrayList<StatusEffectNote>();
 
 	/**
 	 * Rating of the device.
@@ -44,6 +50,26 @@ public abstract class AbstractDevice extends AbstractShadowrunItem implements
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public ArrayList<StatusEffectNote> getStatusEffectNotes() {
+		return (ArrayList<StatusEffectNote>) myStatusEffects.clone();
+	}
+
+	@Override
+	public void removeStatusEffectNote(final StatusEffectNote iStatusEffectNote) {
+		if (iStatusEffectNote != null) {
+			myStatusEffects.remove(iStatusEffectNote);
+		}
+	}
+
+	@Override
+	public void addStatusEffectNote(final StatusEffectNote iStatusEffectNote) {
+		if (iStatusEffectNote != null) {
+			myStatusEffects.add(iStatusEffectNote);
+		}
+	}
+
+	@Override
 	public abstract String toFullString();
 
 	@Override
@@ -55,7 +81,7 @@ public abstract class AbstractDevice extends AbstractShadowrunItem implements
 	}
 
 	@Override
-	public int getMatrixDamage() {
+	public int getTotalMatrixDamage() {
 		int oTotalDamage = 0;
 
 		for (final DeviceMatrixDamageNote damageNote : myMatrixDamageNotes) {

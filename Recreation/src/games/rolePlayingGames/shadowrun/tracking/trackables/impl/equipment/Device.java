@@ -1,53 +1,55 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.impl.equipment;
 
 import games.rolePlayingGames.shadowrun.tracking.ShadowrunTrackingUtil;
+import games.rolePlayingGames.shadowrun.tracking.notes.impl.DeviceMatrixDamageNote;
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.ItemPhysicalDamageNote;
-import games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment.AbstractShadowrunEquipment;
-import games.rolePlayingGames.shadowrun.tracking.trackables.item.equipment.IShadowrunArmor;
+import games.rolePlayingGames.shadowrun.tracking.trackables.matrix.device.AbstractDevice;
 
 import java.awt.GridLayout;
 
+import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
- * Shadowrun Armor. Has armor value and description. Body is assumed to be same
- * as armor, following rules of structures.
+ * Some Shadowrun device.
  * 
  * @author Andrew
- *
  */
-public final class Armor extends AbstractShadowrunEquipment implements
-		IShadowrunArmor {
+public final class Device extends AbstractDevice {
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param iName
-	 *            name of item.
+	 *            name.
+	 * @param iBody
+	 *            body.
 	 * @param iArmor
-	 *            armor attribute.
-	 * @param iBenefits
-	 *            description of any other benefits beyond being armor.
+	 *            armor.
+	 * @param iRating
+	 *            rating.
 	 */
-	public Armor(final String iName, final int iArmor, final String iBenefits) {
-		super(iName, iArmor, iArmor, iBenefits);
+	public Device(final String iName, final int iBody, final int iArmor,
+			final int iRating) {
+		super(iName, iBody, iArmor, iRating);
 	}
 
 	@Override
 	public String toFullString() {
-		final StringBuilder oResult = new StringBuilder(getName());
+		final StringBuilder oResult = new StringBuilder();
 
-		oResult.append(": Max Health-" + getMaximumHealth());
+		oResult.append("Name: " + getName());
+
+		oResult.append("Rating: " + getRating());
 
 		for (final ItemPhysicalDamageNote damageNote : getDamageNotes()) {
 			oResult.append(", Damage-" + damageNote.toString());
 		}
-
-		oResult.append(" Body: " + getBody() + " Armor: " + getArmor());
-
-		oResult.append(" Benefits: " + getBenefits());
+		for (final DeviceMatrixDamageNote damageNote : getMatrixDamageNotes()) {
+			oResult.append(", Matrix Damage-" + damageNote.toString());
+		}
 
 		return oResult.toString();
 	}
@@ -60,12 +62,15 @@ public final class Armor extends AbstractShadowrunEquipment implements
 		final JTextField nameField = ShadowrunTrackingUtil.addStringField(
 				editPanel, "Name", getName());
 
-		// benefits
-		final JTextField benefitsField = ShadowrunTrackingUtil.addStringField(
-				editPanel, "Benefits", getBenefits());
+		// rating
+		final JFormattedTextField ratingField = ShadowrunTrackingUtil
+				.addIntField(editPanel, "Rating", getRating());
 
 		// current damage notes
 		ShadowrunTrackingUtil.addDamageButtons(editPanel, this);
+
+		// current matrix damage notes
+		ShadowrunTrackingUtil.addMatrixDamageButtons(editPanel, this);
 
 		final int result = JOptionPane.showConfirmDialog(null, editPanel,
 				"Edit this armor", JOptionPane.OK_CANCEL_OPTION,
@@ -76,9 +81,9 @@ public final class Armor extends AbstractShadowrunEquipment implements
 			ShadowrunTrackingUtil.examineChangedString(nameField, "Name",
 					(s) -> setName(s), () -> getName());
 
-			// benefits
-			ShadowrunTrackingUtil.examineChangedString(benefitsField,
-					"Benefits", (s) -> setBenefits(s), () -> getBenefits());
+			// rating
+			ShadowrunTrackingUtil.examineChangedInt(ratingField, "Rating",
+					(i) -> setRating(i), () -> getRating());
 		} else if (result == JOptionPane.CANCEL_OPTION) {
 			System.out.println("Cancel selected.");
 		} else {
@@ -88,13 +93,19 @@ public final class Armor extends AbstractShadowrunEquipment implements
 
 	@Override
 	public String toString() {
-		final StringBuilder oResult = new StringBuilder(getName() + ": "
-				+ getArmor());
+		final StringBuilder oResult = new StringBuilder();
 
-		if (getTotalDamage() != 0) {
-			oResult.append(" DAMAGED");
+		oResult.append("Name: " + getName());
+
+		if (getTotalDamage() > 0) {
+			oResult.append("DAMAGED");
+		} else if (getTotalMatrixDamage() >= getMaximumMatrixHealth()) {
+			oResult.append("CRASHED");
+		} else {
+			oResult.append("Rating: " + getRating());
 		}
 
 		return oResult.toString();
 	}
+
 }

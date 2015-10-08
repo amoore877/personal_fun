@@ -1,5 +1,6 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.matrix.hacking;
 
+import games.rolePlayingGames.shadowrun.tracking.trackables.IAbleActor;
 import games.rolePlayingGames.shadowrun.tracking.trackables.matrix.INonPlayerMatrixBeing;
 
 /**
@@ -9,7 +10,7 @@ import games.rolePlayingGames.shadowrun.tracking.trackables.matrix.INonPlayerMat
  * @author Andrew
  */
 public interface INonPlayerHackingBeing extends IHackingBeing,
-		INonPlayerMatrixBeing {
+		INonPlayerMatrixBeing, IAbleActor {
 
 	/**
 	 * @return attack attribute.

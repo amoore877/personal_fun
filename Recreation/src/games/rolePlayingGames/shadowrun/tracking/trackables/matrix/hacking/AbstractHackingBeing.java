@@ -1,6 +1,8 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.matrix.hacking;
 
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.DeviceMatrixDamageNote;
+import games.rolePlayingGames.shadowrun.tracking.notes.impl.StatusEffectNote;
+import games.rolePlayingGames.shadowrun.tracking.notes.status.IShadowrunStatusEffectNote;
 import games.rolePlayingGames.shadowrun.util.ShadowrunCommonUtils;
 import games.rolePlayingGames.tracking.UniqueObject;
 
@@ -34,6 +36,19 @@ public abstract class AbstractHackingBeing extends UniqueObject implements
 	 */
 	private int myRating;
 
+	/**
+	 * Status effects.
+	 */
+	private final ArrayList<IShadowrunStatusEffectNote> myStatusEffects = new ArrayList<IShadowrunStatusEffectNote>();
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param iName
+	 *            name.
+	 * @param iRating
+	 *            rating.
+	 */
 	public AbstractHackingBeing(final String iName, final int iRating) {
 		super();
 		myName = iName;
@@ -46,7 +61,7 @@ public abstract class AbstractHackingBeing extends UniqueObject implements
 	}
 
 	@Override
-	public int getMatrixDamage() {
+	public int getTotalMatrixDamage() {
 		int oTotalDamage = 0;
 
 		for (final DeviceMatrixDamageNote damageNote : myMatrixDamageNotes) {
@@ -128,4 +143,23 @@ public abstract class AbstractHackingBeing extends UniqueObject implements
 		myInitiative = iInitiative;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public ArrayList<StatusEffectNote> getStatusEffectNotes() {
+		return (ArrayList<StatusEffectNote>) myStatusEffects.clone();
+	}
+
+	@Override
+	public void removeStatusEffectNote(final StatusEffectNote iStatusEffectNote) {
+		if (iStatusEffectNote != null) {
+			myStatusEffects.remove(iStatusEffectNote);
+		}
+	}
+
+	@Override
+	public void addStatusEffectNote(final StatusEffectNote iStatusEffectNote) {
+		if (iStatusEffectNote != null) {
+			myStatusEffects.add(iStatusEffectNote);
+		}
+	}
 }

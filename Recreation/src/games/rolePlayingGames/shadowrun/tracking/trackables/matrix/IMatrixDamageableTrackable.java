@@ -1,6 +1,8 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.matrix;
 
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.DeviceMatrixDamageNote;
+import games.rolePlayingGames.shadowrun.tracking.notes.impl.StatusEffectNote;
+import games.rolePlayingGames.tracking.trackable.IEffectableTrackable;
 
 import java.util.ArrayList;
 
@@ -9,7 +11,8 @@ import java.util.ArrayList;
  * 
  * @author Andrew
  */
-public interface IMatrixDamageableTrackable extends IMatrixBeing {
+public interface IMatrixDamageableTrackable extends IMatrixBeing,
+		IEffectableTrackable<StatusEffectNote> {
 	/**
 	 * @return maximum health of this trackable.
 	 */
@@ -18,7 +21,7 @@ public interface IMatrixDamageableTrackable extends IMatrixBeing {
 	/**
 	 * @return total matrix damage.
 	 */
-	int getMatrixDamage();
+	int getTotalMatrixDamage();
 
 	/**
 	 * @return list of damage notes.
