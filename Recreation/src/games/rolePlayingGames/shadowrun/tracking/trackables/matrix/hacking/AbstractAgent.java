@@ -34,7 +34,7 @@ public abstract class AbstractAgent extends AbstractHackingBeing implements
 	public abstract String toFullString();
 
 	@Override
-	public void edit() {
+	public final void edit() {
 		final JPanel editPanel = new JPanel(new GridLayout(0, 1));
 
 		// name

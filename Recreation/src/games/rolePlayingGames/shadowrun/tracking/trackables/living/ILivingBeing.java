@@ -32,4 +32,24 @@ public interface ILivingBeing<D extends IShadowrunDamageNote> extends
 	 * @return magic/resonance attribute.
 	 */
 	int getSpecialAtt();
+
+	/**
+	 * @return body attribute.
+	 */
+	int getBody();
+
+	/**
+	 * @return willpower attribute.
+	 */
+	int getWillpower();
+
+	/**
+	 * @return maximum stun health.
+	 */
+	int getMaximumStunHealth();
+
+	/**
+	 * @return total stun damage.
+	 */
+	int getTotalStunDamage();
 }
