@@ -1,10 +1,13 @@
 package games.rolePlayingGames.shadowrun.tracking.notes.status;
 
+import javax.xml.bind.annotation.XmlEnum;
+
 /**
  * Types of status effects (positive, negative, neutral).
  * 
  * @author Andrew
  */
+@XmlEnum
 public enum StatusEffectType {
 
 	/**

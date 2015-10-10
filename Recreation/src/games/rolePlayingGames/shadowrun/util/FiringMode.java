@@ -1,10 +1,13 @@
 package games.rolePlayingGames.shadowrun.util;
 
+import javax.xml.bind.annotation.XmlEnum;
+
 /**
  * The firing modes of Shadowrun firearms.
  * 
  * @author Andrew
  */
+@XmlEnum
 public enum FiringMode {
 
 	/**

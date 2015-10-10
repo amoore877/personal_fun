@@ -1,10 +1,13 @@
 package games.rolePlayingGames.shadowrun.tracking.notes.quality;
 
+import javax.xml.bind.annotation.XmlEnum;
+
 /**
  * Types of qualities (positive, negative, neutral).
  * 
  * @author Andrew
  */
+@XmlEnum
 public enum QualityType {
 
 	/**
