@@ -1,11 +1,14 @@
 package games.rolePlayingGames.shadowrun.util;
 
+import javax.xml.bind.annotation.XmlEnum;
+
 /**
  * Elements of damage in Shadowrun.
  * 
  * @author Andrew
  *
  */
+@XmlEnum
 public enum DamageElement {
 	/**
 	 * Regular.

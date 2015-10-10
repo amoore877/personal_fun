@@ -2,6 +2,11 @@ package games.rolePlayingGames.tracking.trackable.item;
 
 import games.rolePlayingGames.tracking.UniqueObject;
 
+/**
+ * Abstract item.
+ * 
+ * @author Andrew
+ */
 public abstract class AbstractItem extends UniqueObject implements IItem {
 
 	/**

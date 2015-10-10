@@ -1,10 +1,13 @@
 package games.rolePlayingGames.shadowrun.util;
 
+import javax.xml.bind.annotation.XmlEnum;
+
 /**
  * Shadowrun ranged weapon types.
  * 
  * @author Andrew
  */
+@XmlEnum
 public enum RangedWeaponType {
 
 	/**
