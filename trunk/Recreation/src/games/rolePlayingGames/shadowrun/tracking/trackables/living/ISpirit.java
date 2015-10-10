@@ -8,6 +8,18 @@ import games.rolePlayingGames.shadowrun.tracking.notes.damage.spirit.AbstractSpi
  * @author Andrew
  *
  */
-public interface ISpirit extends
-		ILivingBeing<AbstractSpiritDamageNote> {
+public interface ISpirit extends ILivingBeing<AbstractSpiritDamageNote> {
+
+	/**
+	 * @return number of services.
+	 */
+	int getServices();
+
+	/**
+	 * Use some number of services, either through actual use or banishment.
+	 * 
+	 * @param iServices
+	 *            services to use.
+	 */
+	void useServices(int iServices);
 }

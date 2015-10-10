@@ -1,4 +1,4 @@
-package games.rolePlayingGames.shadowrun.tracking.trackables.impl.characters;
+package games.rolePlayingGames.shadowrun.tracking.trackables.impl.matrix;
 
 import games.rolePlayingGames.shadowrun.tracking.notes.ability.AbstractAbility;
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.DeviceMatrixDamageNote;

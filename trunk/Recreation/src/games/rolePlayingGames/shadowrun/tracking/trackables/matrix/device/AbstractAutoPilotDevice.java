@@ -1,8 +1,6 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.matrix.device;
 
 import games.rolePlayingGames.shadowrun.tracking.ShadowrunTrackingUtil;
-import games.rolePlayingGames.shadowrun.tracking.notes.impl.StatusEffectNote;
-import games.rolePlayingGames.shadowrun.tracking.notes.status.IShadowrunStatusEffectNote;
 import games.rolePlayingGames.shadowrun.tracking.trackables.item.IShadowrunItem;
 
 import java.awt.GridLayout;
@@ -32,11 +30,6 @@ public abstract class AbstractAutoPilotDevice extends AbstractDevice implements
 	private final ArrayList<IShadowrunItem> myInventory;
 
 	/**
-	 * Status effects.
-	 */
-	private final ArrayList<IShadowrunStatusEffectNote> myStatusEffects = new ArrayList<IShadowrunStatusEffectNote>();
-
-	/**
 	 * Constructor.
 	 * 
 	 * @param iName
@@ -63,46 +56,26 @@ public abstract class AbstractAutoPilotDevice extends AbstractDevice implements
 	}
 
 	@Override
-	public int getInitiative() {
+	public final int getInitiative() {
 		return myInitiative;
 	}
 
 	@Override
-	public void setInitiative(final int iInitiative) {
+	public final void setInitiative(final int iInitiative) {
 		myInitiative = iInitiative;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ArrayList<IShadowrunItem> getInventory() {
+	public final ArrayList<IShadowrunItem> getInventory() {
 		return (ArrayList<IShadowrunItem>) myInventory.clone();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public ArrayList<StatusEffectNote> getStatusEffectNotes() {
-		return (ArrayList<StatusEffectNote>) myStatusEffects.clone();
-	}
-
-	@Override
-	public void removeStatusEffectNote(final StatusEffectNote iStatusEffectNote) {
-		if (iStatusEffectNote != null) {
-			myStatusEffects.remove(iStatusEffectNote);
-		}
-	}
-
-	@Override
-	public void addStatusEffectNote(final StatusEffectNote iStatusEffectNote) {
-		if (iStatusEffectNote != null) {
-			myStatusEffects.add(iStatusEffectNote);
-		}
 	}
 
 	@Override
 	public abstract String toFullString();
 
 	@Override
-	public void edit() {
+	public final void edit() {
 		final JPanel editPanel = new JPanel(new GridLayout(0, 1));
 		// name
 		final JTextField nameField = ShadowrunTrackingUtil.addStringField(

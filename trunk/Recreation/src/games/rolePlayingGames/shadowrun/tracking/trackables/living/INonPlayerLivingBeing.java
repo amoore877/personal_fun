@@ -25,11 +25,6 @@ public interface INonPlayerLivingBeing extends INonPlayer {
 	int getSocialLimit();
 
 	/**
-	 * @return body attribute.
-	 */
-	int getBody();
-
-	/**
 	 * @return agility attribute.
 	 */
 	int getAgility();
@@ -43,11 +38,6 @@ public interface INonPlayerLivingBeing extends INonPlayer {
 	 * @return strength attribute.
 	 */
 	int getStrength();
-
-	/**
-	 * @return willpower attribute.
-	 */
-	int getWillpower();
 
 	/**
 	 * @return logic attribute.
@@ -68,4 +58,9 @@ public interface INonPlayerLivingBeing extends INonPlayer {
 	 * @return number of initiative dice.
 	 */
 	int getInitDice();
+
+	/**
+	 * @return armor rating.
+	 */
+	int getArmor();
 }

@@ -56,12 +56,12 @@ public abstract class AbstractHackingBeing extends UniqueObject implements
 	}
 
 	@Override
-	public int getMaximumMatrixHealth() {
+	public final int getMaximumMatrixHealth() {
 		return ShadowrunCommonUtils.getMaximumHealth(getRating());
 	}
 
 	@Override
-	public int getTotalMatrixDamage() {
+	public final int getTotalMatrixDamage() {
 		int oTotalDamage = 0;
 
 		for (final DeviceMatrixDamageNote damageNote : myMatrixDamageNotes) {
@@ -76,26 +76,27 @@ public abstract class AbstractHackingBeing extends UniqueObject implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ArrayList<DeviceMatrixDamageNote> getMatrixDamageNotes() {
+	public final ArrayList<DeviceMatrixDamageNote> getMatrixDamageNotes() {
 		return (ArrayList<DeviceMatrixDamageNote>) myMatrixDamageNotes.clone();
 	}
 
 	@Override
-	public void removeMatrixDamageNote(final DeviceMatrixDamageNote iDamageNote) {
+	public final void removeMatrixDamageNote(
+			final DeviceMatrixDamageNote iDamageNote) {
 		if (iDamageNote != null) {
 			myMatrixDamageNotes.remove(iDamageNote);
 		}
 	}
 
 	@Override
-	public void addDamageNote(final DeviceMatrixDamageNote iDamageNote) {
+	public final void addDamageNote(final DeviceMatrixDamageNote iDamageNote) {
 		if (iDamageNote != null) {
 			myMatrixDamageNotes.add(iDamageNote);
 		}
 	}
 
 	@Override
-	public int getRating() {
+	public final int getRating() {
 		return myRating;
 	}
 
@@ -110,7 +111,7 @@ public abstract class AbstractHackingBeing extends UniqueObject implements
 	}
 
 	@Override
-	public String getName() {
+	public final String getName() {
 		return myName;
 	}
 
@@ -139,25 +140,27 @@ public abstract class AbstractHackingBeing extends UniqueObject implements
 	}
 
 	@Override
-	public void setInitiative(final int iInitiative) {
+	public final void setInitiative(final int iInitiative) {
 		myInitiative = iInitiative;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ArrayList<StatusEffectNote> getStatusEffectNotes() {
+	public final ArrayList<StatusEffectNote> getStatusEffectNotes() {
 		return (ArrayList<StatusEffectNote>) myStatusEffects.clone();
 	}
 
 	@Override
-	public void removeStatusEffectNote(final StatusEffectNote iStatusEffectNote) {
+	public final void removeStatusEffectNote(
+			final StatusEffectNote iStatusEffectNote) {
 		if (iStatusEffectNote != null) {
 			myStatusEffects.remove(iStatusEffectNote);
 		}
 	}
 
 	@Override
-	public void addStatusEffectNote(final StatusEffectNote iStatusEffectNote) {
+	public final void addStatusEffectNote(
+			final StatusEffectNote iStatusEffectNote) {
 		if (iStatusEffectNote != null) {
 			myStatusEffects.add(iStatusEffectNote);
 		}

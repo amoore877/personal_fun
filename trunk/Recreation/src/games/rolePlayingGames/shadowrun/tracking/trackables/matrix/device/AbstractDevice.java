@@ -51,19 +51,21 @@ public abstract class AbstractDevice extends AbstractShadowrunItem implements
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public ArrayList<StatusEffectNote> getStatusEffectNotes() {
+	public final ArrayList<StatusEffectNote> getStatusEffectNotes() {
 		return (ArrayList<StatusEffectNote>) myStatusEffects.clone();
 	}
 
 	@Override
-	public void removeStatusEffectNote(final StatusEffectNote iStatusEffectNote) {
+	public final void removeStatusEffectNote(
+			final StatusEffectNote iStatusEffectNote) {
 		if (iStatusEffectNote != null) {
 			myStatusEffects.remove(iStatusEffectNote);
 		}
 	}
 
 	@Override
-	public void addStatusEffectNote(final StatusEffectNote iStatusEffectNote) {
+	public final void addStatusEffectNote(
+			final StatusEffectNote iStatusEffectNote) {
 		if (iStatusEffectNote != null) {
 			myStatusEffects.add(iStatusEffectNote);
 		}
@@ -76,12 +78,12 @@ public abstract class AbstractDevice extends AbstractShadowrunItem implements
 	public abstract void edit();
 
 	@Override
-	public int getMaximumMatrixHealth() {
+	public final int getMaximumMatrixHealth() {
 		return ShadowrunCommonUtils.getMaximumHealth(getRating());
 	}
 
 	@Override
-	public int getTotalMatrixDamage() {
+	public final int getTotalMatrixDamage() {
 		int oTotalDamage = 0;
 
 		for (final DeviceMatrixDamageNote damageNote : myMatrixDamageNotes) {
@@ -96,19 +98,20 @@ public abstract class AbstractDevice extends AbstractShadowrunItem implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ArrayList<DeviceMatrixDamageNote> getMatrixDamageNotes() {
+	public final ArrayList<DeviceMatrixDamageNote> getMatrixDamageNotes() {
 		return (ArrayList<DeviceMatrixDamageNote>) myMatrixDamageNotes.clone();
 	}
 
 	@Override
-	public void removeMatrixDamageNote(final DeviceMatrixDamageNote iDamageNote) {
+	public final void removeMatrixDamageNote(
+			final DeviceMatrixDamageNote iDamageNote) {
 		if (iDamageNote != null) {
 			myMatrixDamageNotes.remove(iDamageNote);
 		}
 	}
 
 	@Override
-	public void addDamageNote(final DeviceMatrixDamageNote iDamageNote) {
+	public final void addDamageNote(final DeviceMatrixDamageNote iDamageNote) {
 		if (iDamageNote != null) {
 			myMatrixDamageNotes.add(iDamageNote);
 		}
@@ -118,7 +121,7 @@ public abstract class AbstractDevice extends AbstractShadowrunItem implements
 	public abstract String toString();
 
 	@Override
-	public int getRating() {
+	public final int getRating() {
 		return myRating;
 	}
 
