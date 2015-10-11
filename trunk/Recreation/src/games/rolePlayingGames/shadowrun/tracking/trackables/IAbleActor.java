@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * 
  * @author Andrew
  */
-public interface IAbleActor extends IShadowrunTrackable {
+public interface IAbleActor extends IShadowrunCombatTrackable {
 
 	/**
 	 * @return list of abilities for this actor.

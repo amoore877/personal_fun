@@ -1,6 +1,7 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.matrix;
 
 import games.rolePlayingGames.shadowrun.tracking.trackables.INonPlayer;
+import games.rolePlayingGames.shadowrun.tracking.trackables.IShadowrunCombatTrackable;
 
 /**
  * Non-player matrix beings. Need data processing and firewall.
@@ -8,7 +9,8 @@ import games.rolePlayingGames.shadowrun.tracking.trackables.INonPlayer;
  * @author Andrew
  *
  */
-public interface INonPlayerMatrixBeing extends INonPlayer, IMatrixBeing {
+public interface INonPlayerMatrixBeing extends INonPlayer, IMatrixBeing,
+		IShadowrunCombatTrackable {
 
 	/**
 	 * @return firewall attribute.
