@@ -2,6 +2,8 @@ package games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.support;
 
 import games.rolePlayingGames.shadowrun.tracking.notes.quality.QualityType;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -12,33 +14,37 @@ import javax.xml.bind.annotation.XmlType;
  * @author Andrew
  */
 @XmlType(name = "quality")
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "quality")
 public class QualityJAXB {
 	/**
 	 * The note's string.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private String fullDesc;
 
 	/**
 	 * Brief description.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private String briefDesc;
 
 	/**
 	 * Combat quality flag.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private boolean combatQuality;
 
 	/**
 	 * Quality type.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private QualityType qualityType;
 
 	public String getFullDesc() {
 		return fullDesc;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setFullDesc(final String fullDesc) {
 		this.fullDesc = fullDesc;
 	}
@@ -47,7 +53,6 @@ public class QualityJAXB {
 		return briefDesc;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setBriefDesc(final String briefDesc) {
 		this.briefDesc = briefDesc;
 	}
@@ -56,7 +61,6 @@ public class QualityJAXB {
 		return combatQuality;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setCombatQuality(final boolean combatQuality) {
 		this.combatQuality = combatQuality;
 	}
@@ -65,7 +69,6 @@ public class QualityJAXB {
 		return qualityType;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setQualityType(final QualityType qualityType) {
 		this.qualityType = qualityType;
 	}

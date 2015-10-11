@@ -2,6 +2,7 @@ package games.rolePlayingGames.shadowrun.tracking.trackables.impl.matrix;
 
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.DeviceMatrixDamageNote;
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.ItemPhysicalDamageNote;
+import games.rolePlayingGames.shadowrun.tracking.trackables.item.AbstractShadowrunItem;
 import games.rolePlayingGames.shadowrun.tracking.trackables.item.IShadowrunItem;
 import games.rolePlayingGames.shadowrun.tracking.trackables.matrix.device.AbstractAutoPilotDevice;
 import games.rolePlayingGames.shadowrun.tracking.trackables.matrix.device.IPlayerAutoPilotDevice;
@@ -33,7 +34,7 @@ public final class PlayerAutoPilotDevice extends AbstractAutoPilotDevice
 	 */
 	public PlayerAutoPilotDevice(final String iName, final int iBody,
 			final int iArmor, final int iRating,
-			final ArrayList<IShadowrunItem> iInventory) {
+			final ArrayList<AbstractShadowrunItem> iInventory) {
 		super(iName, iBody, iArmor, iRating, iInventory);
 	}
 

@@ -1,7 +1,7 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.matrix.device;
 
 import games.rolePlayingGames.shadowrun.tracking.ShadowrunTrackingUtil;
-import games.rolePlayingGames.shadowrun.tracking.trackables.item.IShadowrunItem;
+import games.rolePlayingGames.shadowrun.tracking.trackables.item.AbstractShadowrunItem;
 
 import java.awt.GridLayout;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public abstract class AbstractAutoPilotDevice extends AbstractDevice implements
 	/**
 	 * Inventory.
 	 */
-	private final ArrayList<IShadowrunItem> myInventory;
+	private final ArrayList<AbstractShadowrunItem> myInventory;
 
 	/**
 	 * Constructor.
@@ -45,11 +45,11 @@ public abstract class AbstractAutoPilotDevice extends AbstractDevice implements
 	 */
 	public AbstractAutoPilotDevice(final String iName, final int iBody,
 			final int iArmor, final int iRating,
-			final ArrayList<IShadowrunItem> iInventory) {
+			final ArrayList<AbstractShadowrunItem> iInventory) {
 		super(iName, iBody, iArmor, iRating);
 
 		if (iInventory == null) {
-			myInventory = new ArrayList<IShadowrunItem>();
+			myInventory = new ArrayList<AbstractShadowrunItem>();
 		} else {
 			myInventory = iInventory;
 		}
@@ -67,8 +67,8 @@ public abstract class AbstractAutoPilotDevice extends AbstractDevice implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public final ArrayList<IShadowrunItem> getInventory() {
-		return (ArrayList<IShadowrunItem>) myInventory.clone();
+	public final ArrayList<AbstractShadowrunItem> getInventory() {
+		return (ArrayList<AbstractShadowrunItem>) myInventory.clone();
 	}
 
 	@Override

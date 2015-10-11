@@ -1,9 +1,9 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.living;
 
 import games.rolePlayingGames.shadowrun.tracking.notes.damage.IShadowrunDamageNote;
+import games.rolePlayingGames.shadowrun.tracking.notes.impl.QualityNote;
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.StatusEffectNote;
-import games.rolePlayingGames.shadowrun.tracking.notes.quality.IShadowrunQualityNote;
-import games.rolePlayingGames.shadowrun.tracking.trackables.item.IShadowrunItem;
+import games.rolePlayingGames.shadowrun.tracking.trackables.item.AbstractShadowrunItem;
 import games.rolePlayingGames.shadowrun.util.ShadowrunCommonUtils;
 import games.rolePlayingGames.tracking.UniqueObject;
 
@@ -63,12 +63,12 @@ public abstract class AbstractLivingBeing<D extends IShadowrunDamageNote>
 	/**
 	 * Inventory.
 	 */
-	private final ArrayList<IShadowrunItem> myInventory;
+	private final ArrayList<AbstractShadowrunItem> myInventory;
 
 	/**
 	 * Qualities.
 	 */
-	private final ArrayList<IShadowrunQualityNote> myQualities;
+	private final ArrayList<QualityNote> myQualities;
 
 	/**
 	 * Constructor.
@@ -93,8 +93,8 @@ public abstract class AbstractLivingBeing<D extends IShadowrunDamageNote>
 	public AbstractLivingBeing(final String iName, final int iEssence,
 			final int iBody, final int iWillpower, final int iSpecial,
 			final ArrayList<StatusEffectNote> iStatusEffects,
-			final ArrayList<IShadowrunItem> iInventory,
-			final ArrayList<IShadowrunQualityNote> iQualities) {
+			final ArrayList<AbstractShadowrunItem> iInventory,
+			final ArrayList<QualityNote> iQualities) {
 		if (iName == null || iName.isEmpty()) {
 			myName = "noName";
 		} else {
@@ -113,13 +113,13 @@ public abstract class AbstractLivingBeing<D extends IShadowrunDamageNote>
 		}
 
 		if (iInventory == null) {
-			myInventory = new ArrayList<IShadowrunItem>();
+			myInventory = new ArrayList<AbstractShadowrunItem>();
 		} else {
 			myInventory = iInventory;
 		}
 
 		if (iQualities == null) {
-			myQualities = new ArrayList<IShadowrunQualityNote>();
+			myQualities = new ArrayList<QualityNote>();
 		} else {
 			myQualities = iQualities;
 		}
@@ -261,19 +261,19 @@ public abstract class AbstractLivingBeing<D extends IShadowrunDamageNote>
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public final ArrayList<IShadowrunQualityNote> getTraitNotes() {
-		return (ArrayList<IShadowrunQualityNote>) myQualities.clone();
+	public final ArrayList<QualityNote> getTraitNotes() {
+		return (ArrayList<QualityNote>) myQualities.clone();
 	}
 
 	@Override
-	public final void removeTraitNote(final IShadowrunQualityNote iTraitNote) {
+	public final void removeTraitNote(final QualityNote iTraitNote) {
 		if (iTraitNote != null) {
 			myQualities.remove(iTraitNote);
 		}
 	}
 
 	@Override
-	public final void addTraitNote(final IShadowrunQualityNote iTraitNote) {
+	public final void addTraitNote(final QualityNote iTraitNote) {
 		if (iTraitNote != null) {
 			myQualities.add(iTraitNote);
 		}
@@ -281,8 +281,8 @@ public abstract class AbstractLivingBeing<D extends IShadowrunDamageNote>
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public final ArrayList<IShadowrunItem> getInventory() {
-		return (ArrayList<IShadowrunItem>) myInventory.clone();
+	public final ArrayList<AbstractShadowrunItem> getInventory() {
+		return (ArrayList<AbstractShadowrunItem>) myInventory.clone();
 	}
 
 	@Override

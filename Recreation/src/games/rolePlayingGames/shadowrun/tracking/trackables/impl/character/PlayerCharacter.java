@@ -1,8 +1,10 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.impl.character;
 
 import games.rolePlayingGames.shadowrun.tracking.notes.damage.character.AbstractCharacterDamageNote;
+import games.rolePlayingGames.shadowrun.tracking.notes.impl.QualityNote;
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.StatusEffectNote;
 import games.rolePlayingGames.shadowrun.tracking.notes.quality.IShadowrunQualityNote;
+import games.rolePlayingGames.shadowrun.tracking.trackables.item.AbstractShadowrunItem;
 import games.rolePlayingGames.shadowrun.tracking.trackables.item.IShadowrunItem;
 import games.rolePlayingGames.shadowrun.tracking.trackables.living.AbstractCharacter;
 import games.rolePlayingGames.shadowrun.tracking.trackables.living.IPlayerLivingBeing;
@@ -61,8 +63,8 @@ public class PlayerCharacter extends AbstractCharacter implements
 	public PlayerCharacter(final String iName, final int iEssence,
 			final int iBody, final int iWillpower, final int iSpecial,
 			final ArrayList<StatusEffectNote> iStatusEffects,
-			final ArrayList<IShadowrunItem> iInventory,
-			final ArrayList<IShadowrunQualityNote> iQualities, final int iCon,
+			final ArrayList<AbstractShadowrunItem> iInventory,
+			final ArrayList<QualityNote> iQualities, final int iCon,
 			final int iConResist, final int iPhysicalLimit) {
 		super(iName, iEssence, iBody, iWillpower, iSpecial, iStatusEffects,
 				iInventory, iQualities);

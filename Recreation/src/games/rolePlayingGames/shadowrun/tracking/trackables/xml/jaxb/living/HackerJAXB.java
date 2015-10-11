@@ -1,5 +1,7 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.living;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -10,38 +12,43 @@ import javax.xml.bind.annotation.XmlType;
  * @author Andrew
  */
 @XmlType(name = "hacker")
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "hacker")
 public class HackerJAXB extends CharacterJAXB {
 	/**
 	 * Rating of cyberdeck/rig.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int rating;
 
 	/**
 	 * Attack.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int attack;
 
 	/**
 	 * Sleaze.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int sleaze;
 
 	/**
 	 * Data processing.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int dataProcessing;
 
 	/**
 	 * Firewall.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int firewall;
 
 	public int getRating() {
 		return rating;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setRating(final int rating) {
 		this.rating = rating;
 	}
@@ -50,7 +57,6 @@ public class HackerJAXB extends CharacterJAXB {
 		return attack;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setAttack(final int attack) {
 		this.attack = attack;
 	}
@@ -59,7 +65,6 @@ public class HackerJAXB extends CharacterJAXB {
 		return sleaze;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setSleaze(final int sleaze) {
 		this.sleaze = sleaze;
 	}
@@ -68,7 +73,6 @@ public class HackerJAXB extends CharacterJAXB {
 		return dataProcessing;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setDataProcessing(final int dataProcessing) {
 		this.dataProcessing = dataProcessing;
 	}
@@ -77,7 +81,6 @@ public class HackerJAXB extends CharacterJAXB {
 		return firewall;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setFirewall(final int firewall) {
 		this.firewall = firewall;
 	}

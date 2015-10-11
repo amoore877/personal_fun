@@ -1,10 +1,10 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.living;
 
 import games.rolePlayingGames.shadowrun.tracking.notes.damage.IShadowrunDamageNote;
+import games.rolePlayingGames.shadowrun.tracking.notes.impl.QualityNote;
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.StatusEffectNote;
-import games.rolePlayingGames.shadowrun.tracking.notes.quality.IShadowrunQualityNote;
 import games.rolePlayingGames.shadowrun.tracking.trackables.IShadowrunTrackable;
-import games.rolePlayingGames.shadowrun.tracking.trackables.item.IShadowrunItem;
+import games.rolePlayingGames.shadowrun.tracking.trackables.item.AbstractShadowrunItem;
 import games.rolePlayingGames.tracking.trackable.IEffectableTrackable;
 import games.rolePlayingGames.tracking.trackable.IInventoryManageableTrackable;
 import games.rolePlayingGames.tracking.trackable.ITraitableTrackable;
@@ -21,8 +21,8 @@ import games.rolePlayingGames.tracking.trackable.character.ICharacter;
 public interface ILivingBeing<D extends IShadowrunDamageNote> extends
 		IShadowrunTrackable, ICharacter<D>,
 		IEffectableTrackable<StatusEffectNote>,
-		ITraitableTrackable<IShadowrunQualityNote>,
-		IInventoryManageableTrackable<IShadowrunItem> {
+		ITraitableTrackable<QualityNote>,
+		IInventoryManageableTrackable<AbstractShadowrunItem> {
 	/**
 	 * @return essence attribute, rounded down.
 	 */
