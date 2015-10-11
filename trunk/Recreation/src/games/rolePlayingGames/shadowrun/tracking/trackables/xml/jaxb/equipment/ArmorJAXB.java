@@ -1,5 +1,7 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.equipment;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -10,18 +12,20 @@ import javax.xml.bind.annotation.XmlType;
  * @author Andrew
  */
 @XmlType(name = "armorEquipment")
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "armorEquipment")
 public class ArmorJAXB extends EquipmentJAXB {
 
+	@XmlElement(required = true, nillable = false)
 	private int armor;
 
+	@XmlElement(required = true, nillable = false)
 	private String benefits;
 
 	public int getArmor() {
 		return armor;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setArmor(final int armor) {
 		this.armor = armor;
 	}
@@ -30,7 +34,6 @@ public class ArmorJAXB extends EquipmentJAXB {
 		return benefits;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setBenefits(final String benefits) {
 		this.benefits = benefits;
 	}

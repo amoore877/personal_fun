@@ -2,6 +2,8 @@ package games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.equipment;
 
 import games.rolePlayingGames.shadowrun.util.DamageElement;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
@@ -12,27 +14,32 @@ import javax.xml.bind.annotation.XmlType;
  * @author Andrew
  */
 @XmlType(name = "weapon")
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({ MeleeWeaponJAXB.class, RangedWeaponJAXB.class })
 public abstract class WeaponJAXB extends EquipmentJAXB {
 
 	/**
 	 * Accuracy.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int accuracy;
 
 	/**
 	 * Damage value.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int damageValue;
 
 	/**
 	 * Armor piercing.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int armorPiercing;
 
 	/**
 	 * Damage element.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private DamageElement damageElement;
 
 	/**
@@ -44,7 +51,6 @@ public abstract class WeaponJAXB extends EquipmentJAXB {
 		return accuracy;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setAccuracy(final int accuracy) {
 		this.accuracy = accuracy;
 	}
@@ -53,7 +59,6 @@ public abstract class WeaponJAXB extends EquipmentJAXB {
 		return damageValue;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setDamageValue(final int damageValue) {
 		this.damageValue = damageValue;
 	}
@@ -62,7 +67,6 @@ public abstract class WeaponJAXB extends EquipmentJAXB {
 		return armorPiercing;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setArmorPiercing(final int armorPiercing) {
 		this.armorPiercing = armorPiercing;
 	}
@@ -71,7 +75,6 @@ public abstract class WeaponJAXB extends EquipmentJAXB {
 		return damageElement;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setDamageElement(final DamageElement damageElement) {
 		this.damageElement = damageElement;
 	}
@@ -80,7 +83,6 @@ public abstract class WeaponJAXB extends EquipmentJAXB {
 		return benefits;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setBenefits(final String benefits) {
 		this.benefits = benefits;
 	}

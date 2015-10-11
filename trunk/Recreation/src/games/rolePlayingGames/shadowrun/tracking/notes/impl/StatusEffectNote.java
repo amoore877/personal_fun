@@ -45,10 +45,12 @@ public final class StatusEffectNote extends AbstractNote implements
 	 *            brief (one or two short words) description of effect.
 	 * @param iCombatStatusEffect
 	 *            true if the status effect is related to combat.
+	 * @param iStatusEffectType
+	 *            type of status effect.
 	 */
 	public StatusEffectNote(final String iFullDesc, final String iBriefDesc,
 			final boolean iCombatStatusEffect,
-			final StatusEffectType iQualityType) {
+			final StatusEffectType iStatusEffectType) {
 		super(iFullDesc);
 
 		if (iBriefDesc == null) {
@@ -59,10 +61,10 @@ public final class StatusEffectNote extends AbstractNote implements
 
 		myCombatStatusEffect = iCombatStatusEffect;
 
-		if (iQualityType == null) {
+		if (iStatusEffectType == null) {
 			myStatusEffectType = StatusEffectType.NEUTRAL;
 		} else {
-			myStatusEffectType = iQualityType;
+			myStatusEffectType = iStatusEffectType;
 		}
 	}
 

@@ -4,9 +4,9 @@ import games.rolePlayingGames.shadowrun.tracking.ShadowrunTrackingUtil;
 import games.rolePlayingGames.shadowrun.tracking.notes.damage.character.AbstractCharacterDamageNote;
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.CharacterPhysicalDamageNote;
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.CharacterStunDamageNote;
+import games.rolePlayingGames.shadowrun.tracking.notes.impl.QualityNote;
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.StatusEffectNote;
-import games.rolePlayingGames.shadowrun.tracking.notes.quality.IShadowrunQualityNote;
-import games.rolePlayingGames.shadowrun.tracking.trackables.item.IShadowrunItem;
+import games.rolePlayingGames.shadowrun.tracking.trackables.item.AbstractShadowrunItem;
 
 import java.awt.GridLayout;
 import java.util.ArrayList;
@@ -49,8 +49,8 @@ public abstract class AbstractCharacter extends
 	public AbstractCharacter(final String iName, final int iEssence,
 			final int iBody, final int iWillpower, final int iSpecial,
 			final ArrayList<StatusEffectNote> iStatusEffects,
-			final ArrayList<IShadowrunItem> iInventory,
-			final ArrayList<IShadowrunQualityNote> iQualities) {
+			final ArrayList<AbstractShadowrunItem> iInventory,
+			final ArrayList<QualityNote> iQualities) {
 		super(iName, iEssence, iBody, iWillpower, iSpecial, iStatusEffects,
 				iInventory, iQualities);
 	}

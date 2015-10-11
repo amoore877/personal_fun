@@ -2,9 +2,11 @@ package games.rolePlayingGames.shadowrun.tracking.trackables.impl.character;
 
 import games.rolePlayingGames.shadowrun.tracking.notes.ability.AbstractAbility;
 import games.rolePlayingGames.shadowrun.tracking.notes.damage.character.AbstractCharacterDamageNote;
+import games.rolePlayingGames.shadowrun.tracking.notes.impl.QualityNote;
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.StatusEffectNote;
 import games.rolePlayingGames.shadowrun.tracking.notes.quality.IShadowrunQualityNote;
 import games.rolePlayingGames.shadowrun.tracking.trackables.impl.equipment.Armor;
+import games.rolePlayingGames.shadowrun.tracking.trackables.item.AbstractShadowrunItem;
 import games.rolePlayingGames.shadowrun.tracking.trackables.item.IShadowrunItem;
 import games.rolePlayingGames.shadowrun.tracking.trackables.living.AbstractCharacter;
 import games.rolePlayingGames.shadowrun.tracking.trackables.living.INonPlayerLivingBeing;
@@ -100,11 +102,11 @@ public class NonPlayerCharacter extends AbstractCharacter implements
 	public NonPlayerCharacter(final String iName, final int iEssence,
 			final int iBody, final int iWillpower, final int iSpecial,
 			final ArrayList<StatusEffectNote> iStatusEffects,
-			final ArrayList<IShadowrunItem> iInventory,
-			final ArrayList<IShadowrunQualityNote> iQualities,
-			final int iAgility, final int iReaction, final int iStrength,
-			final int iLogic, final int iIntuition, final int iCharisma,
-			final int iInitDice, final ArrayList<AbstractAbility> iAbilities) {
+			final ArrayList<AbstractShadowrunItem> iInventory,
+			final ArrayList<QualityNote> iQualities, final int iAgility,
+			final int iReaction, final int iStrength, final int iLogic,
+			final int iIntuition, final int iCharisma, final int iInitDice,
+			final ArrayList<AbstractAbility> iAbilities) {
 		super(iName, iEssence, iBody, iWillpower, iSpecial, iStatusEffects,
 				iInventory, iQualities);
 

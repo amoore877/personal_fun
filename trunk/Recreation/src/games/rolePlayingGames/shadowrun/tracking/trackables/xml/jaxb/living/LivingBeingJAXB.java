@@ -7,6 +7,8 @@ import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.support.Sta
 
 import java.util.ArrayList;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlSeeAlso;
@@ -18,112 +20,116 @@ import javax.xml.bind.annotation.XmlType;
  * @author Andrew
  */
 @XmlType(name = "livingBeing")
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({ SpiritJAXB.class, CharacterJAXB.class })
 public abstract class LivingBeingJAXB {
 
 	/**
 	 * Name.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private String name;
 
 	/**
-	 * Essence.
+	 * Special attribute (magic/resonance/force).
 	 */
-	private int essence;
-
-	/**
-	 * Special attribute (magic/resonance).
-	 */
+	@XmlElement(required = true, nillable = false)
 	private int special;
 
 	/**
 	 * Status effects.
 	 */
+	@XmlElementWrapper
+	@XmlElement(required = true, nillable = false)
 	private ArrayList<StatusEffectJAXB> statusEffects;
 
 	/**
 	 * Inventory.
 	 */
+	@XmlElementWrapper
+	@XmlElement(required = true, nillable = false)
 	private ArrayList<EquipmentJAXB> inventory;
 
 	/**
 	 * Qualities.
 	 */
+	@XmlElementWrapper
+	@XmlElement(required = true, nillable = false)
 	private ArrayList<QualityJAXB> qualities;
 
 	/**
 	 * Body.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int body;
 
 	/**
 	 * Willpower.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int willpower;
 
 	/**
 	 * Agility.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int agility;
 
 	/**
 	 * Reaction.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int reaction;
 
 	/**
 	 * Strength.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int strength;
 
 	/**
 	 * Logic.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int logic;
 
 	/**
 	 * Intuition.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int intuition;
 
 	/**
 	 * Charisma.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int charisma;
 
 	/**
 	 * Initiative dice.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int initDice;
 
 	/**
 	 * Abilities.
 	 */
+	@XmlElementWrapper
+	@XmlElement(required = true, nillable = false)
 	private ArrayList<AbilityJAXB> abilities;
 
 	public String getName() {
 		return name;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setName(final String name) {
 		this.name = name;
-	}
-
-	public int getEssence() {
-		return essence;
-	}
-
-	@XmlElement(required = true, nillable = false)
-	public void setEssence(final int essence) {
-		this.essence = essence;
 	}
 
 	public int getSpecial() {
 		return special;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setSpecial(final int special) {
 		this.special = special;
 	}
@@ -132,8 +138,6 @@ public abstract class LivingBeingJAXB {
 		return statusEffects;
 	}
 
-	@XmlElementWrapper
-	@XmlElement(required = true, nillable = false)
 	public void setStatusEffects(final ArrayList<StatusEffectJAXB> statusEffects) {
 		this.statusEffects = statusEffects;
 	}
@@ -142,8 +146,6 @@ public abstract class LivingBeingJAXB {
 		return inventory;
 	}
 
-	@XmlElementWrapper
-	@XmlElement(required = true, nillable = false)
 	public void setInventory(final ArrayList<EquipmentJAXB> inventory) {
 		this.inventory = inventory;
 	}
@@ -152,8 +154,6 @@ public abstract class LivingBeingJAXB {
 		return qualities;
 	}
 
-	@XmlElementWrapper
-	@XmlElement(required = true, nillable = false)
 	public void setQualities(final ArrayList<QualityJAXB> qualities) {
 		this.qualities = qualities;
 	}
@@ -162,7 +162,6 @@ public abstract class LivingBeingJAXB {
 		return body;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setBody(final int body) {
 		this.body = body;
 	}
@@ -171,7 +170,6 @@ public abstract class LivingBeingJAXB {
 		return willpower;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setWillpower(final int willpower) {
 		this.willpower = willpower;
 	}
@@ -180,7 +178,6 @@ public abstract class LivingBeingJAXB {
 		return agility;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setAgility(final int agility) {
 		this.agility = agility;
 	}
@@ -189,7 +186,6 @@ public abstract class LivingBeingJAXB {
 		return reaction;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setReaction(final int reaction) {
 		this.reaction = reaction;
 	}
@@ -198,7 +194,6 @@ public abstract class LivingBeingJAXB {
 		return strength;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setStrength(final int strength) {
 		this.strength = strength;
 	}
@@ -207,7 +202,6 @@ public abstract class LivingBeingJAXB {
 		return logic;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setLogic(final int logic) {
 		this.logic = logic;
 	}
@@ -216,7 +210,6 @@ public abstract class LivingBeingJAXB {
 		return intuition;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setIntuition(final int intuition) {
 		this.intuition = intuition;
 	}
@@ -225,7 +218,6 @@ public abstract class LivingBeingJAXB {
 		return charisma;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setCharisma(final int charisma) {
 		this.charisma = charisma;
 	}
@@ -234,7 +226,6 @@ public abstract class LivingBeingJAXB {
 		return initDice;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setInitDice(final int initDice) {
 		this.initDice = initDice;
 	}
@@ -243,8 +234,6 @@ public abstract class LivingBeingJAXB {
 		return abilities;
 	}
 
-	@XmlElementWrapper
-	@XmlElement(required = true, nillable = false)
 	public void setAbilities(final ArrayList<AbilityJAXB> abilities) {
 		this.abilities = abilities;
 	}

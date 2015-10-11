@@ -2,9 +2,9 @@ package games.rolePlayingGames.shadowrun.tracking.trackables.impl.character;
 
 import games.rolePlayingGames.shadowrun.tracking.notes.ability.AbstractAbility;
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.DeviceMatrixDamageNote;
+import games.rolePlayingGames.shadowrun.tracking.notes.impl.QualityNote;
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.StatusEffectNote;
-import games.rolePlayingGames.shadowrun.tracking.notes.quality.IShadowrunQualityNote;
-import games.rolePlayingGames.shadowrun.tracking.trackables.item.IShadowrunItem;
+import games.rolePlayingGames.shadowrun.tracking.trackables.item.AbstractShadowrunItem;
 import games.rolePlayingGames.shadowrun.tracking.trackables.matrix.hacking.INonPlayerHackingBeing;
 
 import java.util.ArrayList;
@@ -56,11 +56,11 @@ public final class NonPlayerTechnomancer extends NonPlayerCharacter implements
 	public NonPlayerTechnomancer(final String iName, final int iEssence,
 			final int iBody, final int iWillpower, final int iSpecial,
 			final ArrayList<StatusEffectNote> iStatusEffects,
-			final ArrayList<IShadowrunItem> iInventory,
-			final ArrayList<IShadowrunQualityNote> iQualities,
-			final int iAgility, final int iReaction, final int iStrength,
-			final int iLogic, final int iIntuition, final int iCharisma,
-			final int iInitDice, final ArrayList<AbstractAbility> iAbilities) {
+			final ArrayList<AbstractShadowrunItem> iInventory,
+			final ArrayList<QualityNote> iQualities, final int iAgility,
+			final int iReaction, final int iStrength, final int iLogic,
+			final int iIntuition, final int iCharisma, final int iInitDice,
+			final ArrayList<AbstractAbility> iAbilities) {
 		super(iName, iEssence, iBody, iWillpower, iSpecial, iStatusEffects,
 				iInventory, iQualities, iAgility, iReaction, iStrength, iLogic,
 				iIntuition, iCharisma, iInitDice, iAbilities);

@@ -4,6 +4,8 @@ import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.support.Abi
 
 import java.util.ArrayList;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlSeeAlso;
@@ -16,39 +18,45 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 @XmlType(name = "matrixBeing")
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({ AgentJAXB.class, AutoPilotDeviceJAXB.class })
 public abstract class MatrixBeingJAXB {
 
 	/**
 	 * Name.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private String name;
 
 	/**
 	 * Rating.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int rating;
 
 	/**
 	 * Data processing.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int dataProcessing;
 
 	/**
 	 * Firewall.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int firewall;
 
 	/**
 	 * Matrix abilities/programs.
 	 */
+	@XmlElementWrapper
+	@XmlElement(required = true, nillable = false)
 	private ArrayList<AbilityJAXB> abilities;
 
 	public String getName() {
 		return name;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setName(final String name) {
 		this.name = name;
 	}
@@ -57,7 +65,6 @@ public abstract class MatrixBeingJAXB {
 		return rating;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setRating(final int rating) {
 		this.rating = rating;
 	}
@@ -66,7 +73,6 @@ public abstract class MatrixBeingJAXB {
 		return dataProcessing;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setDataProcessing(final int dataProcessing) {
 		this.dataProcessing = dataProcessing;
 	}
@@ -75,7 +81,6 @@ public abstract class MatrixBeingJAXB {
 		return firewall;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setFirewall(final int firewall) {
 		this.firewall = firewall;
 	}
@@ -84,8 +89,6 @@ public abstract class MatrixBeingJAXB {
 		return abilities;
 	}
 
-	@XmlElementWrapper
-	@XmlElement(required = true, nillable = false)
 	public void setAbilities(final ArrayList<AbilityJAXB> abilities) {
 		this.abilities = abilities;
 	}

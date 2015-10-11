@@ -1,5 +1,7 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.support;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -10,19 +12,20 @@ import javax.xml.bind.annotation.XmlType;
  * @author Andrew
  */
 @XmlRootElement(name = "skill")
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "skill")
 public class SkillJAXB extends AbilityJAXB {
 
 	/**
 	 * Level of the skill.
 	 */
+	@XmlElement(required = true, nillable = false)
 	private int level;
 
 	public int getLevel() {
 		return level;
 	}
 
-	@XmlElement(required = true, nillable = false)
 	public void setLevel(final int level) {
 		this.level = level;
 	}

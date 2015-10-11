@@ -37,27 +37,40 @@
 
   <xs:element name="timedItem" type="timedItem"/>
 
-  <xs:complexType name="pilotDevice">
-    <xs:complexContent>
-      <xs:extension base="matrixBeing">
-        <xs:sequence>
-          <xs:element name="armor" type="xs:int"/>
-          <xs:element name="body" type="xs:int"/>
-          <xs:element name="inventory" minOccurs="0">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="inventory" type="equipment" maxOccurs="unbounded"/>
-              </xs:sequence>
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="pilot" type="xs:int"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="matrixBeing" abstract="true">
+  <xs:complexType name="livingBeing" abstract="true">
     <xs:sequence>
+      <xs:element name="name" type="xs:string"/>
+      <xs:element name="special" type="xs:int"/>
+      <xs:element name="statusEffects" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="statusEffects" type="statusEffect" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="inventory" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="inventory" type="equipment" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="qualities" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="qualities" type="quality" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="body" type="xs:int"/>
+      <xs:element name="willpower" type="xs:int"/>
+      <xs:element name="agility" type="xs:int"/>
+      <xs:element name="reaction" type="xs:int"/>
+      <xs:element name="strength" type="xs:int"/>
+      <xs:element name="logic" type="xs:int"/>
+      <xs:element name="intuition" type="xs:int"/>
+      <xs:element name="charisma" type="xs:int"/>
+      <xs:element name="initDice" type="xs:int"/>
       <xs:element name="abilities" minOccurs="0">
         <xs:complexType>
           <xs:sequence>
@@ -65,10 +78,15 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="dataProcessing" type="xs:int"/>
-      <xs:element name="firewall" type="xs:int"/>
-      <xs:element name="name" type="xs:string"/>
-      <xs:element name="rating" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="statusEffect">
+    <xs:sequence>
+      <xs:element name="fullDesc" type="xs:string"/>
+      <xs:element name="briefDesc" type="xs:string"/>
+      <xs:element name="combatStatusEffect" type="xs:boolean"/>
+      <xs:element name="statusEffectType" type="statusEffectType"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -93,8 +111,8 @@
     <xs:complexContent>
       <xs:extension base="equipment">
         <xs:sequence>
-          <xs:element name="armor" type="xs:int"/>
           <xs:element name="body" type="xs:int"/>
+          <xs:element name="armor" type="xs:int"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -125,10 +143,10 @@
       <xs:extension base="equipment">
         <xs:sequence>
           <xs:element name="accuracy" type="xs:int"/>
-          <xs:element name="armorPiercing" type="xs:int"/>
-          <xs:element name="benefits" type="xs:string"/>
-          <xs:element name="damageElement" type="damageElement"/>
           <xs:element name="damageValue" type="xs:int"/>
+          <xs:element name="armorPiercing" type="xs:int"/>
+          <xs:element name="damageElement" type="damageElement"/>
+          <xs:element name="benefits" type="xs:string" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -158,7 +176,13 @@
     <xs:complexContent>
       <xs:extension base="weapon">
         <xs:sequence>
-          <xs:element name="rangedWeaponType" type="rangedWeaponType"/>
+          <xs:element name="rangedWeaponTypes" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="rangedWeaponTypes" type="rangedWeaponType" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -183,10 +207,20 @@
               </xs:sequence>
             </xs:complexType>
           </xs:element>
+          <xs:element name="clipCapacity" type="xs:int"/>
           <xs:element name="recoilCompensation" type="xs:int"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="quality">
+    <xs:sequence>
+      <xs:element name="fullDesc" type="xs:string"/>
+      <xs:element name="briefDesc" type="xs:string"/>
+      <xs:element name="combatQuality" type="xs:boolean"/>
+      <xs:element name="qualityType" type="qualityType"/>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="ability" abstract="true">
@@ -215,12 +249,33 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="agent">
+  <xs:complexType name="spirit">
     <xs:complexContent>
-      <xs:extension base="matrixBeing">
+      <xs:extension base="livingBeing">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="character">
+    <xs:complexContent>
+      <xs:extension base="livingBeing">
         <xs:sequence>
+          <xs:element name="essence" type="xs:int"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="hacker">
+    <xs:complexContent>
+      <xs:extension base="character">
+        <xs:sequence>
+          <xs:element name="rating" type="xs:int"/>
           <xs:element name="attack" type="xs:int"/>
           <xs:element name="sleaze" type="xs:int"/>
+          <xs:element name="dataProcessing" type="xs:int"/>
+          <xs:element name="firewall" type="xs:int"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -234,16 +289,23 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="character">
+  <xs:complexType name="agent">
     <xs:complexContent>
-      <xs:extension base="livingBeing">
-        <xs:sequence/>
+      <xs:extension base="matrixBeing">
+        <xs:sequence>
+          <xs:element name="attack" type="xs:int"/>
+          <xs:element name="sleaze" type="xs:int"/>
+        </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="livingBeing" abstract="true">
+  <xs:complexType name="matrixBeing" abstract="true">
     <xs:sequence>
+      <xs:element name="name" type="xs:string"/>
+      <xs:element name="rating" type="xs:int"/>
+      <xs:element name="dataProcessing" type="xs:int"/>
+      <xs:element name="firewall" type="xs:int"/>
       <xs:element name="abilities" minOccurs="0">
         <xs:complexType>
           <xs:sequence>
@@ -251,81 +313,35 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="agility" type="xs:int"/>
-      <xs:element name="body" type="xs:int"/>
-      <xs:element name="charisma" type="xs:int"/>
-      <xs:element name="essence" type="xs:int"/>
-      <xs:element name="initDice" type="xs:int"/>
-      <xs:element name="intuition" type="xs:int"/>
-      <xs:element name="inventory" minOccurs="0">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="inventory" type="equipment" maxOccurs="unbounded"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="logic" type="xs:int"/>
-      <xs:element name="name" type="xs:string"/>
-      <xs:element name="qualities" minOccurs="0">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="qualities" type="quality" maxOccurs="unbounded"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="reaction" type="xs:int"/>
-      <xs:element name="special" type="xs:int"/>
-      <xs:element name="statusEffects" minOccurs="0">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="statusEffects" type="statusEffect" maxOccurs="unbounded"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="strength" type="xs:int"/>
-      <xs:element name="willpower" type="xs:int"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="quality">
-    <xs:sequence>
-      <xs:element name="briefDesc" type="xs:string"/>
-      <xs:element name="combatQuality" type="xs:boolean"/>
-      <xs:element name="fullDesc" type="xs:string"/>
-      <xs:element name="qualityType" type="qualityType"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="statusEffect">
-    <xs:sequence>
-      <xs:element name="briefDesc" type="xs:string"/>
-      <xs:element name="combatStatusEffect" type="xs:boolean"/>
-      <xs:element name="fullDesc" type="xs:string"/>
-      <xs:element name="statusEffectType" type="statusEffectType"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="spirit">
+  <xs:complexType name="pilotDevice">
     <xs:complexContent>
-      <xs:extension base="livingBeing">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="hacker">
-    <xs:complexContent>
-      <xs:extension base="character">
+      <xs:extension base="matrixBeing">
         <xs:sequence>
-          <xs:element name="attack" type="xs:int"/>
-          <xs:element name="dataProcessing" type="xs:int"/>
-          <xs:element name="firewall" type="xs:int"/>
-          <xs:element name="rating" type="xs:int"/>
-          <xs:element name="sleaze" type="xs:int"/>
+          <xs:element name="pilot" type="xs:int"/>
+          <xs:element name="body" type="xs:int"/>
+          <xs:element name="armor" type="xs:int"/>
+          <xs:element name="inventory" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="inventory" type="equipment" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
+
+  <xs:simpleType name="statusEffectType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="POSITIVE"/>
+      <xs:enumeration value="NEGATIVE"/>
+      <xs:enumeration value="NEUTRAL"/>
+    </xs:restriction>
+  </xs:simpleType>
 
   <xs:simpleType name="damageElement">
     <xs:restriction base="xs:string">
@@ -375,14 +391,6 @@
   </xs:simpleType>
 
   <xs:simpleType name="qualityType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="POSITIVE"/>
-      <xs:enumeration value="NEGATIVE"/>
-      <xs:enumeration value="NEUTRAL"/>
-    </xs:restriction>
-  </xs:simpleType>
-
-  <xs:simpleType name="statusEffectType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="POSITIVE"/>
       <xs:enumeration value="NEGATIVE"/>

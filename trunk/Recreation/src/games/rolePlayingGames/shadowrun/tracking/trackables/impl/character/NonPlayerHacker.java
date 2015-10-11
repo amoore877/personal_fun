@@ -2,9 +2,9 @@ package games.rolePlayingGames.shadowrun.tracking.trackables.impl.character;
 
 import games.rolePlayingGames.shadowrun.tracking.notes.ability.AbstractAbility;
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.DeviceMatrixDamageNote;
+import games.rolePlayingGames.shadowrun.tracking.notes.impl.QualityNote;
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.StatusEffectNote;
-import games.rolePlayingGames.shadowrun.tracking.notes.quality.IShadowrunQualityNote;
-import games.rolePlayingGames.shadowrun.tracking.trackables.item.IShadowrunItem;
+import games.rolePlayingGames.shadowrun.tracking.trackables.item.AbstractShadowrunItem;
 import games.rolePlayingGames.shadowrun.tracking.trackables.matrix.hacking.INonPlayerHacker;
 import games.rolePlayingGames.shadowrun.util.ShadowrunCommonUtils;
 
@@ -96,13 +96,13 @@ public final class NonPlayerHacker extends NonPlayerCharacter implements
 	public NonPlayerHacker(final String iName, final int iEssence,
 			final int iBody, final int iWillpower, final int iSpecial,
 			final ArrayList<StatusEffectNote> iStatusEffects,
-			final ArrayList<IShadowrunItem> iInventory,
-			final ArrayList<IShadowrunQualityNote> iQualities,
-			final int iAgility, final int iReaction, final int iStrength,
-			final int iLogic, final int iIntuition, final int iCharisma,
-			final int iInitDice, final ArrayList<AbstractAbility> iAbilities,
-			final int iRating, final int iAttack, final int iSleaze,
-			final int iDataProcessing, final int iFirewall) {
+			final ArrayList<AbstractShadowrunItem> iInventory,
+			final ArrayList<QualityNote> iQualities, final int iAgility,
+			final int iReaction, final int iStrength, final int iLogic,
+			final int iIntuition, final int iCharisma, final int iInitDice,
+			final ArrayList<AbstractAbility> iAbilities, final int iRating,
+			final int iAttack, final int iSleaze, final int iDataProcessing,
+			final int iFirewall) {
 		super(iName, iEssence, iBody, iWillpower, iSpecial, iStatusEffects,
 				iInventory, iQualities, iAgility, iReaction, iStrength, iLogic,
 				iIntuition, iCharisma, iInitDice, iAbilities);
