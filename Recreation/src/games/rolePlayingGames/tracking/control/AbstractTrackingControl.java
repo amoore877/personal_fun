@@ -9,8 +9,8 @@ import java.util.HashMap;
  * Abstract tracking control.
  * 
  * @param <C>
- *            highest level combat trackable that is handled. Should extend T
- *            and combat trackable.
+ *            highest level combat trackable that is handled. Extends combat
+ *            trackable.
  * 
  * @author Andrew
  */
