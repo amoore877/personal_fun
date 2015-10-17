@@ -126,7 +126,7 @@ public abstract class AbstractTrackingControl<C extends ICombatTrackable> {
 	/**
 	 * Edit the selected.
 	 */
-	public abstract void editSelected();
+	public abstract void editSelected(C iTrackable);
 
 	/**
 	 * Start combat.
@@ -141,7 +141,7 @@ public abstract class AbstractTrackingControl<C extends ICombatTrackable> {
 	/**
 	 * Roll initiative for everyone.
 	 */
-	public abstract void rollInitiative();
+	protected abstract void rollInitiative();
 
 	/**
 	 * Advance the initiative to the next being.

@@ -55,11 +55,6 @@ public interface INonPlayerLivingBeing extends INonPlayer {
 	int getCharisma();
 
 	/**
-	 * @return number of initiative dice.
-	 */
-	int getInitDice();
-
-	/**
 	 * @return armor rating.
 	 */
 	int getArmor();

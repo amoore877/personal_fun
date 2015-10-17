@@ -125,8 +125,12 @@ public abstract class AbstractTrackingFrame<T extends AbstractTrackingTable>
 
 		myTable = iTable;
 		// TODO sizing and options
-		// TODO add table
-		// TODO add control panel
+
+		// add table
+		tablePanel.add(myTable);
+
+		// add control panel
+		controlPanel.add(iControlPanel);
 	}
 
 	/**

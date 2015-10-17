@@ -247,11 +247,21 @@ public final class FirearmWeapon extends AbstractAmmoFedWeapon implements
 				final int realBulletUsage = originalBulletUsage
 						- bulletDeficiency;
 
+				// uncompensated recoil is doubled for heavy weapons
+				int heavyWeaponRecoilMultiplier;
+				if (RangedWeaponType
+						.isHeavyWeapon((RangedWeaponType) rangedWeaponTypeBox
+								.getSelectedItem())) {
+					heavyWeaponRecoilMultiplier = 2;
+				} else {
+					heavyWeaponRecoilMultiplier = 1;
+				}
 				// recoil minus missing bullets minus compensation minus the
 				// free point of compensation
 				// TODO also get compensation = STR / 3
 				final int realRecoil = Math.max(0, originalRecoil
-						- bulletDeficiency - getRecoilCompensation() - 1);
+						- bulletDeficiency - getRecoilCompensation() - 1)
+						* heavyWeaponRecoilMultiplier;
 
 				final int damagePenalty;
 				final int accuracyPenalty;

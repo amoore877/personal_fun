@@ -16,6 +16,11 @@ import javax.swing.JPanel;
 public final class ShadowrunTrackingFrame extends
 		AbstractTrackingFrame<ShadowrunTrackingTable> {
 
+	/**
+	 * Serial ID.
+	 */
+	private static final long serialVersionUID = -667228463422833163L;
+
 	public ShadowrunTrackingFrame(final String iTitle,
 			final ShadowrunTrackingTable iTable, final JPanel iControlPanel)
 			throws HeadlessException {

@@ -104,10 +104,6 @@ public abstract class AbstractSpirit extends
 		final JTextField nameField = ShadowrunTrackingUtil.addStringField(
 				editPanel, "Name", getName());
 
-		// initiative
-		final JFormattedTextField initiativeField = ShadowrunTrackingUtil
-				.addIntField(editPanel, "Initiative", getInitiative());
-
 		// services
 		final JFormattedTextField servicesField = ShadowrunTrackingUtil
 				.addIntField(editPanel, "Services", getServices());
@@ -123,11 +119,6 @@ public abstract class AbstractSpirit extends
 			// name
 			ShadowrunTrackingUtil.examineChangedString(nameField, "Name",
 					(s) -> setName(s), () -> getName());
-
-			// initiative
-			ShadowrunTrackingUtil.examineChangedInt(initiativeField,
-					"Initiative", (i) -> setInitiative(i),
-					() -> getInitiative());
 
 			// services
 			ShadowrunTrackingUtil.examineChangedInt(servicesField, "Services",

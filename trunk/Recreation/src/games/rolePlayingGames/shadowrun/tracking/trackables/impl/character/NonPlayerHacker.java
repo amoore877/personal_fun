@@ -8,7 +8,12 @@ import games.rolePlayingGames.shadowrun.tracking.trackables.item.AbstractShadowr
 import games.rolePlayingGames.shadowrun.tracking.trackables.matrix.hacking.INonPlayerHacker;
 import games.rolePlayingGames.shadowrun.util.ShadowrunCommonUtils;
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
 
 /**
  * NPC hacker/rigger. Not a technomancer.
@@ -176,5 +181,54 @@ public final class NonPlayerHacker extends NonPlayerCharacter implements
 	@Override
 	public int getDataProcessing() {
 		return myDataProcessing;
+	}
+
+	@Override
+	public int rollInitiative(final int iPenalties) {
+		// prompt for initiative type
+		final JRadioButton meatButton = new JRadioButton("Meat ");
+		meatButton.setMnemonic(KeyEvent.VK_M);
+		final JRadioButton astralButton = new JRadioButton("Astral ");
+		astralButton.setMnemonic(KeyEvent.VK_A);
+		final JRadioButton arButton = new JRadioButton("AR ");
+		arButton.setMnemonic(KeyEvent.VK_R);
+		final JRadioButton coldVRButton = new JRadioButton("Cold VR ");
+		coldVRButton.setMnemonic(KeyEvent.VK_C);
+		final JRadioButton hotVRButton = new JRadioButton("Hot VR ");
+		hotVRButton.setMnemonic(KeyEvent.VK_H);
+		final ButtonGroup initiativeTypeButtonGroup = new ButtonGroup();
+		initiativeTypeButtonGroup.add(meatButton);
+		if (getSpecialAtt() > 0) {
+			initiativeTypeButtonGroup.add(astralButton);
+		}
+		initiativeTypeButtonGroup.add(arButton);
+		initiativeTypeButtonGroup.add(coldVRButton);
+		initiativeTypeButtonGroup.add(hotVRButton);
+
+		meatButton.setSelected(true);
+
+		JOptionPane.showConfirmDialog(null, initiativeTypeButtonGroup,
+				"Initiative type for: " + getName(),
+				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+		if (astralButton.isSelected()) {
+			return ShadowrunCommonUtils.rollAstralInitiative(getIntuition(),
+					getInitDice()) - iPenalties;
+		} else if (arButton.isSelected()) {
+			return ShadowrunCommonUtils.rollARInitiative(getIntuition(),
+					getReaction(), getInitDice()) - iPenalties;
+		} else if (coldVRButton.isSelected()) {
+			return ShadowrunCommonUtils.rollColdVRInitiative(
+					getDataProcessing(), getIntuition(), getInitDice())
+					- iPenalties;
+		} else if (hotVRButton.isSelected()) {
+			return ShadowrunCommonUtils.rollHotVRInitiative(
+					getDataProcessing(), getIntuition(), getInitDice())
+					- iPenalties;
+		} else {
+			// assume meat
+			return ShadowrunCommonUtils.rollInitiative(getIntuition(),
+					getReaction(), getInitDice()) - iPenalties;
+		}
 	}
 }

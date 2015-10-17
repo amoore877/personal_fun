@@ -102,4 +102,41 @@ public enum RangedWeaponType {
 	 * Aerodynamic grenade.
 	 */
 	AERO_GRENADE;
+
+	/**
+	 * Determine if the given ranged weapon type is a heavy weapon or not.
+	 * 
+	 * @param iRangedWeaponType
+	 *            the given ranged weapon type.
+	 * @return true if a heavy weapon, false otherwise.
+	 */
+	public static boolean isHeavyWeapon(final RangedWeaponType iRangedWeaponType) {
+		if (LMG.equals(iRangedWeaponType) || HMG.equals(iRangedWeaponType)
+				|| CANNON.equals(iRangedWeaponType)
+				|| GL.equals(iRangedWeaponType)
+				|| MISSILE.equals(iRangedWeaponType)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Determine if the given ranged weapon type is a weapon that suffers from
+	 * scattering or not.
+	 * 
+	 * @param iRangedWeaponType
+	 *            the given ranged weapon type.
+	 * @return true if scatter is involved, false otherwise.
+	 */
+	public static boolean isScatteringWeapon(
+			final RangedWeaponType iRangedWeaponType) {
+		if (GL.equals(iRangedWeaponType) || MISSILE.equals(iRangedWeaponType)
+				|| STD_GRENADE.equals(iRangedWeaponType)
+				|| AERO_GRENADE.equals(iRangedWeaponType)) {
+			return true;
+		}
+
+		return false;
+	}
 }
