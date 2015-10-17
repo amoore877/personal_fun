@@ -1,6 +1,6 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.item;
 
-import games.rolePlayingGames.tracking.trackable.ICombatTrackable;
+import games.rolePlayingGames.shadowrun.tracking.trackables.IShadowrunCombatTrackable;
 
 /**
  * An item that is timed for combat (such as a grenade). Must have some effect,
@@ -8,7 +8,7 @@ import games.rolePlayingGames.tracking.trackable.ICombatTrackable;
  * 
  * @author Andrew
  */
-public interface ITimedItem extends IShadowrunItem, ICombatTrackable {
+public interface ITimedItem extends IShadowrunItem, IShadowrunCombatTrackable {
 
 	/**
 	 * @return effect of the item when time is up.

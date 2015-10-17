@@ -4,7 +4,6 @@ import games.rolePlayingGames.shadowrun.tracking.ShadowrunTrackingUtil;
 
 import java.awt.GridLayout;
 
-import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -41,10 +40,6 @@ public abstract class AbstractAgent extends AbstractHackingBeing implements
 		final JTextField nameField = ShadowrunTrackingUtil.addStringField(
 				editPanel, "Name", getName());
 
-		// initiative
-		final JFormattedTextField initiativeField = ShadowrunTrackingUtil
-				.addIntField(editPanel, "Initiative", getInitiative());
-
 		// current matrix damage notes
 		ShadowrunTrackingUtil.addMatrixDamageButtons(editPanel, this);
 
@@ -56,11 +51,6 @@ public abstract class AbstractAgent extends AbstractHackingBeing implements
 			// name
 			ShadowrunTrackingUtil.examineChangedString(nameField, "Name",
 					(s) -> setName(s), () -> getName());
-
-			// initiative
-			ShadowrunTrackingUtil.examineChangedInt(initiativeField,
-					"Initiative", (i) -> setInitiative(i),
-					() -> getInitiative());
 
 		} else if (result == JOptionPane.CANCEL_OPTION) {
 			System.out.println("Cancel selected.");

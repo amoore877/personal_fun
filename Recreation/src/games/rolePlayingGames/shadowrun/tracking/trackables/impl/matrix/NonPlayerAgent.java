@@ -4,6 +4,7 @@ import games.rolePlayingGames.shadowrun.tracking.notes.ability.AbstractAbility;
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.DeviceMatrixDamageNote;
 import games.rolePlayingGames.shadowrun.tracking.trackables.matrix.hacking.AbstractAgent;
 import games.rolePlayingGames.shadowrun.tracking.trackables.matrix.hacking.INonPlayerAgent;
+import games.rolePlayingGames.shadowrun.util.ShadowrunCommonUtils;
 
 import java.util.ArrayList;
 
@@ -40,6 +41,11 @@ public final class NonPlayerAgent extends AbstractAgent implements
 	 * Matrix abilities/programs.
 	 */
 	private final ArrayList<AbstractAbility> myAbilities;
+
+	/**
+	 * Initiative dice.
+	 */
+	private final int myInitDice = 4;
 
 	/**
 	 * Constructor.
@@ -137,4 +143,14 @@ public final class NonPlayerAgent extends AbstractAgent implements
 		return oResult.toString();
 	}
 
+	@Override
+	public int getInitDice() {
+		return myInitDice;
+	}
+
+	@Override
+	public int rollInitiative(final int iPenalties) {
+		return ShadowrunCommonUtils.rollHotVRInitiative(getDataProcessing(),
+				getRating(), getInitDice()) - iPenalties;
+	}
 }

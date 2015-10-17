@@ -6,7 +6,6 @@ import games.rolePlayingGames.shadowrun.tracking.trackables.item.AbstractShadowr
 import java.awt.GridLayout;
 import java.util.ArrayList;
 
-import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -81,10 +80,6 @@ public abstract class AbstractAutoPilotDevice extends AbstractDevice implements
 		final JTextField nameField = ShadowrunTrackingUtil.addStringField(
 				editPanel, "Name", getName());
 
-		// initiative
-		final JFormattedTextField initiativeField = ShadowrunTrackingUtil
-				.addIntField(editPanel, "Initiative", getInitiative());
-
 		// current damage notes
 		ShadowrunTrackingUtil.addDamageButtons(editPanel, this);
 
@@ -100,10 +95,6 @@ public abstract class AbstractAutoPilotDevice extends AbstractDevice implements
 			ShadowrunTrackingUtil.examineChangedString(nameField, "Name",
 					(s) -> setName(s), () -> getName());
 
-			// initiative
-			ShadowrunTrackingUtil.examineChangedInt(initiativeField,
-					"Initiative", (i) -> setInitiative(i),
-					() -> getInitiative());
 		} else if (result == JOptionPane.CANCEL_OPTION) {
 			System.out.println("Cancel selected.");
 		} else {

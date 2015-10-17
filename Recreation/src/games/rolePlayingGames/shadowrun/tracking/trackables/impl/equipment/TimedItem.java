@@ -7,7 +7,6 @@ import games.rolePlayingGames.shadowrun.tracking.trackables.item.ITimedItem;
 
 import java.awt.GridLayout;
 
-import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -82,10 +81,6 @@ public final class TimedItem extends AbstractShadowrunItem implements
 		final JTextField nameField = ShadowrunTrackingUtil.addStringField(
 				editPanel, "Name", getName());
 
-		// initiative
-		final JFormattedTextField initiativeField = ShadowrunTrackingUtil
-				.addIntField(editPanel, "Initiative", getInitiative());
-
 		// effect
 		final JTextField effectField = ShadowrunTrackingUtil.addStringField(
 				editPanel, "Effect", getEffect());
@@ -101,11 +96,6 @@ public final class TimedItem extends AbstractShadowrunItem implements
 			// name
 			ShadowrunTrackingUtil.examineChangedString(nameField, "Name",
 					(s) -> setName(s), () -> getName());
-
-			// initiative
-			ShadowrunTrackingUtil.examineChangedInt(initiativeField,
-					"Initiative", (i) -> setInitiative(i),
-					() -> getInitiative());
 
 			// effect
 			ShadowrunTrackingUtil.examineChangedString(effectField, "Effect", (

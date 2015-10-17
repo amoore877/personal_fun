@@ -6,8 +6,14 @@ import games.rolePlayingGames.shadowrun.tracking.notes.impl.QualityNote;
 import games.rolePlayingGames.shadowrun.tracking.notes.impl.StatusEffectNote;
 import games.rolePlayingGames.shadowrun.tracking.trackables.item.AbstractShadowrunItem;
 import games.rolePlayingGames.shadowrun.tracking.trackables.matrix.hacking.INonPlayerHackingBeing;
+import games.rolePlayingGames.shadowrun.util.ShadowrunCommonUtils;
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
 
 /**
  * NPC technomancer.
@@ -149,4 +155,37 @@ public final class NonPlayerTechnomancer extends NonPlayerCharacter implements
 		return getIntuition();
 	}
 
+	@Override
+	public int rollInitiative(final int iPenalties) {
+		// prompt for initiative type
+		final JRadioButton meatButton = new JRadioButton("Meat ");
+		meatButton.setMnemonic(KeyEvent.VK_M);
+		final JRadioButton arButton = new JRadioButton("AR ");
+		arButton.setMnemonic(KeyEvent.VK_R);
+		final JRadioButton hotVRButton = new JRadioButton("Hot VR ");
+		hotVRButton.setMnemonic(KeyEvent.VK_H);
+		final ButtonGroup initiativeTypeButtonGroup = new ButtonGroup();
+		initiativeTypeButtonGroup.add(meatButton);
+		initiativeTypeButtonGroup.add(arButton);
+		initiativeTypeButtonGroup.add(hotVRButton);
+
+		meatButton.setSelected(true);
+
+		JOptionPane.showConfirmDialog(null, initiativeTypeButtonGroup,
+				"Initiative type for: " + getName(),
+				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+		if (arButton.isSelected()) {
+			return ShadowrunCommonUtils.rollARInitiative(getIntuition(),
+					getReaction(), getInitDice()) - iPenalties;
+		} else if (hotVRButton.isSelected()) {
+			return ShadowrunCommonUtils.rollHotVRInitiative(
+					getDataProcessing(), getIntuition(), getInitDice())
+					- iPenalties;
+		} else {
+			// assume meat
+			return ShadowrunCommonUtils.rollInitiative(getIntuition(),
+					getReaction(), getInitDice()) - iPenalties;
+		}
+	}
 }

@@ -7,6 +7,7 @@ import games.rolePlayingGames.shadowrun.tracking.trackables.item.AbstractShadowr
 import games.rolePlayingGames.shadowrun.tracking.trackables.item.IShadowrunItem;
 import games.rolePlayingGames.shadowrun.tracking.trackables.matrix.device.AbstractAutoPilotDevice;
 import games.rolePlayingGames.shadowrun.tracking.trackables.matrix.device.INonPlayerAutoPilotDevice;
+import games.rolePlayingGames.shadowrun.util.ShadowrunCommonUtils;
 
 import java.util.ArrayList;
 
@@ -38,6 +39,11 @@ public final class NonPlayerAutoPilotDevice extends AbstractAutoPilotDevice
 	 * Abilities.
 	 */
 	private final ArrayList<AbstractAbility> myAbilities;
+
+	/**
+	 * Initiative dice.
+	 */
+	private final int myInitDice = 4;
 
 	/**
 	 * Constructor.
@@ -147,4 +153,14 @@ public final class NonPlayerAutoPilotDevice extends AbstractAutoPilotDevice
 		return oResult.toString();
 	}
 
+	@Override
+	public int getInitDice() {
+		return myInitDice;
+	}
+
+	@Override
+	public int rollInitiative(final int iPenalties) {
+		return ShadowrunCommonUtils.rollHotVRInitiative(getDataProcessing(),
+				getRating(), getInitDice()) - iPenalties;
+	}
 }
