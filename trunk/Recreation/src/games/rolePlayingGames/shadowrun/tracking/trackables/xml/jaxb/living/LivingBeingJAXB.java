@@ -1,9 +1,7 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.living;
 
-import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.equipment.EquipmentJAXB;
-import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.support.AbilityJAXB;
-import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.support.QualityJAXB;
-import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.support.StatusEffectJAXB;
+import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.support.SkillJAXB;
+import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.support.SpellJAXB;
 
 import java.util.ArrayList;
 
@@ -39,23 +37,23 @@ public abstract class LivingBeingJAXB {
 	/**
 	 * Status effects.
 	 */
-	@XmlElementWrapper
-	@XmlElement(required = true, nillable = false)
-	private ArrayList<StatusEffectJAXB> statusEffects;
+	@XmlElementWrapper(required = true, nillable = false, name = "statusEffects")
+	@XmlElement(required = true, nillable = false, name = "statusEffectID")
+	private ArrayList<String> statusEffects;
 
 	/**
 	 * Inventory.
 	 */
-	@XmlElementWrapper
-	@XmlElement(required = true, nillable = false)
-	private ArrayList<EquipmentJAXB> inventory;
+	@XmlElementWrapper(required = true, nillable = false, name = "inventory")
+	@XmlElement(required = true, nillable = false, name = "inventoryID")
+	private ArrayList<String> inventory;
 
 	/**
 	 * Qualities.
 	 */
-	@XmlElementWrapper
-	@XmlElement(required = true, nillable = false)
-	private ArrayList<QualityJAXB> qualities;
+	@XmlElementWrapper(required = true, nillable = false, name = "qualities")
+	@XmlElement(required = true, nillable = false, name = "qualityID")
+	private ArrayList<String> qualities;
 
 	/**
 	 * Body.
@@ -112,11 +110,18 @@ public abstract class LivingBeingJAXB {
 	private int initDice;
 
 	/**
-	 * Abilities.
+	 * Skills.
 	 */
-	@XmlElementWrapper
-	@XmlElement(required = true, nillable = false)
-	private ArrayList<AbilityJAXB> abilities;
+	@XmlElementWrapper(required = true, nillable = false, name = "skills")
+	@XmlElement(required = true, nillable = false, name = "skill")
+	private ArrayList<SkillJAXB> skills;
+
+	/**
+	 * Spells.
+	 */
+	@XmlElementWrapper(required = true, nillable = false, name = "spells")
+	@XmlElement(required = true, nillable = false, name = "spell")
+	private ArrayList<SpellJAXB> spells;
 
 	public String getName() {
 		return name;
@@ -134,27 +139,27 @@ public abstract class LivingBeingJAXB {
 		this.special = special;
 	}
 
-	public ArrayList<StatusEffectJAXB> getStatusEffects() {
+	public ArrayList<String> getStatusEffects() {
 		return statusEffects;
 	}
 
-	public void setStatusEffects(final ArrayList<StatusEffectJAXB> statusEffects) {
+	public void setStatusEffects(final ArrayList<String> statusEffects) {
 		this.statusEffects = statusEffects;
 	}
 
-	public ArrayList<EquipmentJAXB> getInventory() {
+	public ArrayList<String> getInventory() {
 		return inventory;
 	}
 
-	public void setInventory(final ArrayList<EquipmentJAXB> inventory) {
+	public void setInventory(final ArrayList<String> inventory) {
 		this.inventory = inventory;
 	}
 
-	public ArrayList<QualityJAXB> getQualities() {
+	public ArrayList<String> getQualities() {
 		return qualities;
 	}
 
-	public void setQualities(final ArrayList<QualityJAXB> qualities) {
+	public void setQualities(final ArrayList<String> qualities) {
 		this.qualities = qualities;
 	}
 
@@ -230,11 +235,19 @@ public abstract class LivingBeingJAXB {
 		this.initDice = initDice;
 	}
 
-	public ArrayList<AbilityJAXB> getAbilities() {
-		return abilities;
+	public ArrayList<SkillJAXB> getSkills() {
+		return skills;
 	}
 
-	public void setAbilities(final ArrayList<AbilityJAXB> abilities) {
-		this.abilities = abilities;
+	public void setSkills(final ArrayList<SkillJAXB> skills) {
+		this.skills = skills;
+	}
+
+	public ArrayList<SpellJAXB> getSpells() {
+		return spells;
+	}
+
+	public void setSpells(final ArrayList<SpellJAXB> spells) {
+		this.spells = spells;
 	}
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<armorEquipment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../src/games/rolePlayingGames/shadowrun/tracking/trackables/xml/xsd/ShadowrunSchema.xsd">
+  <name>Armor Jacket</name>
+  <id>be398a63-797a-47ef-ad93-5d3e05b423bb</id>
+  <armor>12</armor>
+  <benefits>none</benefits>
+</armorEquipment>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<firearm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../src/games/rolePlayingGames/shadowrun/tracking/trackables/xml/xsd/ShadowrunSchema.xsd">
+  <name>Browning Ultra-Power</name>
+  <id>4161e7df-b49f-42b2-8290-cd2e78653dc6</id>
+  <accuracy>6</accuracy>
+  <damageValue>8</damageValue>
+  <armorPiercing>-1</armorPiercing>
+  <damageElement>REGULAR</damageElement>
+  <rangedWeaponTypes>
+    <rangedWeaponType>HVY_PISTOL</rangedWeaponType>
+  </rangedWeaponTypes>
+  <firingModes>
+    <firingMode>SA</firingMode>
+  </firingModes>
+  <clipCapacity>10</clipCapacity>
+  <recoilCompensation>0</recoilCompensation>
+</firearm>

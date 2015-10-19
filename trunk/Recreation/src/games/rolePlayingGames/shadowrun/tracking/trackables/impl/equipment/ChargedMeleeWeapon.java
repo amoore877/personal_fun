@@ -106,8 +106,8 @@ public final class ChargedMeleeWeapon extends AbstractMeleeWeapon implements
 
 	@Override
 	public void use() {
-		// TODO more?
 		setAmmoInClip(getAmmoInClip() - 1);
+		// TODO roll
 	}
 
 	@Override

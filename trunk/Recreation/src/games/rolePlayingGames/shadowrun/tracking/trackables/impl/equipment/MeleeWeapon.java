@@ -27,7 +27,7 @@ public final class MeleeWeapon extends AbstractMeleeWeapon {
 	 * @param iAccuracy
 	 *            accuracy.
 	 * @param iDamageValue
-	 *            damage value.
+	 *            damage value, without strength.
 	 * @param iArmorPiercing
 	 *            armor piercing.
 	 * @param iDamageElement
@@ -45,7 +45,8 @@ public final class MeleeWeapon extends AbstractMeleeWeapon {
 
 	@Override
 	public void use() {
-		// TODO unimplemented?
+		// TODO prompt for strength
+		// TODO roll
 	}
 
 	@Override

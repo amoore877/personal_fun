@@ -24,8 +24,8 @@ public class FirearmWeaponJAXB extends RangedWeaponJAXB {
 	/**
 	 * Firing modes for this weapon.
 	 */
-	@XmlElementWrapper
-	@XmlElement(required = true, nillable = false)
+	@XmlElementWrapper(required = true, nillable = false, name = "firingModes")
+	@XmlElement(required = true, nillable = false, name = "firingMode")
 	private Set<FiringMode> firingModes;
 
 	/**

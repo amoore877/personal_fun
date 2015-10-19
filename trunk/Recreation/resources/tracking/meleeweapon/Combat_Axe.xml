@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<meleeWeapon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../src/games/rolePlayingGames/shadowrun/tracking/trackables/xml/xsd/ShadowrunSchema.xsd" xsi:type="meleeWeapon">
+  <name>Combat Axe</name>
+  <id>51711c87-6bce-424c-820e-b2fa76df74cf</id>
+  <accuracy>4</accuracy>
+  <damageValue>5</damageValue>
+  <armorPiercing>-4</armorPiercing>
+  <damageElement>REGULAR</damageElement>
+  <benefits>none</benefits>
+  <reach>2</reach>
+</meleeWeapon>

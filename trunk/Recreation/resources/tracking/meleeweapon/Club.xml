@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<meleeWeapon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../src/games/rolePlayingGames/shadowrun/tracking/trackables/xml/xsd/ShadowrunSchema.xsd" xsi:type="meleeWeapon">
+  <name>Club</name>
+  <id>1b969b76-e224-478c-8d27-49a1b98507af</id>
+  <accuracy>4</accuracy>
+  <damageValue>3</damageValue>
+  <armorPiercing>0</armorPiercing>
+  <damageElement>REGULAR</damageElement>
+  <benefits>none</benefits>
+  <reach>1</reach>
+</meleeWeapon>

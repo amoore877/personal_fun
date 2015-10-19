@@ -24,8 +24,8 @@ public abstract class RangedWeaponJAXB extends WeaponJAXB {
 	/**
 	 * Type of this ranged weapon.
 	 */
-	@XmlElementWrapper
-	@XmlElement(required = true, nillable = false)
+	@XmlElementWrapper(required = true, nillable = false, name = "rangedWeaponTypes")
+	@XmlElement(required = true, nillable = false, name = "rangedWeaponType")
 	private Set<RangedWeaponType> rangedWeaponTypes;
 
 	public Set<RangedWeaponType> getRangedWeaponTypes() {
