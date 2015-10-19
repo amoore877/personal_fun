@@ -18,6 +18,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "statusEffect")
 public class StatusEffectJAXB {
 
+	@XmlElement(required = true, nillable = false)
+	private String id;
+
 	/**
 	 * The note's string.
 	 */
@@ -72,5 +75,13 @@ public class StatusEffectJAXB {
 
 	public void setStatusEffectType(final StatusEffectType statusEffectType) {
 		this.statusEffectType = statusEffectType;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(final String id) {
+		this.id = id;
 	}
 }

@@ -36,17 +36,25 @@ import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.equipment.T
 import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.equipment.WeaponJAXB;
 import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.living.CharacterJAXB;
 import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.living.HackerJAXB;
+import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.living.LivingBeingJAXB;
 import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.living.SpiritJAXB;
 import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.living.TechnomancerJAXB;
 import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.matrix.AgentJAXB;
 import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.matrix.AutoPilotDeviceJAXB;
+import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.matrix.MatrixBeingJAXB;
 import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.support.AbilityJAXB;
 import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.support.QualityJAXB;
 import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.support.SkillJAXB;
 import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.support.SpellJAXB;
 import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.support.StatusEffectJAXB;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 /**
  * Utility class for JAXB class to regular Java class.
@@ -56,9 +64,493 @@ import java.util.ArrayList;
 public final class JAXBtoJava {
 
 	/**
-	 * Constructor.
+	 * Instance.
 	 */
-	private JAXBtoJava() {
+	private static JAXBtoJava myInstance = null;
+
+	/**
+	 * Armor folder.
+	 */
+	private static final String ARMOR_FOLDER = "tracking/armor";
+
+	/**
+	 * Basic item folder.
+	 */
+	private static final String BASIC_ITEM_FOLDER = "tracking/basicitem";
+
+	/**
+	 * Charged melee weapon folder.
+	 */
+	private static final String CHARGED_MELEE_WEAPON_FOLDER = "tracking/chargedmeleeweapon";
+
+	/**
+	 * Device folder.
+	 */
+	private static final String DEVICE_FOLDER = "tracking/device";
+
+	/**
+	 * Firearm folder.
+	 */
+	private static final String FIREARM_FOLDER = "tracking/firearm";
+
+	/**
+	 * Melee weapon folder.
+	 */
+	private static final String MELEE_WEAPON_FOLDER = "tracking/meleeweapon";
+
+	/**
+	 * Projectile folder.
+	 */
+	private static final String PROJECTILE_FOLDER = "tracking/projectile";
+
+	/**
+	 * Timed item folder.
+	 */
+	private static final String TIMED_ITEM_FOLDER = "tracking/timeditem";
+
+	/**
+	 * Status effect folder.
+	 */
+	private static final String STATUS_EFFECT_FOLDER = "tracking/statuseffect";
+
+	/**
+	 * Quality folder.
+	 */
+	private static final String QUALITY_FOLDER = "tracking/quality";
+
+	/**
+	 * Regular character folder.
+	 */
+	private static final String CHARACTER_FOLDER = "tracking/character";
+
+	/**
+	 * Spirit folder.
+	 */
+	private static final String SPIRIT_FOLDER = "tracking/spirit";
+
+	/**
+	 * Hacker folder.
+	 */
+	private static final String HACKER_FOLDER = "tracking/hacker";
+
+	/**
+	 * Technomancer folder.
+	 */
+	private static final String TECHNO_FOLDER = "tracking/techno";
+
+	/**
+	 * Agent folder.
+	 */
+	private static final String AGENT_FOLDER = "tracking/agent";
+
+	/**
+	 * Autopilot devices folder.
+	 */
+	private static final String AUTO_PILOT_FOLDER = "tracking/autopilot";
+
+	/**
+	 * Equipment map.
+	 */
+	private final HashMap<String, EquipmentJAXB> myEquipment = new HashMap<String, EquipmentJAXB>();
+
+	/**
+	 * Status effect map.
+	 */
+	private final HashMap<String, StatusEffectJAXB> myStatusEffects = new HashMap<String, StatusEffectJAXB>();
+
+	/**
+	 * Quality map.
+	 */
+	private final HashMap<String, QualityJAXB> myQualities = new HashMap<String, QualityJAXB>();
+
+	/**
+	 * Regular character list.
+	 */
+	private final ArrayList<CharacterJAXB> myCharacters = new ArrayList<CharacterJAXB>();
+
+	/**
+	 * Hacker list.
+	 */
+	private final ArrayList<HackerJAXB> myHackers = new ArrayList<HackerJAXB>();
+
+	/**
+	 * Spirit list.
+	 */
+	private final ArrayList<SpiritJAXB> mySpirits = new ArrayList<SpiritJAXB>();
+
+	/**
+	 * Technomancers list.
+	 */
+	private final ArrayList<TechnomancerJAXB> myTechnomancers = new ArrayList<TechnomancerJAXB>();
+
+	/**
+	 * Agents list.
+	 */
+	private final ArrayList<AgentJAXB> myAgents = new ArrayList<AgentJAXB>();
+
+	/**
+	 * Autopiloted devices list.
+	 */
+	private final ArrayList<AutoPilotDeviceJAXB> myAutoPilots = new ArrayList<AutoPilotDeviceJAXB>();
+
+	/**
+	 * Constructor.
+	 * 
+	 * @throws JAXBException
+	 */
+	private JAXBtoJava() throws JAXBException {
+		parseEquipment();
+		parseStatusEffects();
+		parseQualities();
+		parseLivingBeings();
+		parseMatrixBeings();
+	}
+
+	/**
+	 * @return instance.
+	 * @throws JAXBException
+	 */
+	public static JAXBtoJava getInstance() {
+		if (myInstance == null) {
+			try {
+				myInstance = new JAXBtoJava();
+			} catch (final JAXBException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return myInstance;
+	}
+
+	/**
+	 * Parse qualities.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseQualities() throws JAXBException {
+		final File folder = new File(getClass().getClassLoader()
+				.getResource(QUALITY_FOLDER).getFile());
+		final JAXBContext context = JAXBContext.newInstance(QualityJAXB.class);
+		final Unmarshaller unmarshaller = context.createUnmarshaller();
+		for (final File file : folder.listFiles()) {
+			final QualityJAXB object = (QualityJAXB) unmarshaller
+					.unmarshal(file);
+
+			myQualities.put(object.getId(), object);
+		}
+	}
+
+	/**
+	 * Parse status effects.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseStatusEffects() throws JAXBException {
+		final File folder = new File(getClass().getClassLoader()
+				.getResource(STATUS_EFFECT_FOLDER).getFile());
+		final JAXBContext context = JAXBContext
+				.newInstance(StatusEffectJAXB.class);
+		final Unmarshaller unmarshaller = context.createUnmarshaller();
+		for (final File file : folder.listFiles()) {
+			final StatusEffectJAXB object = (StatusEffectJAXB) unmarshaller
+					.unmarshal(file);
+
+			myStatusEffects.put(object.getId(), object);
+		}
+	}
+
+	/**
+	 * Parse matrix beings.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseMatrixBeings() throws JAXBException {
+		parseAgents();
+		parseAutoPilots();
+	}
+
+	/**
+	 * Parse autopiloted devices.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseAutoPilots() throws JAXBException {
+		final File folder = new File(getClass().getClassLoader()
+				.getResource(AUTO_PILOT_FOLDER).getFile());
+		final JAXBContext context = JAXBContext
+				.newInstance(AutoPilotDeviceJAXB.class);
+		final Unmarshaller unmarshaller = context.createUnmarshaller();
+		for (final File file : folder.listFiles()) {
+			final AutoPilotDeviceJAXB object = (AutoPilotDeviceJAXB) unmarshaller
+					.unmarshal(file);
+
+			myAutoPilots.add(object);
+		}
+	}
+
+	/**
+	 * Parse agents.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseAgents() throws JAXBException {
+		final File folder = new File(getClass().getClassLoader()
+				.getResource(AGENT_FOLDER).getFile());
+		final JAXBContext context = JAXBContext.newInstance(AgentJAXB.class);
+		final Unmarshaller unmarshaller = context.createUnmarshaller();
+		for (final File file : folder.listFiles()) {
+			final AgentJAXB object = (AgentJAXB) unmarshaller.unmarshal(file);
+
+			myAgents.add(object);
+		}
+	}
+
+	/**
+	 * Parse living beings.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseLivingBeings() throws JAXBException {
+		parseCharacters();
+		parseHackers();
+		parseSpirits();
+		parseTechnomancers();
+	}
+
+	/**
+	 * Parse technomancers.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseTechnomancers() throws JAXBException {
+		final File folder = new File(getClass().getClassLoader()
+				.getResource(TECHNO_FOLDER).getFile());
+		final JAXBContext context = JAXBContext
+				.newInstance(TechnomancerJAXB.class);
+		final Unmarshaller unmarshaller = context.createUnmarshaller();
+		for (final File file : folder.listFiles()) {
+			final TechnomancerJAXB object = (TechnomancerJAXB) unmarshaller
+					.unmarshal(file);
+
+			myTechnomancers.add(object);
+		}
+	}
+
+	/**
+	 * Parse spirits.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseSpirits() throws JAXBException {
+		final File folder = new File(getClass().getClassLoader()
+				.getResource(SPIRIT_FOLDER).getFile());
+		final JAXBContext context = JAXBContext.newInstance(SpiritJAXB.class);
+		final Unmarshaller unmarshaller = context.createUnmarshaller();
+		for (final File file : folder.listFiles()) {
+			final SpiritJAXB object = (SpiritJAXB) unmarshaller.unmarshal(file);
+
+			mySpirits.add(object);
+		}
+	}
+
+	/**
+	 * Parse hackers.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseHackers() throws JAXBException {
+		final File folder = new File(getClass().getClassLoader()
+				.getResource(HACKER_FOLDER).getFile());
+		final JAXBContext context = JAXBContext.newInstance(HackerJAXB.class);
+		final Unmarshaller unmarshaller = context.createUnmarshaller();
+		for (final File file : folder.listFiles()) {
+			final HackerJAXB object = (HackerJAXB) unmarshaller.unmarshal(file);
+
+			myHackers.add(object);
+		}
+	}
+
+	/**
+	 * Parse characters.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseCharacters() throws JAXBException {
+		final File folder = new File(getClass().getClassLoader()
+				.getResource(CHARACTER_FOLDER).getFile());
+		final JAXBContext context = JAXBContext
+				.newInstance(CharacterJAXB.class);
+		final Unmarshaller unmarshaller = context.createUnmarshaller();
+		for (final File file : folder.listFiles()) {
+			final CharacterJAXB object = (CharacterJAXB) unmarshaller
+					.unmarshal(file);
+
+			myCharacters.add(object);
+		}
+	}
+
+	/**
+	 * Parse equipment.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseEquipment() throws JAXBException {
+		parseArmors();
+		parseBasicItems();
+		parseChargedMeleeWeapons();
+		parseDevices();
+		parseFirearms();
+		parseMeleeWeapons();
+		parseProjectileWeapons();
+		parseTimedItems();
+	}
+
+	/**
+	 * Parse timed items.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseTimedItems() throws JAXBException {
+		final File folder = new File(getClass().getClassLoader()
+				.getResource(TIMED_ITEM_FOLDER).getFile());
+		final JAXBContext context = JAXBContext
+				.newInstance(TimedItemJAXB.class);
+		final Unmarshaller unmarshaller = context.createUnmarshaller();
+		for (final File file : folder.listFiles()) {
+			final TimedItemJAXB object = (TimedItemJAXB) unmarshaller
+					.unmarshal(file);
+
+			myEquipment.put(object.getId(), object);
+		}
+	}
+
+	/**
+	 * Parse projectile weapons.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseProjectileWeapons() throws JAXBException {
+		final File folder = new File(getClass().getClassLoader()
+				.getResource(PROJECTILE_FOLDER).getFile());
+		final JAXBContext context = JAXBContext
+				.newInstance(ProjectileWeaponJAXB.class);
+		final Unmarshaller unmarshaller = context.createUnmarshaller();
+		for (final File file : folder.listFiles()) {
+			final ProjectileWeaponJAXB object = (ProjectileWeaponJAXB) unmarshaller
+					.unmarshal(file);
+
+			myEquipment.put(object.getId(), object);
+		}
+	}
+
+	/**
+	 * Parse melee weapons.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseMeleeWeapons() throws JAXBException {
+		final File folder = new File(getClass().getClassLoader()
+				.getResource(MELEE_WEAPON_FOLDER).getFile());
+		final JAXBContext context = JAXBContext
+				.newInstance(MeleeWeaponJAXB.class);
+		final Unmarshaller unmarshaller = context.createUnmarshaller();
+		for (final File file : folder.listFiles()) {
+			final MeleeWeaponJAXB object = (MeleeWeaponJAXB) unmarshaller
+					.unmarshal(file);
+
+			myEquipment.put(object.getId(), object);
+		}
+	}
+
+	/**
+	 * Parse firearms.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseFirearms() throws JAXBException {
+		final File folder = new File(getClass().getClassLoader()
+				.getResource(FIREARM_FOLDER).getFile());
+		final JAXBContext context = JAXBContext
+				.newInstance(FirearmWeaponJAXB.class);
+		final Unmarshaller unmarshaller = context.createUnmarshaller();
+		for (final File file : folder.listFiles()) {
+			final FirearmWeaponJAXB object = (FirearmWeaponJAXB) unmarshaller
+					.unmarshal(file);
+
+			myEquipment.put(object.getId(), object);
+		}
+	}
+
+	/**
+	 * Parse devices.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseDevices() throws JAXBException {
+		final File folder = new File(getClass().getClassLoader()
+				.getResource(DEVICE_FOLDER).getFile());
+		final JAXBContext context = JAXBContext.newInstance(DeviceJAXB.class);
+		final Unmarshaller unmarshaller = context.createUnmarshaller();
+		for (final File file : folder.listFiles()) {
+			final DeviceJAXB object = (DeviceJAXB) unmarshaller.unmarshal(file);
+
+			myEquipment.put(object.getId(), object);
+		}
+	}
+
+	/**
+	 * Parse charged melee weapons.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseChargedMeleeWeapons() throws JAXBException {
+		final File folder = new File(getClass().getClassLoader()
+				.getResource(CHARGED_MELEE_WEAPON_FOLDER).getFile());
+		final JAXBContext context = JAXBContext
+				.newInstance(ChargedMeleeWeaponJAXB.class);
+		final Unmarshaller unmarshaller = context.createUnmarshaller();
+		for (final File file : folder.listFiles()) {
+			final ChargedMeleeWeaponJAXB object = (ChargedMeleeWeaponJAXB) unmarshaller
+					.unmarshal(file);
+
+			myEquipment.put(object.getId(), object);
+		}
+	}
+
+	/**
+	 * Parse basic items.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseBasicItems() throws JAXBException {
+		final File folder = new File(getClass().getClassLoader()
+				.getResource(BASIC_ITEM_FOLDER).getFile());
+		final JAXBContext context = JAXBContext
+				.newInstance(BasicItemJAXB.class);
+		final Unmarshaller unmarshaller = context.createUnmarshaller();
+		for (final File file : folder.listFiles()) {
+			final BasicItemJAXB object = (BasicItemJAXB) unmarshaller
+					.unmarshal(file);
+
+			myEquipment.put(object.getId(), object);
+		}
+	}
+
+	/**
+	 * Parse armors.
+	 * 
+	 * @throws JAXBException
+	 */
+	private void parseArmors() throws JAXBException {
+		final File folder = new File(getClass().getClassLoader()
+				.getResource(ARMOR_FOLDER).getFile());
+		final JAXBContext context = JAXBContext.newInstance(ArmorJAXB.class);
+		final Unmarshaller unmarshaller = context.createUnmarshaller();
+		for (final File file : folder.listFiles()) {
+			final ArmorJAXB object = (ArmorJAXB) unmarshaller.unmarshal(file);
+
+			myEquipment.put(object.getId(), object);
+		}
 	}
 
 	/**
@@ -68,7 +560,7 @@ public final class JAXBtoJava {
 	 *            EquipmentJAXB.
 	 * @return some item/equipment, or null.
 	 */
-	public static AbstractShadowrunItem getItem(final EquipmentJAXB iEquipment) {
+	public AbstractShadowrunItem getItem(final EquipmentJAXB iEquipment) {
 		if (iEquipment instanceof ArmorJAXB) {
 			return getArmor((ArmorJAXB) iEquipment);
 		} else if (iEquipment instanceof BasicItemJAXB) {
@@ -82,6 +574,22 @@ public final class JAXBtoJava {
 	}
 
 	/**
+	 * Get some item from the JAXB version ID.
+	 * 
+	 * @param iID
+	 *            JAXB version of item.
+	 * @return item. May be null.
+	 */
+	public AbstractShadowrunItem getItemByID(final String iID) {
+		final EquipmentJAXB object = myEquipment.get(iID);
+		if (object != null) {
+			return getItem(object);
+		} else {
+			return null;
+		}
+	}
+
+	/**
 	 * Get some Shadowrun items from the Equipment JAXBs. Ignore nulls on
 	 * conversion.
 	 * 
@@ -89,12 +597,33 @@ public final class JAXBtoJava {
 	 *            Equipment JAXBs.
 	 * @return some items/equipments.
 	 */
-	public static ArrayList<AbstractShadowrunItem> getItems(
+	public ArrayList<AbstractShadowrunItem> getItems(
 			final ArrayList<EquipmentJAXB> iEquipments) {
 		final ArrayList<AbstractShadowrunItem> oResult = new ArrayList<AbstractShadowrunItem>();
 
 		for (final EquipmentJAXB equipment : iEquipments) {
 			final AbstractShadowrunItem convertedItem = getItem(equipment);
+			if (convertedItem != null) {
+				oResult.add(convertedItem);
+			}
+		}
+
+		return oResult;
+	}
+
+	/**
+	 * Get some items from the JAXB version IDs. Ignore nulls on conversion.
+	 * 
+	 * @param iIDs
+	 *            JAXB version IDs of items.
+	 * @return items.
+	 */
+	public ArrayList<AbstractShadowrunItem> getItemsByID(
+			final ArrayList<String> iIDs) {
+		final ArrayList<AbstractShadowrunItem> oResult = new ArrayList<AbstractShadowrunItem>();
+
+		for (final String id : iIDs) {
+			final AbstractShadowrunItem convertedItem = getItemByID(id);
 			if (convertedItem != null) {
 				oResult.add(convertedItem);
 			}
@@ -110,7 +639,7 @@ public final class JAXBtoJava {
 	 *            WeaponJAXB.
 	 * @return some weapon, or null.
 	 */
-	public static AbstractShadowrunWeapon getWeapon(final WeaponJAXB iWeapon) {
+	public AbstractShadowrunWeapon getWeapon(final WeaponJAXB iWeapon) {
 		if (iWeapon instanceof RangedWeaponJAXB) {
 			return getRangedWeapon((RangedWeaponJAXB) iWeapon);
 		} else if (iWeapon instanceof MeleeWeaponJAXB) {
@@ -128,8 +657,7 @@ public final class JAXBtoJava {
 	 *            melee weapon JAXB.
 	 * @return some melee weapon.
 	 */
-	public static AbstractMeleeWeapon getMeleeWeapon(
-			final MeleeWeaponJAXB iWeapon) {
+	public AbstractMeleeWeapon getMeleeWeapon(final MeleeWeaponJAXB iWeapon) {
 		if (iWeapon instanceof ChargedMeleeWeaponJAXB) {
 			return getChargedMeleeWeapon((ChargedMeleeWeaponJAXB) iWeapon);
 		} else {
@@ -149,7 +677,7 @@ public final class JAXBtoJava {
 	 *            charged melee weapon JAXB.
 	 * @return some charged melee weapon.
 	 */
-	public static ChargedMeleeWeapon getChargedMeleeWeapon(
+	public ChargedMeleeWeapon getChargedMeleeWeapon(
 			final ChargedMeleeWeaponJAXB iWeapon) {
 		// TODO spare clips prompt?
 		return new ChargedMeleeWeapon(iWeapon.getName(), iWeapon.getBenefits(),
@@ -165,8 +693,7 @@ public final class JAXBtoJava {
 	 *            ranged weapon JAXB.
 	 * @return some ammo-fed weapon, or null.
 	 */
-	public static AbstractAmmoFedWeapon getRangedWeapon(
-			final RangedWeaponJAXB iWeapon) {
+	public AbstractAmmoFedWeapon getRangedWeapon(final RangedWeaponJAXB iWeapon) {
 		if (iWeapon instanceof ProjectileWeaponJAXB) {
 			return getProjectileWeapon((ProjectileWeaponJAXB) iWeapon);
 		} else if (iWeapon instanceof FirearmWeaponJAXB) {
@@ -184,7 +711,7 @@ public final class JAXBtoJava {
 	 *            firearm weapon JAXB.
 	 * @return some firearm weapon.
 	 */
-	public static FirearmWeapon getFirearmWeapon(final FirearmWeaponJAXB iWeapon) {
+	public FirearmWeapon getFirearmWeapon(final FirearmWeaponJAXB iWeapon) {
 		// TODO spare clips prompt?
 		return new FirearmWeapon(iWeapon.getName(), iWeapon.getBenefits(),
 				iWeapon.getAccuracy(), iWeapon.getDamageValue(),
@@ -200,7 +727,7 @@ public final class JAXBtoJava {
 	 *            projectile weapon JAXB.
 	 * @return some projectile weapon.
 	 */
-	public static ProjectileWeapon getProjectileWeapon(
+	public ProjectileWeapon getProjectileWeapon(
 			final ProjectileWeaponJAXB iWeapon) {
 		// TODO spare clips prompt?
 		return new ProjectileWeapon(iWeapon.getName(), iWeapon.getBenefits(),
@@ -216,7 +743,7 @@ public final class JAXBtoJava {
 	 *            JAXB armor.
 	 * @return Java armor.
 	 */
-	public static Armor getArmor(final ArmorJAXB iArmor) {
+	public Armor getArmor(final ArmorJAXB iArmor) {
 		return new Armor(iArmor.getName(), iArmor.getArmor(),
 				iArmor.getBenefits());
 	}
@@ -228,7 +755,7 @@ public final class JAXBtoJava {
 	 *            BasicItemJAXB.
 	 * @return device, timed item, or basic item.
 	 */
-	public static AbstractShadowrunItem getBasicItem(final BasicItemJAXB iItem) {
+	public AbstractShadowrunItem getBasicItem(final BasicItemJAXB iItem) {
 		if (iItem instanceof DeviceJAXB) {
 			return getDevice((DeviceJAXB) iItem);
 		} else if (iItem instanceof TimedItemJAXB) {
@@ -247,8 +774,7 @@ public final class JAXBtoJava {
 	 *            JAXB version of timed item.
 	 * @return timed item.
 	 */
-	public static AbstractShadowrunItem getTimedItem(
-			final TimedItemJAXB iTimedItem) {
+	public AbstractShadowrunItem getTimedItem(final TimedItemJAXB iTimedItem) {
 		return new TimedItem(iTimedItem.getName(), iTimedItem.getBody(),
 				iTimedItem.getArmor(), 0, iTimedItem.getEffect());
 	}
@@ -260,7 +786,7 @@ public final class JAXBtoJava {
 	 *            JAXB version of device.
 	 * @return device.
 	 */
-	public static Device getDevice(final DeviceJAXB iDevice) {
+	public Device getDevice(final DeviceJAXB iDevice) {
 		return new Device(iDevice.getName(), iDevice.getBody(),
 				iDevice.getArmor(), iDevice.getRating());
 	}
@@ -272,7 +798,7 @@ public final class JAXBtoJava {
 	 *            JAXB version of ability.
 	 * @return ability, or null.
 	 */
-	public static AbstractAbility getAbility(final AbilityJAXB iAbility) {
+	public AbstractAbility getAbility(final AbilityJAXB iAbility) {
 		if (iAbility instanceof SkillJAXB) {
 			return getSkill((SkillJAXB) iAbility);
 		} else if (iAbility instanceof SpellJAXB) {
@@ -291,8 +817,8 @@ public final class JAXBtoJava {
 	 *            JAXB abilities.
 	 * @return list of abilities.
 	 */
-	public static ArrayList<AbstractAbility> getAbilities(
-			final ArrayList<AbilityJAXB> iAbilities) {
+	public ArrayList<AbstractAbility> getAbilities(
+			final ArrayList<? extends AbilityJAXB> iAbilities) {
 		final ArrayList<AbstractAbility> oResult = new ArrayList<AbstractAbility>();
 
 		for (final AbilityJAXB ability : iAbilities) {
@@ -306,13 +832,49 @@ public final class JAXBtoJava {
 	}
 
 	/**
+	 * Convert character's JAXB abilities to Abstract Abilities. Ignore
+	 * abilities that cannot be converted.
+	 * 
+	 * @param iAbilities
+	 *            JAXB abilities.
+	 * @return list of abilities.
+	 */
+	public <C extends LivingBeingJAXB> ArrayList<AbstractAbility> getAbilities(
+			final C iCharacter) {
+		final ArrayList<AbstractAbility> oResult = new ArrayList<AbstractAbility>();
+
+		oResult.addAll(getAbilities(iCharacter.getSkills()));
+		oResult.addAll(getAbilities(iCharacter.getSpells()));
+
+		return oResult;
+	}
+
+	/**
+	 * Convert matrix being's JAXB abilities to Abstract Abilities. Ignore
+	 * abilities that cannot be converted.
+	 * 
+	 * @param iAbilities
+	 *            JAXB abilities.
+	 * @return list of abilities.
+	 */
+	public <M extends MatrixBeingJAXB> ArrayList<AbstractAbility> getAbilities(
+			final M iMatrixBeing) {
+		final ArrayList<AbstractAbility> oResult = new ArrayList<AbstractAbility>();
+
+		oResult.addAll(getAbilities(iMatrixBeing.getSkills()));
+		oResult.addAll(getAbilities(iMatrixBeing.getSpells()));
+
+		return oResult;
+	}
+
+	/**
 	 * Get some skill from the JAXB version.
 	 * 
 	 * @param iSkill
 	 *            JAXB version of skill.
 	 * @return skill.
 	 */
-	public static Skill getSkill(final SkillJAXB iSkill) {
+	public Skill getSkill(final SkillJAXB iSkill) {
 		return new Skill(iSkill.getFullDesc(), iSkill.getLevel());
 	}
 
@@ -323,7 +885,7 @@ public final class JAXBtoJava {
 	 *            JAXB version of spell.
 	 * @return spell.
 	 */
-	public static Spell getSpell(final SpellJAXB iSpell) {
+	public Spell getSpell(final SpellJAXB iSpell) {
 		return new Spell(iSpell.getFullDesc(), iSpell.getBriefDesc());
 	}
 
@@ -334,9 +896,25 @@ public final class JAXBtoJava {
 	 *            JAXB version of quality.
 	 * @return quality.
 	 */
-	public static QualityNote getQuality(final QualityJAXB iQuality) {
+	public QualityNote getQuality(final QualityJAXB iQuality) {
 		return new QualityNote(iQuality.getFullDesc(), iQuality.getBriefDesc(),
 				iQuality.isCombatQuality(), iQuality.getQualityType());
+	}
+
+	/**
+	 * Get some quality from the JAXB version ID.
+	 * 
+	 * @param iID
+	 *            JAXB version of quality.
+	 * @return quality. May be null.
+	 */
+	public QualityNote getQualityByID(final String iID) {
+		final QualityJAXB object = myQualities.get(iID);
+		if (object != null) {
+			return getQuality(object);
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -346,12 +924,32 @@ public final class JAXBtoJava {
 	 *            JAXB version of qualities.
 	 * @return qualities.
 	 */
-	public static ArrayList<QualityNote> getQualities(
+	public ArrayList<QualityNote> getQualities(
 			final ArrayList<QualityJAXB> iQualities) {
 		final ArrayList<QualityNote> oResult = new ArrayList<QualityNote>();
 
 		for (final QualityJAXB quality : iQualities) {
 			final QualityNote convertedQuality = getQuality(quality);
+			if (convertedQuality != null) {
+				oResult.add(convertedQuality);
+			}
+		}
+
+		return oResult;
+	}
+
+	/**
+	 * Get some qualities from the JAXB version IDs. Ignore nulls on conversion.
+	 * 
+	 * @param iIDs
+	 *            JAXB version IDs of qualities.
+	 * @return qualities.
+	 */
+	public ArrayList<QualityNote> getQualitiesByID(final ArrayList<String> iIDs) {
+		final ArrayList<QualityNote> oResult = new ArrayList<QualityNote>();
+
+		for (final String id : iIDs) {
+			final QualityNote convertedQuality = getQualityByID(id);
 			if (convertedQuality != null) {
 				oResult.add(convertedQuality);
 			}
@@ -367,12 +965,27 @@ public final class JAXBtoJava {
 	 *            JAXB version of status effect.
 	 * @return status effect.
 	 */
-	public static StatusEffectNote getStatusEffect(
-			final StatusEffectJAXB iStatusEffect) {
+	public StatusEffectNote getStatusEffect(final StatusEffectJAXB iStatusEffect) {
 		return new StatusEffectNote(iStatusEffect.getFullDesc(),
 				iStatusEffect.getBriefDesc(),
 				iStatusEffect.isCombatStatusEffect(),
 				iStatusEffect.getStatusEffectType());
+	}
+
+	/**
+	 * Get some status effect from the JAXB version ID.
+	 * 
+	 * @param iID
+	 *            JAXB version of status effect.
+	 * @return status effect. May be null.
+	 */
+	public StatusEffectNote getStatusEffectByID(final String iID) {
+		final StatusEffectJAXB object = myStatusEffects.get(iID);
+		if (object != null) {
+			return getStatusEffect(object);
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -383,12 +996,34 @@ public final class JAXBtoJava {
 	 *            JAXB version of status effects.
 	 * @return status effects.
 	 */
-	public static ArrayList<StatusEffectNote> getStatusEffects(
+	public ArrayList<StatusEffectNote> getStatusEffects(
 			final ArrayList<StatusEffectJAXB> iStatusEffects) {
 		final ArrayList<StatusEffectNote> oResult = new ArrayList<StatusEffectNote>();
 
 		for (final StatusEffectJAXB statusEffect : iStatusEffects) {
 			final StatusEffectNote convertedStatusEffect = getStatusEffect(statusEffect);
+			if (convertedStatusEffect != null) {
+				oResult.add(convertedStatusEffect);
+			}
+		}
+
+		return oResult;
+	}
+
+	/**
+	 * Get some status effects from the JAXB version IDs. Ignore nulls on
+	 * conversion.
+	 * 
+	 * @param iIDs
+	 *            JAXB version IDs of status effects.
+	 * @return status effects.
+	 */
+	public ArrayList<StatusEffectNote> getStatusEffectsByID(
+			final ArrayList<String> iIDs) {
+		final ArrayList<StatusEffectNote> oResult = new ArrayList<StatusEffectNote>();
+
+		for (final String id : iIDs) {
+			final StatusEffectNote convertedStatusEffect = getStatusEffectByID(id);
 			if (convertedStatusEffect != null) {
 				oResult.add(convertedStatusEffect);
 			}
@@ -404,11 +1039,11 @@ public final class JAXBtoJava {
 	 *            JAXB version of agent.
 	 * @return agent.
 	 */
-	public static NonPlayerAgent getAgent(final AgentJAXB iAgent) {
+	public NonPlayerAgent getAgent(final AgentJAXB iAgent) {
 		return new NonPlayerAgent(iAgent.getName(), iAgent.getRating(),
 				iAgent.getAttack(), iAgent.getSleaze(),
 				iAgent.getDataProcessing(), iAgent.getFirewall(),
-				getAbilities(iAgent.getAbilities()));
+				getAbilities(iAgent));
 	}
 
 	/**
@@ -418,13 +1053,13 @@ public final class JAXBtoJava {
 	 *            JAXB version of autopilot device.
 	 * @return autopilot device.
 	 */
-	public static NonPlayerAutoPilotDevice getAutoPilotDevice(
+	public NonPlayerAutoPilotDevice getAutoPilotDevice(
 			final AutoPilotDeviceJAXB iAutoPilotDevice) {
 		return new NonPlayerAutoPilotDevice(iAutoPilotDevice.getName(),
 				iAutoPilotDevice.getBody(), iAutoPilotDevice.getArmor(),
 				iAutoPilotDevice.getRating(),
-				getItems(iAutoPilotDevice.getInventory()),
-				getAbilities(iAutoPilotDevice.getAbilities()),
+				getItemsByID(iAutoPilotDevice.getInventory()),
+				getAbilities(iAutoPilotDevice),
 				iAutoPilotDevice.getDataProcessing(),
 				iAutoPilotDevice.getFirewall(), iAutoPilotDevice.getPilot());
 	}
@@ -436,17 +1071,17 @@ public final class JAXBtoJava {
 	 *            JAXB version of spirit.
 	 * @return spirit.
 	 */
-	public static NonPlayerSpirit getSpirit(final SpiritJAXB iSpirit) {
+	public NonPlayerSpirit getSpirit(final SpiritJAXB iSpirit) {
 		// TODO prompt for services?
 		return new NonPlayerSpirit(iSpirit.getName(), iSpirit.getSpecial(),
 				iSpirit.getBody(), iSpirit.getWillpower(),
-				getStatusEffects(iSpirit.getStatusEffects()),
-				getItems(iSpirit.getInventory()),
-				getQualities(iSpirit.getQualities()), 4, iSpirit.getAgility(),
-				iSpirit.getReaction(), iSpirit.getStrength(),
-				iSpirit.getLogic(), iSpirit.getIntuition(),
-				iSpirit.getCharisma(), iSpirit.getInitDice(),
-				getAbilities(iSpirit.getAbilities()));
+				getStatusEffectsByID(iSpirit.getStatusEffects()),
+				getItemsByID(iSpirit.getInventory()),
+				getQualitiesByID(iSpirit.getQualities()), 4,
+				iSpirit.getAgility(), iSpirit.getReaction(),
+				iSpirit.getStrength(), iSpirit.getLogic(),
+				iSpirit.getIntuition(), iSpirit.getCharisma(),
+				iSpirit.getInitDice(), getAbilities(iSpirit));
 	}
 
 	/**
@@ -456,7 +1091,7 @@ public final class JAXBtoJava {
 	 *            JAXB version of character.
 	 * @return character.
 	 */
-	public static NonPlayerCharacter getCharacter(final CharacterJAXB iCharacter) {
+	public NonPlayerCharacter getCharacter(final CharacterJAXB iCharacter) {
 		if (iCharacter instanceof HackerJAXB) {
 			return getHacker((HackerJAXB) iCharacter);
 		} else if (iCharacter instanceof TechnomancerJAXB) {
@@ -466,14 +1101,13 @@ public final class JAXBtoJava {
 			return new NonPlayerCharacter(iCharacter.getName(),
 					iCharacter.getEssence(), iCharacter.getBody(),
 					iCharacter.getWillpower(), iCharacter.getSpecial(),
-					getStatusEffects(iCharacter.getStatusEffects()),
-					getItems(iCharacter.getInventory()),
-					getQualities(iCharacter.getQualities()),
+					getStatusEffectsByID(iCharacter.getStatusEffects()),
+					getItemsByID(iCharacter.getInventory()),
+					getQualitiesByID(iCharacter.getQualities()),
 					iCharacter.getAgility(), iCharacter.getReaction(),
 					iCharacter.getStrength(), iCharacter.getLogic(),
 					iCharacter.getIntuition(), iCharacter.getCharisma(),
-					iCharacter.getInitDice(),
-					getAbilities(iCharacter.getAbilities()));
+					iCharacter.getInitDice(), getAbilities(iCharacter));
 		}
 	}
 
@@ -484,19 +1118,18 @@ public final class JAXBtoJava {
 	 *            JAXB version of technomancer.
 	 * @return technomancer.
 	 */
-	public static NonPlayerTechnomancer getTechnomancer(
+	public NonPlayerTechnomancer getTechnomancer(
 			final TechnomancerJAXB iTechnomancer) {
 		return new NonPlayerTechnomancer(iTechnomancer.getName(),
 				iTechnomancer.getEssence(), iTechnomancer.getBody(),
 				iTechnomancer.getWillpower(), iTechnomancer.getSpecial(),
-				getStatusEffects(iTechnomancer.getStatusEffects()),
-				getItems(iTechnomancer.getInventory()),
-				getQualities(iTechnomancer.getQualities()),
+				getStatusEffectsByID(iTechnomancer.getStatusEffects()),
+				getItemsByID(iTechnomancer.getInventory()),
+				getQualitiesByID(iTechnomancer.getQualities()),
 				iTechnomancer.getAgility(), iTechnomancer.getReaction(),
 				iTechnomancer.getStrength(), iTechnomancer.getLogic(),
 				iTechnomancer.getIntuition(), iTechnomancer.getCharisma(),
-				iTechnomancer.getInitDice(),
-				getAbilities(iTechnomancer.getAbilities()));
+				iTechnomancer.getInitDice(), getAbilities(iTechnomancer));
 	}
 
 	/**
@@ -506,17 +1139,17 @@ public final class JAXBtoJava {
 	 *            JAXB version of hacker.
 	 * @return hacker.
 	 */
-	public static NonPlayerHacker getHacker(final HackerJAXB iHacker) {
+	public NonPlayerHacker getHacker(final HackerJAXB iHacker) {
 		return new NonPlayerHacker(iHacker.getName(), iHacker.getEssence(),
 				iHacker.getBody(), iHacker.getWillpower(),
 				iHacker.getSpecial(),
-				getStatusEffects(iHacker.getStatusEffects()),
-				getItems(iHacker.getInventory()),
-				getQualities(iHacker.getQualities()), iHacker.getAgility(),
+				getStatusEffectsByID(iHacker.getStatusEffects()),
+				getItemsByID(iHacker.getInventory()),
+				getQualitiesByID(iHacker.getQualities()), iHacker.getAgility(),
 				iHacker.getReaction(), iHacker.getStrength(),
 				iHacker.getLogic(), iHacker.getIntuition(),
 				iHacker.getCharisma(), iHacker.getInitDice(),
-				getAbilities(iHacker.getAbilities()), iHacker.getRating(),
+				getAbilities(iHacker), iHacker.getRating(),
 				iHacker.getAttack(), iHacker.getSleaze(),
 				iHacker.getDataProcessing(), iHacker.getFirewall());
 	}

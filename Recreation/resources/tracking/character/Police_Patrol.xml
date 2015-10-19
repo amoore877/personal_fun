@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<character xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../../../src/games/rolePlayingGames/shadowrun/tracking/trackables/xml/xsd/ShadowrunSchema.xsd">
+	<name>Police Patrol</name>
+	<special>0</special>
+	<statusEffects>
+	</statusEffects>
+	<inventory>
+		<!-- Rating 3 Commlink -->
+		<inventoryID>b874c9af-9734-462f-8746-676b3869d666</inventoryID>
+		<!-- Ares Predator V -->
+		<inventoryID>0d52c869-658d-4211-8b0b-5d3fb21a4222</inventoryID>
+		<!-- Defiance EX Shocket -->
+		<inventoryID>4f36a452-7db2-41b7-93e6-4f7f37282252</inventoryID>
+		<!-- Stun Baton -->
+		<inventoryID>7f23a4e3-5d1f-4d9f-8b65-e11252672ee2</inventoryID>
+		<!-- Armor Jacket -->
+		<inventoryID>be398a63-797a-47ef-ad93-5d3e05b423bb</inventoryID>
+	</inventory>
+	<qualities>
+	</qualities>
+	<body>4</body>
+	<willpower>3</willpower>
+	<agility>3</agility>
+	<reaction>4</reaction>
+	<strength>3</strength>
+	<logic>2</logic>
+	<intuition>3</intuition>
+	<charisma>3</charisma>
+	<initDice>3</initDice>
+	<skills>
+		<skill>
+			<fullDesc>Running</fullDesc>
+			<level>3</level>
+		</skill>
+		<skill>
+			<fullDesc>Perception</fullDesc>
+			<level>3</level>
+		</skill>
+		<skill>
+			<fullDesc>Pistols</fullDesc>
+			<level>4</level>
+		</skill>
+		<skill>
+			<fullDesc>Clubs</fullDesc>
+			<level>3</level>
+		</skill>
+		<skill>
+			<fullDesc>Unarmed Combat</fullDesc>
+			<level>4</level>
+		</skill>
+	</skills>
+	<spells>
+	</spells>
+	<essence>6</essence>
+</character>

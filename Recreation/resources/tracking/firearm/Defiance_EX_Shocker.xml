@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<firearm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../src/games/rolePlayingGames/shadowrun/tracking/trackables/xml/xsd/ShadowrunSchema.xsd">
+  <name>Defiance EX Shocket</name>
+  <id>4f36a452-7db2-41b7-93e6-4f7f37282252</id>
+  <accuracy>4</accuracy>
+  <damageValue>11</damageValue>
+  <armorPiercing>-5</armorPiercing>
+  <damageElement>ELECTRIC</damageElement>
+  <rangedWeaponTypes>
+    <rangedWeaponType>TASER</rangedWeaponType>
+  </rangedWeaponTypes>
+  <firingModes>
+    <firingMode>SS</firingMode>
+  </firingModes>
+  <clipCapacity>4</clipCapacity>
+  <recoilCompensation>0</recoilCompensation>
+</firearm>

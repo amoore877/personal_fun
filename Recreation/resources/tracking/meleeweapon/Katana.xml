@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<meleeWeapon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../src/games/rolePlayingGames/shadowrun/tracking/trackables/xml/xsd/ShadowrunSchema.xsd" xsi:type="meleeWeapon">
+  <name>Katana</name>
+  <id>3a3a2444-9b82-473f-91d1-a1a0b87cad28</id>
+  <accuracy>7</accuracy>
+  <damageValue>3</damageValue>
+  <armorPiercing>-3</armorPiercing>
+  <damageElement>REGULAR</damageElement>
+  <benefits>none</benefits>
+  <reach>1</reach>
+</meleeWeapon>

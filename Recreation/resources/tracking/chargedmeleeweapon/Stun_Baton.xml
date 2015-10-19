@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chargedMeleeWeapon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../src/games/rolePlayingGames/shadowrun/tracking/trackables/xml/xsd/ShadowrunSchema.xsd">
+  <name>Stun Baton</name>
+  <id>7f23a4e3-5d1f-4d9f-8b65-e11252672ee2</id>
+  <accuracy>4</accuracy>
+  <damageValue>9</damageValue>
+  <armorPiercing>-5</armorPiercing>
+  <damageElement>ELECTRIC</damageElement>
+  <reach>1</reach>
+  <clipCapacity>10</clipCapacity>
+</chargedMeleeWeapon>

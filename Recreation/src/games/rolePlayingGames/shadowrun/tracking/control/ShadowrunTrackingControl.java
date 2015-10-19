@@ -1,15 +1,20 @@
 package games.rolePlayingGames.shadowrun.tracking.control;
 
 import games.rolePlayingGames.shadowrun.tracking.trackables.INonPlayer;
+import games.rolePlayingGames.shadowrun.tracking.trackables.IPlayer;
 import games.rolePlayingGames.shadowrun.tracking.trackables.IShadowrunCombatTrackable;
 import games.rolePlayingGames.shadowrun.tracking.trackables.impl.equipment.TimedItem;
 import games.rolePlayingGames.tracking.control.AbstractTrackingControl;
 
+import java.awt.GridLayout;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  * Shadowrun tracking control.
@@ -56,7 +61,7 @@ public final class ShadowrunTrackingControl extends
 		// TODO if not in combat add new trackable to all overall trackables
 
 		// TODO if in combat, add new trackable to combat list, and get
-		// initiative
+		// initiative, add to initiative map, and, if needed, act
 
 	}
 
@@ -74,20 +79,61 @@ public final class ShadowrunTrackingControl extends
 	 */
 	@Override
 	public void startCombat() {
-		// TODO confirmation
+		// confirmation
+		final int result = JOptionPane.showConfirmDialog(null,
+				"Are you sure you want to start combat?", "Start combat?",
+				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
-		// TODO add all PCs to combat, present options to add any alive NPCs to
-		// combat
+		if (result == JOptionPane.OK_OPTION) {
+			// add all PCs to combat
+			for (final IShadowrunCombatTrackable trackable : getAllTrackables()) {
+				if (trackable instanceof IPlayer) {
+					addCombatTrackable(trackable);
+				}
+			}
 
-		// set combat status to true
-		setInCombat(true);
+			// present options to add any NPCs to combat
+			final JPanel npcAdditionPanel = new JPanel(new GridLayout(0, 1));
 
-		// roll initiative for all in-combat
-		rollInitiative();
+			final HashMap<JCheckBox, INonPlayer> nonPlayerCheckBoxMap = new HashMap<JCheckBox, INonPlayer>();
 
-		// TODO make table display only in-combat trackables now
+			for (final IShadowrunCombatTrackable trackable : getAllCombatTrackables()) {
+				if (trackable instanceof INonPlayer) {
+					final JCheckBox npcCheckbox = new JCheckBox(
+							trackable.toString(), true);
+					npcAdditionPanel.add(npcCheckbox);
+					nonPlayerCheckBoxMap.put(npcCheckbox,
+							(INonPlayer) trackable);
+				}
+			}
+			if (!nonPlayerCheckBoxMap.isEmpty()) {
+				final int addResult = JOptionPane
+						.showConfirmDialog(null, npcAdditionPanel,
+								"Which NPCs should be added?",
+								JOptionPane.OK_CANCEL_OPTION,
+								JOptionPane.PLAIN_MESSAGE);
 
-		// TODO start combat button should be disabled, end combat enabled
+				if (addResult == JOptionPane.OK_OPTION) {
+					for (final Entry<JCheckBox, INonPlayer> entry : nonPlayerCheckBoxMap
+							.entrySet()) {
+						final JCheckBox checkbox = entry.getKey();
+						if (checkbox.isSelected()) {
+							addCombatTrackable(entry.getValue());
+						}
+					}
+				}
+			}
+
+			// set combat status to true
+			setInCombat(true);
+
+			// roll initiative for all in-combat
+			rollInitiative();
+
+			// TODO make table display only in-combat trackables now
+
+			// TODO start combat button should be disabled, end combat enabled
+		}
 	}
 
 	/**
@@ -95,19 +141,54 @@ public final class ShadowrunTrackingControl extends
 	 */
 	@Override
 	public void endCombat() {
-		// TODO confirmation
+		// confirmation
+		final int result = JOptionPane.showConfirmDialog(null,
+				"Are you sure you want to end combat?", "End combat?",
+				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
-		// TODO remove dead NPCs from game?
+		if (result == JOptionPane.OK_OPTION) {
+			// remove NPCs from game?
+			final JPanel npcRemovalPanel = new JPanel(new GridLayout(0, 1));
 
-		// clear combat tracking list
-		getAllCombatTrackables().clear();
+			final HashMap<JCheckBox, INonPlayer> nonPlayerCheckBoxMap = new HashMap<JCheckBox, INonPlayer>();
 
-		// set combat status to false
-		setInCombat(false);
+			for (final IShadowrunCombatTrackable trackable : getAllCombatTrackables()) {
+				if (trackable instanceof INonPlayer) {
+					final JCheckBox npcCheckbox = new JCheckBox(
+							trackable.toString(), true);
+					npcRemovalPanel.add(npcCheckbox);
+					nonPlayerCheckBoxMap.put(npcCheckbox,
+							(INonPlayer) trackable);
+				}
+			}
+			if (!nonPlayerCheckBoxMap.isEmpty()) {
+				final int removeResult = JOptionPane
+						.showConfirmDialog(null, npcRemovalPanel,
+								"Which NPCs should be removed?",
+								JOptionPane.OK_CANCEL_OPTION,
+								JOptionPane.PLAIN_MESSAGE);
 
-		// TODO make table display all trackables now
+				if (removeResult == JOptionPane.OK_OPTION) {
+					for (final Entry<JCheckBox, INonPlayer> entry : nonPlayerCheckBoxMap
+							.entrySet()) {
+						final JCheckBox checkbox = entry.getKey();
+						if (checkbox.isSelected()) {
+							removeTrackable(entry.getValue());
+						}
+					}
+				}
+			}
 
-		// TODO end combat button should be disabled, start combat enabled
+			// clear combat tracking list
+			getAllCombatTrackables().clear();
+
+			// set combat status to false
+			setInCombat(false);
+
+			// TODO make table display all trackables now
+
+			// TODO end combat button should be disabled, start combat enabled
+		}
 	}
 
 	@Override
@@ -119,7 +200,6 @@ public final class ShadowrunTrackingControl extends
 		for (final IShadowrunCombatTrackable trackable : getAllCombatTrackables()) {
 			final int initiative;
 
-			// TODO check if still alive/operational
 			if (trackable instanceof INonPlayer) {
 				// non-player trackable; program rolls initiative
 				// dialog penalty input dialog

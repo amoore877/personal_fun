@@ -41,24 +41,24 @@
     <xs:sequence>
       <xs:element name="name" type="xs:string"/>
       <xs:element name="special" type="xs:int"/>
-      <xs:element name="statusEffects" minOccurs="0">
+      <xs:element name="statusEffects">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="statusEffects" type="statusEffect" maxOccurs="unbounded"/>
+            <xs:element name="statusEffectID" type="xs:string" maxOccurs="unbounded"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="inventory" minOccurs="0">
+      <xs:element name="inventory">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="inventory" type="equipment" maxOccurs="unbounded"/>
+            <xs:element name="inventoryID" type="xs:string" maxOccurs="unbounded"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="qualities" minOccurs="0">
+      <xs:element name="qualities">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="qualities" type="quality" maxOccurs="unbounded"/>
+            <xs:element name="qualityID" type="xs:string" maxOccurs="unbounded"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -71,28 +71,93 @@
       <xs:element name="intuition" type="xs:int"/>
       <xs:element name="charisma" type="xs:int"/>
       <xs:element name="initDice" type="xs:int"/>
-      <xs:element name="abilities" minOccurs="0">
+      <xs:element name="skills">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="abilities" type="ability" maxOccurs="unbounded"/>
+            <xs:element ref="skill" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="spells">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="spell" maxOccurs="unbounded"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="statusEffect">
+  <xs:complexType name="skill">
+    <xs:complexContent>
+      <xs:extension base="ability">
+        <xs:sequence>
+          <xs:element name="level" type="xs:int"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ability" abstract="true">
     <xs:sequence>
       <xs:element name="fullDesc" type="xs:string"/>
-      <xs:element name="briefDesc" type="xs:string"/>
-      <xs:element name="combatStatusEffect" type="xs:boolean"/>
-      <xs:element name="statusEffectType" type="statusEffectType"/>
     </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="spell">
+    <xs:complexContent>
+      <xs:extension base="ability">
+        <xs:sequence>
+          <xs:element name="briefDesc" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="spirit">
+    <xs:complexContent>
+      <xs:extension base="livingBeing">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="character">
+    <xs:complexContent>
+      <xs:extension base="livingBeing">
+        <xs:sequence>
+          <xs:element name="essence" type="xs:int"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="hacker">
+    <xs:complexContent>
+      <xs:extension base="character">
+        <xs:sequence>
+          <xs:element name="rating" type="xs:int"/>
+          <xs:element name="attack" type="xs:int"/>
+          <xs:element name="sleaze" type="xs:int"/>
+          <xs:element name="dataProcessing" type="xs:int"/>
+          <xs:element name="firewall" type="xs:int"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="technomancer">
+    <xs:complexContent>
+      <xs:extension base="character">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="equipment" abstract="true">
     <xs:sequence>
       <xs:element name="name" type="xs:string"/>
+      <xs:element name="id" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -176,10 +241,10 @@
     <xs:complexContent>
       <xs:extension base="weapon">
         <xs:sequence>
-          <xs:element name="rangedWeaponTypes" minOccurs="0">
+          <xs:element name="rangedWeaponTypes">
             <xs:complexType>
               <xs:sequence>
-                <xs:element name="rangedWeaponTypes" type="rangedWeaponType" maxOccurs="unbounded"/>
+                <xs:element name="rangedWeaponType" type="rangedWeaponType" maxOccurs="unbounded"/>
               </xs:sequence>
             </xs:complexType>
           </xs:element>
@@ -200,10 +265,10 @@
     <xs:complexContent>
       <xs:extension base="rangedWeapon">
         <xs:sequence>
-          <xs:element name="firingModes" minOccurs="0">
+          <xs:element name="firingModes">
             <xs:complexType>
               <xs:sequence>
-                <xs:element name="firingModes" type="firingMode" maxOccurs="unbounded"/>
+                <xs:element name="firingMode" type="firingMode" maxOccurs="unbounded"/>
               </xs:sequence>
             </xs:complexType>
           </xs:element>
@@ -216,6 +281,7 @@
 
   <xs:complexType name="quality">
     <xs:sequence>
+      <xs:element name="id" type="xs:string"/>
       <xs:element name="fullDesc" type="xs:string"/>
       <xs:element name="briefDesc" type="xs:string"/>
       <xs:element name="combatQuality" type="xs:boolean"/>
@@ -223,70 +289,14 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="ability" abstract="true">
+  <xs:complexType name="statusEffect">
     <xs:sequence>
+      <xs:element name="id" type="xs:string"/>
       <xs:element name="fullDesc" type="xs:string"/>
+      <xs:element name="briefDesc" type="xs:string"/>
+      <xs:element name="combatStatusEffect" type="xs:boolean"/>
+      <xs:element name="statusEffectType" type="statusEffectType"/>
     </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="skill">
-    <xs:complexContent>
-      <xs:extension base="ability">
-        <xs:sequence>
-          <xs:element name="level" type="xs:int"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="spell">
-    <xs:complexContent>
-      <xs:extension base="ability">
-        <xs:sequence>
-          <xs:element name="briefDesc" type="xs:string"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="spirit">
-    <xs:complexContent>
-      <xs:extension base="livingBeing">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="character">
-    <xs:complexContent>
-      <xs:extension base="livingBeing">
-        <xs:sequence>
-          <xs:element name="essence" type="xs:int"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="hacker">
-    <xs:complexContent>
-      <xs:extension base="character">
-        <xs:sequence>
-          <xs:element name="rating" type="xs:int"/>
-          <xs:element name="attack" type="xs:int"/>
-          <xs:element name="sleaze" type="xs:int"/>
-          <xs:element name="dataProcessing" type="xs:int"/>
-          <xs:element name="firewall" type="xs:int"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="technomancer">
-    <xs:complexContent>
-      <xs:extension base="character">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="agent">
@@ -306,10 +316,17 @@
       <xs:element name="rating" type="xs:int"/>
       <xs:element name="dataProcessing" type="xs:int"/>
       <xs:element name="firewall" type="xs:int"/>
-      <xs:element name="abilities" minOccurs="0">
+      <xs:element name="skills">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="abilities" type="ability" maxOccurs="unbounded"/>
+            <xs:element name="skillID" type="skill" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="spells">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="spellID" type="spell" maxOccurs="unbounded"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -323,10 +340,10 @@
           <xs:element name="pilot" type="xs:int"/>
           <xs:element name="body" type="xs:int"/>
           <xs:element name="armor" type="xs:int"/>
-          <xs:element name="inventory" minOccurs="0">
+          <xs:element name="inventories">
             <xs:complexType>
               <xs:sequence>
-                <xs:element name="inventory" type="equipment" maxOccurs="unbounded"/>
+                <xs:element name="inventoryID" type="xs:string" maxOccurs="unbounded"/>
               </xs:sequence>
             </xs:complexType>
           </xs:element>
@@ -334,14 +351,6 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-
-  <xs:simpleType name="statusEffectType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="POSITIVE"/>
-      <xs:enumeration value="NEGATIVE"/>
-      <xs:enumeration value="NEUTRAL"/>
-    </xs:restriction>
-  </xs:simpleType>
 
   <xs:simpleType name="damageElement">
     <xs:restriction base="xs:string">
@@ -391,6 +400,14 @@
   </xs:simpleType>
 
   <xs:simpleType name="qualityType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="POSITIVE"/>
+      <xs:enumeration value="NEGATIVE"/>
+      <xs:enumeration value="NEUTRAL"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="statusEffectType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="POSITIVE"/>
       <xs:enumeration value="NEGATIVE"/>

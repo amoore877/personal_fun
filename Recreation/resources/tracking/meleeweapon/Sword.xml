@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<meleeWeapon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../src/games/rolePlayingGames/shadowrun/tracking/trackables/xml/xsd/ShadowrunSchema.xsd" xsi:type="meleeWeapon">
+  <name>Sword</name>
+  <id>f4796cf0-a5bf-4316-b91a-bc445a4ffae6</id>
+  <accuracy>6</accuracy>
+  <damageValue>3</damageValue>
+  <armorPiercing>-2</armorPiercing>
+  <damageElement>REGULAR</damageElement>
+  <benefits>none</benefits>
+  <reach>1</reach>
+</meleeWeapon>

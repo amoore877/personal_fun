@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<character xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../../../src/games/rolePlayingGames/shadowrun/tracking/trackables/xml/xsd/ShadowrunSchema.xsd">
+	<name>Thug</name>
+	<special>0</special>
+	<statusEffects>
+	</statusEffects>
+	<inventory>
+	    <!-- Club -->
+		<inventoryID>1b969b76-e224-478c-8d27-49a1b98507af</inventoryID>
+		<!-- Knife -->
+		<inventoryID>60873b15-34e4-446f-984c-aff16d1c1b09</inventoryID>
+		<!-- Rating 1 Commlink -->
+		<inventoryID>bce3054e-1eb9-4405-8105-774813853d18</inventoryID>
+	</inventory>
+	<qualities>
+	</qualities>
+	<body>3</body>
+	<willpower>3</willpower>
+	<agility>3</agility>
+	<reaction>3</reaction>
+	<strength>3</strength>
+	<logic>2</logic>
+	<intuition>3</intuition>
+	<charisma>2</charisma>
+	<initDice>1</initDice>
+	<skills>
+		<skill>
+			<fullDesc>Blades</fullDesc>
+			<level>3</level>
+		</skill>
+		<skill>
+			<fullDesc>Clubs</fullDesc>
+			<level>3</level>
+		</skill>
+		<skill>
+			<fullDesc>Intimidation</fullDesc>
+			<level>3</level>
+		</skill>
+		<skill>
+			<fullDesc>Unarmed Combat</fullDesc>
+			<level>3</level>
+		</skill>
+	</skills>
+	<spells>
+	</spells>
+	<essence>6</essence>
+</character>

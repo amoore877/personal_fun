@@ -17,6 +17,10 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "quality")
 public class QualityJAXB {
+
+	@XmlElement(required = true, nillable = false)
+	private String id;
+
 	/**
 	 * The note's string.
 	 */
@@ -71,5 +75,13 @@ public class QualityJAXB {
 
 	public void setQualityType(final QualityType qualityType) {
 		this.qualityType = qualityType;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(final String id) {
+		this.id = id;
 	}
 }

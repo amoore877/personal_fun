@@ -1,6 +1,7 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.matrix;
 
-import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.support.AbilityJAXB;
+import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.support.SkillJAXB;
+import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.support.SpellJAXB;
 
 import java.util.ArrayList;
 
@@ -47,11 +48,18 @@ public abstract class MatrixBeingJAXB {
 	private int firewall;
 
 	/**
-	 * Matrix abilities/programs.
+	 * Skills.
 	 */
-	@XmlElementWrapper
-	@XmlElement(required = true, nillable = false)
-	private ArrayList<AbilityJAXB> abilities;
+	@XmlElementWrapper(required = true, nillable = false, name = "skills")
+	@XmlElement(required = true, nillable = false, name = "skillID")
+	private ArrayList<SkillJAXB> skills;
+
+	/**
+	 * Spells.
+	 */
+	@XmlElementWrapper(required = true, nillable = false, name = "spells")
+	@XmlElement(required = true, nillable = false, name = "spellID")
+	private ArrayList<SpellJAXB> spells;
 
 	public String getName() {
 		return name;
@@ -85,11 +93,19 @@ public abstract class MatrixBeingJAXB {
 		this.firewall = firewall;
 	}
 
-	public ArrayList<AbilityJAXB> getAbilities() {
-		return abilities;
+	public ArrayList<SkillJAXB> getSkills() {
+		return skills;
 	}
 
-	public void setAbilities(final ArrayList<AbilityJAXB> abilities) {
-		this.abilities = abilities;
+	public void setSkills(final ArrayList<SkillJAXB> skills) {
+		this.skills = skills;
+	}
+
+	public ArrayList<SpellJAXB> getSpells() {
+		return spells;
+	}
+
+	public void setSpells(final ArrayList<SpellJAXB> spells) {
+		this.spells = spells;
 	}
 }

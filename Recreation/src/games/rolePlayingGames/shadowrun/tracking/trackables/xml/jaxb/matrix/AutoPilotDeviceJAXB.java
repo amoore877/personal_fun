@@ -1,7 +1,5 @@
 package games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.matrix;
 
-import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.equipment.EquipmentJAXB;
-
 import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -42,9 +40,9 @@ public class AutoPilotDeviceJAXB extends MatrixBeingJAXB {
 	/**
 	 * Inventory.
 	 */
-	@XmlElementWrapper
-	@XmlElement(required = true, nillable = false)
-	private ArrayList<EquipmentJAXB> inventory;
+	@XmlElementWrapper(required = true, nillable = false, name = "inventories")
+	@XmlElement(required = true, nillable = false, name = "inventoryID")
+	private ArrayList<String> inventory;
 
 	public int getPilot() {
 		return pilot;
@@ -70,11 +68,11 @@ public class AutoPilotDeviceJAXB extends MatrixBeingJAXB {
 		this.armor = armor;
 	}
 
-	public ArrayList<EquipmentJAXB> getInventory() {
+	public ArrayList<String> getInventory() {
 		return inventory;
 	}
 
-	public void setInventory(final ArrayList<EquipmentJAXB> inventory) {
+	public void setInventory(final ArrayList<String> inventory) {
 		this.inventory = inventory;
 	}
 }

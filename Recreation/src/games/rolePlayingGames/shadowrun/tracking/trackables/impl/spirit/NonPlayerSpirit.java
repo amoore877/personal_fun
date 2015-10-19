@@ -12,7 +12,12 @@ import games.rolePlayingGames.shadowrun.tracking.trackables.living.AbstractSpiri
 import games.rolePlayingGames.shadowrun.tracking.trackables.living.INonPlayerLivingBeing;
 import games.rolePlayingGames.shadowrun.util.ShadowrunCommonUtils;
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
 
 /**
  * An NPC spirit.
@@ -220,5 +225,32 @@ public final class NonPlayerSpirit extends AbstractSpirit implements
 		}
 
 		return oResult;
+	}
+
+	@Override
+	public int rollInitiative(final int iPenalties) {
+		// prompt for initiative type
+		final JRadioButton meatButton = new JRadioButton("Meat ");
+		meatButton.setMnemonic(KeyEvent.VK_M);
+		final JRadioButton astralButton = new JRadioButton("Astral ");
+		astralButton.setMnemonic(KeyEvent.VK_A);
+		final ButtonGroup initiativeTypeButtonGroup = new ButtonGroup();
+		initiativeTypeButtonGroup.add(meatButton);
+		initiativeTypeButtonGroup.add(astralButton);
+
+		meatButton.setSelected(true);
+
+		JOptionPane.showConfirmDialog(null, initiativeTypeButtonGroup,
+				"Initiative type for: " + getName(),
+				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+		if (astralButton.isSelected()) {
+			return ShadowrunCommonUtils.rollAstralInitiative(getIntuition(),
+					getInitDice()) - iPenalties;
+		} else {
+			// assume meat
+			return ShadowrunCommonUtils.rollInitiative(getIntuition(),
+					getReaction(), getInitDice()) - iPenalties;
+		}
 	}
 }
