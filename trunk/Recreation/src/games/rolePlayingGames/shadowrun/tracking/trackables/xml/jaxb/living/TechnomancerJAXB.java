@@ -15,4 +15,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "technomancer")
 public class TechnomancerJAXB extends CharacterJAXB {
 
+	@Override
+	public String toString() {
+		return "Technomancer-" + getName();
+	}
 }

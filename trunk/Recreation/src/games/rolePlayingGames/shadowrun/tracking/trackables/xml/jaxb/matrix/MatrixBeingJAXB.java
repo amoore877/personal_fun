@@ -108,4 +108,7 @@ public abstract class MatrixBeingJAXB {
 	public void setSpells(final ArrayList<SpellJAXB> spells) {
 		this.spells = spells;
 	}
+
+	@Override
+	public abstract String toString();
 }
