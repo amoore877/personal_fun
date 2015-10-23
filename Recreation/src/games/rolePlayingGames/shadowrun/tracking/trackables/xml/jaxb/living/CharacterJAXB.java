@@ -32,4 +32,9 @@ public class CharacterJAXB extends LivingBeingJAXB {
 	public void setEssence(final int essence) {
 		this.essence = essence;
 	}
+
+	@Override
+	public String toString() {
+		return "Character-" + getName();
+	}
 }

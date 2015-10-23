@@ -75,4 +75,9 @@ public class AutoPilotDeviceJAXB extends MatrixBeingJAXB {
 	public void setInventory(final ArrayList<String> inventory) {
 		this.inventory = inventory;
 	}
+
+	@Override
+	public String toString() {
+		return "AutoPilot Device-" + getName();
+	}
 }

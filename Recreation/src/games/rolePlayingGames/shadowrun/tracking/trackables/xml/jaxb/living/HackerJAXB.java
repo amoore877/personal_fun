@@ -84,4 +84,9 @@ public class HackerJAXB extends CharacterJAXB {
 	public void setFirewall(final int firewall) {
 		this.firewall = firewall;
 	}
+
+	@Override
+	public String toString() {
+		return "Hacker-" + getName();
+	}
 }

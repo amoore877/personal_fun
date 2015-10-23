@@ -43,4 +43,9 @@ public class AgentJAXB extends MatrixBeingJAXB {
 	public void setSleaze(final int sleaze) {
 		this.sleaze = sleaze;
 	}
+
+	@Override
+	public String toString() {
+		return "Agent-" + getName();
+	}
 }

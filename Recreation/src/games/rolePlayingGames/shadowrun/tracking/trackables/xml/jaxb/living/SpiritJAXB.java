@@ -15,4 +15,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "spirit")
 public class SpiritJAXB extends LivingBeingJAXB {
 
+	@Override
+	public String toString() {
+		return "Spirit-" + getName();
+	}
 }

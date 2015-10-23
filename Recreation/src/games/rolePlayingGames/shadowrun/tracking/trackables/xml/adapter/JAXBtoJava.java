@@ -64,6 +64,26 @@ import javax.xml.bind.Unmarshaller;
 public final class JAXBtoJava {
 
 	/**
+	 * Default spirit services count.
+	 */
+	private static final int DEFAULT_SPIRIT_SERVICES = 4;
+
+	/**
+	 * Default projectile weapon spare clips.
+	 */
+	private static final int DEFAULT_PROJECTILE_WEAPON_SPARE_CLIPS = 4;
+
+	/**
+	 * Default firearm spare clips.
+	 */
+	private static final int DEFAULT_FIREARM_SPARE_CLIPS = 3;
+
+	/**
+	 * Default charged melee weapon spare clips.
+	 */
+	private static final int DEFAULT_CHARGED_MELEE_WEAPON_SPARE_CLIPS = 0;
+
+	/**
 	 * Instance.
 	 */
 	private static JAXBtoJava myInstance = null;
@@ -568,7 +588,7 @@ public final class JAXBtoJava {
 		} else if (iEquipment instanceof WeaponJAXB) {
 			return getWeapon((WeaponJAXB) iEquipment);
 		} else {
-			// TODO add any additional extensions of Equipment here
+			// add any additional extensions of Equipment here
 			return null;
 		}
 	}
@@ -645,7 +665,7 @@ public final class JAXBtoJava {
 		} else if (iWeapon instanceof MeleeWeaponJAXB) {
 			return getMeleeWeapon((MeleeWeaponJAXB) iWeapon);
 		} else {
-			// TODO add any additional extensions of weapon here
+			// add any additional extensions of weapon here
 			return null;
 		}
 	}
@@ -661,7 +681,7 @@ public final class JAXBtoJava {
 		if (iWeapon instanceof ChargedMeleeWeaponJAXB) {
 			return getChargedMeleeWeapon((ChargedMeleeWeaponJAXB) iWeapon);
 		} else {
-			// TODO add any additional extensions of melee weapon here
+			// add any additional extensions of melee weapon here
 			return new MeleeWeapon(iWeapon.getName(), iWeapon.getBenefits(),
 					iWeapon.getAccuracy(), iWeapon.getDamageValue(),
 					iWeapon.getArmorPiercing(), iWeapon.getDamageElement(),
@@ -671,7 +691,7 @@ public final class JAXBtoJava {
 
 	/**
 	 * Get some Shadowrun charged melee weapon from the Charged Melee Weapon
-	 * JAXB.
+	 * JAXB. Use default "spare clips" of 0.
 	 * 
 	 * @param iWeapon
 	 *            charged melee weapon JAXB.
@@ -679,11 +699,26 @@ public final class JAXBtoJava {
 	 */
 	public ChargedMeleeWeapon getChargedMeleeWeapon(
 			final ChargedMeleeWeaponJAXB iWeapon) {
-		// TODO spare clips prompt?
+		return getChargedMeleeWeapon(iWeapon,
+				DEFAULT_CHARGED_MELEE_WEAPON_SPARE_CLIPS);
+	}
+
+	/**
+	 * Get some Shadowrun charged melee weapon from the Charged Melee Weapon
+	 * JAXB.
+	 * 
+	 * @param iWeapon
+	 *            charged melee weapon JAXB.
+	 * @param iSpareClips
+	 *            spare clips to use.
+	 * @return some charged melee weapon.
+	 */
+	public ChargedMeleeWeapon getChargedMeleeWeapon(
+			final ChargedMeleeWeaponJAXB iWeapon, final int iSpareClips) {
 		return new ChargedMeleeWeapon(iWeapon.getName(), iWeapon.getBenefits(),
 				iWeapon.getAccuracy(), iWeapon.getDamageValue(),
 				iWeapon.getArmorPiercing(), iWeapon.getDamageElement(),
-				iWeapon.getReach(), iWeapon.getClipCapacity(), 2);
+				iWeapon.getReach(), iWeapon.getClipCapacity(), iSpareClips);
 	}
 
 	/**
@@ -699,9 +734,21 @@ public final class JAXBtoJava {
 		} else if (iWeapon instanceof FirearmWeaponJAXB) {
 			return getFirearmWeapon((FirearmWeaponJAXB) iWeapon);
 		} else {
-			// TODO add any additional extensions of ranged weapon here
+			// add any additional extensions of ranged weapon here
 			return null;
 		}
+	}
+
+	/**
+	 * Get some Shadowrun firearm from the Firearm Weapon JAXB. Use default
+	 * spare clips of 3.
+	 * 
+	 * @param iWeapon
+	 *            firearm weapon JAXB.
+	 * @return some firearm weapon.
+	 */
+	public FirearmWeapon getFirearmWeapon(final FirearmWeaponJAXB iWeapon) {
+		return getFirearmWeapon(iWeapon, DEFAULT_FIREARM_SPARE_CLIPS);
 	}
 
 	/**
@@ -709,19 +756,23 @@ public final class JAXBtoJava {
 	 * 
 	 * @param iWeapon
 	 *            firearm weapon JAXB.
+	 * @param iSpareClips
+	 *            spare clips.
 	 * @return some firearm weapon.
 	 */
-	public FirearmWeapon getFirearmWeapon(final FirearmWeaponJAXB iWeapon) {
-		// TODO spare clips prompt?
+	public FirearmWeapon getFirearmWeapon(final FirearmWeaponJAXB iWeapon,
+			final int iSpareClips) {
 		return new FirearmWeapon(iWeapon.getName(), iWeapon.getBenefits(),
 				iWeapon.getAccuracy(), iWeapon.getDamageValue(),
 				iWeapon.getArmorPiercing(), iWeapon.getDamageElement(),
-				iWeapon.getClipCapacity(), 2, iWeapon.getRangedWeaponTypes(),
-				iWeapon.getFiringModes(), iWeapon.getRecoilCompensation());
+				iWeapon.getClipCapacity(), iSpareClips,
+				iWeapon.getRangedWeaponTypes(), iWeapon.getFiringModes(),
+				iWeapon.getRecoilCompensation());
 	}
 
 	/**
-	 * Get some Shadowrun projectile weapon from the Projectile Weapon JAXB.
+	 * Get some Shadowrun projectile weapon from the Projectile Weapon JAXB. Use
+	 * default "spare clips" of 4.
 	 * 
 	 * @param iWeapon
 	 *            projectile weapon JAXB.
@@ -729,11 +780,25 @@ public final class JAXBtoJava {
 	 */
 	public ProjectileWeapon getProjectileWeapon(
 			final ProjectileWeaponJAXB iWeapon) {
-		// TODO spare clips prompt?
+		return getProjectileWeapon(iWeapon,
+				DEFAULT_PROJECTILE_WEAPON_SPARE_CLIPS);
+	}
+
+	/**
+	 * Get some Shadowrun projectile weapon from the Projectile Weapon JAXB.
+	 * 
+	 * @param iWeapon
+	 *            projectile weapon JAXB.
+	 * @param iSpareClips
+	 *            "spare clips" to use.
+	 * @return some projectile weapon.
+	 */
+	public ProjectileWeapon getProjectileWeapon(
+			final ProjectileWeaponJAXB iWeapon, final int iSpareClips) {
 		return new ProjectileWeapon(iWeapon.getName(), iWeapon.getBenefits(),
 				iWeapon.getAccuracy(), iWeapon.getDamageValue(),
-				iWeapon.getArmorPiercing(), iWeapon.getDamageElement(), 2,
-				iWeapon.getRangedWeaponTypes());
+				iWeapon.getArmorPiercing(), iWeapon.getDamageElement(),
+				iSpareClips, iWeapon.getRangedWeaponTypes());
 	}
 
 	/**
@@ -761,7 +826,7 @@ public final class JAXBtoJava {
 		} else if (iItem instanceof TimedItemJAXB) {
 			return getTimedItem((TimedItemJAXB) iItem);
 		} else {
-			// TODO add any additional extensions of BasicItem here
+			// add any additional extensions of BasicItem here
 			return new ShadowrunBasicItem(iItem.getName(), iItem.getBody(),
 					iItem.getArmor());
 		}
@@ -804,7 +869,7 @@ public final class JAXBtoJava {
 		} else if (iAbility instanceof SpellJAXB) {
 			return getSpell((SpellJAXB) iAbility);
 		} else {
-			// TODO add additional extensions of Ability JAXB here
+			// add additional extensions of Ability JAXB here
 			return null;
 		}
 	}
@@ -1065,19 +1130,32 @@ public final class JAXBtoJava {
 	}
 
 	/**
-	 * Get some spirit from JAXB version.
+	 * Get some NPC spirit from JAXB version. Use default services of 4.
 	 * 
 	 * @param iSpirit
 	 *            JAXB version of spirit.
 	 * @return spirit.
 	 */
 	public NonPlayerSpirit getSpirit(final SpiritJAXB iSpirit) {
-		// TODO prompt for services?
+		return getSpirit(iSpirit, DEFAULT_SPIRIT_SERVICES);
+	}
+
+	/**
+	 * Get some NPC spirit from JAXB version.
+	 * 
+	 * @param iSpirit
+	 *            JAXB version of spirit.
+	 * @param iServices
+	 *            services for the spirit.
+	 * @return spirit.
+	 */
+	public NonPlayerSpirit getSpirit(final SpiritJAXB iSpirit,
+			final int iServices) {
 		return new NonPlayerSpirit(iSpirit.getName(), iSpirit.getSpecial(),
 				iSpirit.getBody(), iSpirit.getWillpower(),
 				getStatusEffectsByID(iSpirit.getStatusEffects()),
 				getItemsByID(iSpirit.getInventory()),
-				getQualitiesByID(iSpirit.getQualities()), 4,
+				getQualitiesByID(iSpirit.getQualities()), iServices,
 				iSpirit.getAgility(), iSpirit.getReaction(),
 				iSpirit.getStrength(), iSpirit.getLogic(),
 				iSpirit.getIntuition(), iSpirit.getCharisma(),
@@ -1097,7 +1175,7 @@ public final class JAXBtoJava {
 		} else if (iCharacter instanceof TechnomancerJAXB) {
 			return getTechnomancer((TechnomancerJAXB) iCharacter);
 		} else {
-			// TODO add additional extensions of Character JAXB here
+			// add additional extensions of Character JAXB here
 			return new NonPlayerCharacter(iCharacter.getName(),
 					iCharacter.getEssence(), iCharacter.getBody(),
 					iCharacter.getWillpower(), iCharacter.getSpecial(),
@@ -1152,5 +1230,53 @@ public final class JAXBtoJava {
 				getAbilities(iHacker), iHacker.getRating(),
 				iHacker.getAttack(), iHacker.getSleaze(),
 				iHacker.getDataProcessing(), iHacker.getFirewall());
+	}
+
+	/**
+	 * @return all loaded characters.
+	 */
+	@SuppressWarnings("unchecked")
+	public ArrayList<CharacterJAXB> getCharacters() {
+		return (ArrayList<CharacterJAXB>) myCharacters.clone();
+	}
+
+	/**
+	 * @return all loaded hackers.
+	 */
+	@SuppressWarnings("unchecked")
+	public ArrayList<HackerJAXB> getHackers() {
+		return (ArrayList<HackerJAXB>) myHackers.clone();
+	}
+
+	/**
+	 * @return all loaded spirits.
+	 */
+	@SuppressWarnings("unchecked")
+	public ArrayList<SpiritJAXB> getSpirits() {
+		return (ArrayList<SpiritJAXB>) mySpirits.clone();
+	}
+
+	/**
+	 * @return all loaded technomancers.
+	 */
+	@SuppressWarnings("unchecked")
+	public ArrayList<TechnomancerJAXB> getTechnomancers() {
+		return (ArrayList<TechnomancerJAXB>) myTechnomancers.clone();
+	}
+
+	/**
+	 * @return all loaded agents.
+	 */
+	@SuppressWarnings("unchecked")
+	public ArrayList<AgentJAXB> getAgents() {
+		return (ArrayList<AgentJAXB>) myAgents.clone();
+	}
+
+	/**
+	 * @return all loaded autopiloted devices.
+	 */
+	@SuppressWarnings("unchecked")
+	public ArrayList<AutoPilotDeviceJAXB> getAutoPilots() {
+		return (ArrayList<AutoPilotDeviceJAXB>) myAutoPilots.clone();
 	}
 }
