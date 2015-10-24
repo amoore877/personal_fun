@@ -36,7 +36,7 @@ public abstract class AbstractItem extends UniqueObject implements IItem {
 	 * @param iName
 	 *            new name.
 	 */
-	protected final void setName(final String iName) {
+	public final void setName(final String iName) {
 		if ((iName == null) || (iName.isEmpty())) {
 			System.err.println("Given name [" + iName + "]. Name [" + myName
 					+ "] will be unchanged.");
