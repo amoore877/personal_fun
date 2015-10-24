@@ -16,10 +16,49 @@ public class RollForShadowrun {
 	 * Main.
 	 * 
 	 * @param args
-	 *            arguments (none parsed).
+	 *            arguments. For no args, start general program. For 1 arg, must
+	 *            be the number of dice to roll, no edge. For 2 args, must be
+	 *            number of dice to roll, and y or n for edge.
 	 */
 	public static void main(final String[] args) {
-		new RollForShadowrun().start();
+		if (args.length == 0) {
+			// no args, run general program
+			new RollForShadowrun().start();
+		} else {
+			// at least one arg
+			try {
+				// get dice count
+				final int diceCount = Integer.parseInt(args[0]);
+
+				boolean useEdge;
+				if (args.length > 1) {
+					// get edge argument
+					if (args[1].equals("y")) {
+						useEdge = true;
+					} else {
+						useEdge = false;
+					}
+				} else {
+					useEdge = false;
+				}
+
+				printResults(
+						new ShadowrunRollResult(ShadowrunRoller.rollDice(
+								diceCount, useEdge)), false);
+			} catch (final NumberFormatException iException) {
+				iException.printStackTrace();
+				printUsage();
+			}
+		}
+	}
+
+	/**
+	 * Print usage.
+	 */
+	private static void printUsage() {
+		System.out.println("Usage:\t[d] [y|n]\n"
+				+ "No args\tRun program continuously.\n" + "d\tRoll d dice.\n"
+				+ "y\tUse edge.\n" + "n\tDon't use edge.");
 	}
 
 	/**
@@ -57,22 +96,9 @@ public class RollForShadowrun {
 						edgeUsed = false;
 					}
 
-					final ShadowrunRollResult rollResult = new ShadowrunRollResult(
-							ShadowrunRoller.rollDice(diceNum, edgeUsed));
-
-					final int hits = rollResult.getHits();
-
-					System.out.println("\n\n\n\n\n\n" + "Result ["
-							+ rollResult.toString() + "] \n" + "Dice Rolled: ["
-							+ rollResult.getTotalDice() + "] \n" + "Hits: ["
-							+ hits + "] \n" + "Ones: [" + rollResult.getOnes()
-							+ "], Minimum to glitch: ["
-							+ rollResult.getGlitchMinimum() + "]");
-					if (rollResult.isCriticalGlitch()) {
-						System.out.println("Critical glitch!");
-					} else if (rollResult.isGlitch()) {
-						System.out.println("Glitch!");
-					}
+					printResults(
+							new ShadowrunRollResult(ShadowrunRoller.rollDice(
+									diceNum, edgeUsed)), true);
 
 					System.out.println("\n\n\n\n\n\n");
 				} else {
@@ -90,5 +116,34 @@ public class RollForShadowrun {
 		}
 
 		System.out.println("Exiting program.");
+	}
+
+	/**
+	 * Print results of given roll.
+	 * 
+	 * @param iRollResult
+	 *            roll to print out.
+	 * @param iVerbose
+	 *            true for verbose output, false otherwise.
+	 */
+	private static void printResults(final ShadowrunRollResult iRollResult,
+			final boolean iVerbose) {
+		final int hits = iRollResult.getHits();
+
+		if (iVerbose) {
+			System.out.println("\n\n\n\n\n\n" + "Result ["
+					+ iRollResult.toString() + "] \n" + "Dice Rolled: ["
+					+ iRollResult.getTotalDice() + "] \n" + "Hits: [" + hits
+					+ "] \n" + "Ones: [" + iRollResult.getOnes()
+					+ "], Minimum to glitch: ["
+					+ iRollResult.getGlitchMinimum() + "]");
+		} else {
+			System.out.println("Hits: [" + hits + "]");
+		}
+		if (iRollResult.isCriticalGlitch()) {
+			System.out.println("Critical glitch!");
+		} else if (iRollResult.isGlitch()) {
+			System.out.println("Glitch!");
+		}
 	}
 }
