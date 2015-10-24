@@ -3,10 +3,24 @@ package games.rolePlayingGames.shadowrun.tracking.control;
 import games.rolePlayingGames.shadowrun.tracking.trackables.INonPlayer;
 import games.rolePlayingGames.shadowrun.tracking.trackables.IPlayer;
 import games.rolePlayingGames.shadowrun.tracking.trackables.IShadowrunCombatTrackable;
+import games.rolePlayingGames.shadowrun.tracking.trackables.impl.character.NonPlayerCharacter;
+import games.rolePlayingGames.shadowrun.tracking.trackables.impl.character.NonPlayerHacker;
+import games.rolePlayingGames.shadowrun.tracking.trackables.impl.character.NonPlayerTechnomancer;
 import games.rolePlayingGames.shadowrun.tracking.trackables.impl.equipment.TimedItem;
+import games.rolePlayingGames.shadowrun.tracking.trackables.impl.matrix.NonPlayerAgent;
+import games.rolePlayingGames.shadowrun.tracking.trackables.impl.matrix.NonPlayerAutoPilotDevice;
+import games.rolePlayingGames.shadowrun.tracking.trackables.impl.spirit.NonPlayerSpirit;
+import games.rolePlayingGames.shadowrun.tracking.trackables.xml.adapter.JAXBtoJava;
+import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.living.CharacterJAXB;
+import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.living.HackerJAXB;
+import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.living.SpiritJAXB;
+import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.living.TechnomancerJAXB;
+import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.matrix.AgentJAXB;
+import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.matrix.AutoPilotDeviceJAXB;
 import games.rolePlayingGames.tracking.control.AbstractTrackingControl;
 
 import java.awt.GridLayout;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,9 +31,11 @@ import java.util.Set;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.text.NumberFormatter;
 
 /**
  * Shadowrun tracking control.
@@ -49,6 +65,11 @@ public final class ShadowrunTrackingControl extends
 	 * Initiative pass.
 	 */
 	private int myInitiativePass = 0;
+
+	/**
+	 * Alphabet tag for generated NPCs.
+	 */
+	private char myAlphabetTag = 'A';
 
 	/**
 	 * Constructor.
@@ -143,7 +164,8 @@ public final class ShadowrunTrackingControl extends
 			System.err.println("Unknown option");
 		}
 
-		// TODO refresh table?
+		// refresh table?
+		refreshTable();
 	}
 
 	/**
@@ -199,9 +221,129 @@ public final class ShadowrunTrackingControl extends
 	 * @return NPC trackable(s) to add.
 	 */
 	private ArrayList<IShadowrunCombatTrackable> addNewNPCTrackable() {
-		// TODO New, NPC: combox, show loaded XMLs
+		// New, NPC: combox, show loaded XMLs
+		final JPanel dialogPanel = new JPanel(new GridLayout(0, 1));
+
 		final JComboBox<Object> npcCombox = new JComboBox<Object>();
-		return null;
+		for (final CharacterJAXB character : JAXBtoJava.getInstance()
+				.getCharacters()) {
+			npcCombox.addItem(character);
+		}
+		for (final HackerJAXB hacker : JAXBtoJava.getInstance().getHackers()) {
+			npcCombox.addItem(hacker);
+		}
+		for (final TechnomancerJAXB technomancer : JAXBtoJava.getInstance()
+				.getTechnomancers()) {
+			npcCombox.addItem(technomancer);
+		}
+		for (final SpiritJAXB spirit : JAXBtoJava.getInstance().getSpirits()) {
+			npcCombox.addItem(spirit);
+		}
+		for (final AgentJAXB agent : JAXBtoJava.getInstance().getAgents()) {
+			npcCombox.addItem(agent);
+		}
+		for (final AutoPilotDeviceJAXB autoPilotDevice : JAXBtoJava
+				.getInstance().getAutoPilots()) {
+			npcCombox.addItem(autoPilotDevice);
+		}
+
+		dialogPanel.add(npcCombox);
+
+		final NumberFormatter numberFormatter = new NumberFormatter(
+				NumberFormat.getIntegerInstance());
+		numberFormatter.setMinimum(1);
+		final JFormattedTextField numOfTrackablesField = new JFormattedTextField();
+		numOfTrackablesField.setValue(1);
+
+		dialogPanel.add(numOfTrackablesField);
+
+		final int result = JOptionPane.showConfirmDialog(null, dialogPanel,
+				"Which NPC trackable to add, and how many?",
+				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+		final ArrayList<IShadowrunCombatTrackable> oTrackables = new ArrayList<IShadowrunCombatTrackable>();
+
+		if (result == JOptionPane.OK_OPTION) {
+			final Object selectedObject = npcCombox.getSelectedItem();
+			if (selectedObject != null) {
+				// number of instances to generate
+				int tempInstances = 1;
+				try {
+					tempInstances = Integer.parseInt(numOfTrackablesField
+							.getValue().toString());
+				} catch (final NumberFormatException iException) {
+					iException.printStackTrace();
+				}
+
+				final int instances = tempInstances;
+
+				if (selectedObject instanceof TechnomancerJAXB) {
+					for (int instanceCount = 1; instanceCount <= instances; instanceCount++) {
+						final NonPlayerTechnomancer newNPC = JAXBtoJava
+								.getInstance().getTechnomancer(
+										(TechnomancerJAXB) selectedObject);
+						newNPC.setName(newNPC.getName() + " " + myAlphabetTag
+								+ instanceCount);
+						oTrackables.add(newNPC);
+					}
+				} else if (selectedObject instanceof HackerJAXB) {
+					for (int instanceCount = 1; instanceCount <= instances; instanceCount++) {
+						final NonPlayerHacker newNPC = JAXBtoJava.getInstance()
+								.getHacker((HackerJAXB) selectedObject);
+						newNPC.setName(newNPC.getName() + " " + myAlphabetTag
+								+ instanceCount);
+						oTrackables.add(newNPC);
+					}
+				} else if (selectedObject instanceof CharacterJAXB) {
+					for (int instanceCount = 1; instanceCount <= instances; instanceCount++) {
+						final NonPlayerCharacter newNPC = JAXBtoJava
+								.getInstance().getCharacter(
+										(CharacterJAXB) selectedObject);
+						newNPC.setName(newNPC.getName() + " " + myAlphabetTag
+								+ instanceCount);
+						oTrackables.add(newNPC);
+					}
+				} else if (selectedObject instanceof SpiritJAXB) {
+					for (int instanceCount = 1; instanceCount <= instances; instanceCount++) {
+						final NonPlayerSpirit newNPC = JAXBtoJava.getInstance()
+								.getSpirit((SpiritJAXB) selectedObject);
+						newNPC.setName(newNPC.getName() + " " + myAlphabetTag
+								+ instanceCount);
+						oTrackables.add(newNPC);
+					}
+				} else if (selectedObject instanceof AutoPilotDeviceJAXB) {
+					for (int instanceCount = 1; instanceCount <= instances; instanceCount++) {
+						final NonPlayerAutoPilotDevice newNPC = JAXBtoJava
+								.getInstance().getAutoPilotDevice(
+										(AutoPilotDeviceJAXB) selectedObject);
+						newNPC.setName(newNPC.getName() + " " + myAlphabetTag
+								+ instanceCount);
+						oTrackables.add(newNPC);
+					}
+				} else if (selectedObject instanceof AgentJAXB) {
+					for (int instanceCount = 1; instanceCount <= instances; instanceCount++) {
+						final NonPlayerAgent newNPC = JAXBtoJava.getInstance()
+								.getAgent((AgentJAXB) selectedObject);
+						newNPC.setName(newNPC.getName() + " " + myAlphabetTag
+								+ instanceCount);
+						oTrackables.add(newNPC);
+					}
+				}
+
+				// increment alphabetical tag
+				if (myAlphabetTag >= 'Z') {
+					myAlphabetTag = 'A';
+				} else {
+					myAlphabetTag++;
+				}
+			}
+		} else if (result == JOptionPane.CANCEL_OPTION) {
+			System.out.println("Cancel selected");
+		} else {
+			System.err.println("Unknown option");
+		}
+
+		return oTrackables;
 	}
 
 	/**
@@ -255,7 +397,8 @@ public final class ShadowrunTrackingControl extends
 		// edit the trackable
 		iTrackable.edit();
 
-		// TODO refresh table?
+		// refresh table
+		refreshTable();
 	}
 
 	/**
@@ -315,7 +458,8 @@ public final class ShadowrunTrackingControl extends
 			// roll initiative for all in-combat
 			rollInitiative();
 
-			// TODO make table display only in-combat trackables now
+			// make table display only in-combat trackables now
+			refreshTable();
 
 			// TODO start combat button should be disabled, end combat enabled
 		}
@@ -370,7 +514,8 @@ public final class ShadowrunTrackingControl extends
 			// set combat status to false
 			setInCombat(false);
 
-			// TODO make table display all trackables now
+			// make table display all trackables now
+			refreshTable();
 
 			// TODO end combat button should be disabled, start combat enabled
 		}
@@ -391,7 +536,8 @@ public final class ShadowrunTrackingControl extends
 		// set current initiative to theoretical maximum
 		myCurrentInitiative = THEORETICAL_MAX_INITIATIVE;
 
-		// TODO table should display new initiative scores
+		// table should display new initiative scores
+		refreshTable();
 	}
 
 	/**
@@ -413,10 +559,12 @@ public final class ShadowrunTrackingControl extends
 					penalty = Integer.parseInt(JOptionPane.showInputDialog(
 							null,
 							"Initiative penalties for: "
-									+ iTrackable.toFullString(), 0));
+									+ iTrackable.toFullString(),
+							getLateJoinPenalty()));
 					validEntry = true;
 				} catch (final Exception iException) {
-					// TODO specific exceptions
+					// specific exceptions
+					iException.printStackTrace();
 				}
 			}
 			// calculate
@@ -435,7 +583,8 @@ public final class ShadowrunTrackingControl extends
 									tempInitiative));
 					validEntry = true;
 				} catch (final Exception iException) {
-					// TODO specific exceptions
+					// specific exceptions
+					iException.printStackTrace();
 				}
 			}
 
@@ -449,10 +598,12 @@ public final class ShadowrunTrackingControl extends
 				try {
 					tempInitiative = Integer.parseInt(JOptionPane
 							.showInputDialog(null, "Initiative for: "
-									+ iTrackable.toString(), 0));
+									+ iTrackable.toString(),
+									-getLateJoinPenalty()));
 					validEntry = true;
 				} catch (final Exception iException) {
-					// TODO specific exceptions
+					// specific exceptions
+					iException.printStackTrace();
 				}
 			}
 
@@ -472,6 +623,13 @@ public final class ShadowrunTrackingControl extends
 
 		trackablesForThisInitiative.add(iTrackable);
 		myInitiativeMap.put(initiative, trackablesForThisInitiative);
+	}
+
+	/**
+	 * @return late join to combat penalty; 10*current initiative pass.
+	 */
+	private int getLateJoinPenalty() {
+		return myInitiativePass * 10;
 	}
 
 	@Override
@@ -567,12 +725,19 @@ public final class ShadowrunTrackingControl extends
 		myCurrentInitiative = THEORETICAL_MAX_INITIATIVE;
 
 		if (highestInitiative > 0) {
-			// TODO table should display new initiative scores
-
+			// table should display new initiative scores
+			refreshTable();
 		} else {
 			// if no one has initiative above 0, reroll initiative for new
 			// combat turn
 			rollInitiative();
 		}
+	}
+
+	/**
+	 * Refresh the displayed table.
+	 */
+	private void refreshTable() {
+		// TODO refresh table
 	}
 }

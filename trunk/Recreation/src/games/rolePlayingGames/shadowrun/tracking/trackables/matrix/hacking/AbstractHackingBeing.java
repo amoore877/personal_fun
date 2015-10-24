@@ -121,7 +121,7 @@ public abstract class AbstractHackingBeing extends UniqueObject implements
 	 * @param iName
 	 *            name.
 	 */
-	protected final void setName(final String iName) {
+	public final void setName(final String iName) {
 		myName = iName;
 	}
 

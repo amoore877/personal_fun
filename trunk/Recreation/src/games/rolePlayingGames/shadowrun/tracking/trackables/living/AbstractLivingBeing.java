@@ -136,7 +136,7 @@ public abstract class AbstractLivingBeing<D extends IShadowrunDamageNote>
 	 * @param iName
 	 *            new name.
 	 */
-	protected final void setName(final String iName) {
+	public final void setName(final String iName) {
 		myName = iName;
 	}
 
