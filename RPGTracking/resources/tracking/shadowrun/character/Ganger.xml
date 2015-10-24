@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<character xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../../../../src/games/rolePlayingGames/shadowrun/tracking/trackables/xml/xsd/ShadowrunSchema.xsd">
+	<name>Ganger</name>
+	<special>0</special>
+	<statusEffects>
+	</statusEffects>
+	<inventory>
+		<!-- Knife -->
+		<inventoryID>60873b15-34e4-446f-984c-aff16d1c1b09</inventoryID>
+		<!-- Rating 1 Commlink -->
+		<inventoryID>bce3054e-1eb9-4405-8105-774813853d18</inventoryID>
+		<!-- Browning Ultra-Power -->
+		<inventoryID>4161e7df-b49f-42b2-8290-cd2e78653dc6</inventoryID>
+		<!-- Armor Vest -->
+		<inventoryID>8c474000-5e91-4ccc-8eca-1a333c177cc5</inventoryID>
+	</inventory>
+	<qualities>
+	    <!-- Toughness -->
+	    <qualityID>abb5ddc4-12d1-4b5b-a284-e70a1bd61806</qualityID>
+	</qualities>
+	<body>4</body>
+	<willpower>3</willpower>
+	<agility>4</agility>
+	<reaction>3</reaction>
+	<strength>4</strength>
+	<logic>2</logic>
+	<intuition>3</intuition>
+	<charisma>3</charisma>
+	<initDice>2</initDice>
+	<skills>
+		<skill>
+			<fullDesc>Blades</fullDesc>
+			<level>4</level>
+		</skill>
+		<skill>
+			<fullDesc>Clubs</fullDesc>
+			<level>3</level>
+		</skill>
+		<skill>
+			<fullDesc>Intimidation</fullDesc>
+			<level>4</level>
+		</skill>
+		<skill>
+			<fullDesc>Pistols</fullDesc>
+			<level>4</level>
+		</skill>
+		<skill>
+			<fullDesc>Unarmed Combat</fullDesc>
+			<level>3</level>
+		</skill>
+	</skills>
+	<spells>
+	</spells>
+	<essence>6</essence>
+</character>
