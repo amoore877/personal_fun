@@ -177,19 +177,27 @@ public final class ShadowrunTrackingControl extends
 	private ArrayList<IShadowrunCombatTrackable> addNewTrackable() {
 		final JPanel dialogPanel = new JPanel(new GridLayout(0, 1));
 
-		// New: NPC or PC controlled?
+		// New: NPC or PC or Timed Item controlled?
 		final JPanel npcOrPCPanel = new JPanel(new GridLayout(1, 0));
 		final JRadioButton npcButton = new JRadioButton("NPC");
 		final JRadioButton pcButton = new JRadioButton("PC");
+		final JRadioButton timedItemButton = new JRadioButton("Timed Item");
 		final ButtonGroup npcOrPCGroup = new ButtonGroup();
 		npcOrPCGroup.add(npcButton);
 		npcOrPCPanel.add(npcButton);
 		npcOrPCGroup.add(pcButton);
 		npcOrPCPanel.add(pcButton);
+		npcOrPCGroup.add(timedItemButton);
+		npcOrPCPanel.add(timedItemButton);
 		dialogPanel.add(npcOrPCPanel);
 
 		// set default to NPC
 		npcButton.setSelected(true);
+
+		// if not in combat, don't allow timed items
+		if (!isInCombat()) {
+			timedItemButton.setEnabled(false);
+		}
 
 		final int result = JOptionPane.showConfirmDialog(null, dialogPanel,
 				"Add Trackable, NPC or PC controlled?",
@@ -202,9 +210,12 @@ public final class ShadowrunTrackingControl extends
 				// New, PC controlled: combox, only show PC-controlled types
 				oTrackablesToAdd = new ArrayList<IShadowrunCombatTrackable>();
 				oTrackablesToAdd.add(addNewPCTrackable());
-			} else {
+			} else if (npcButton.isSelected()) {
 				// New, NPC: combox, show loaded XMLs
 				oTrackablesToAdd = addNewNPCTrackable();
+			} else {
+				// New, timed item
+				oTrackablesToAdd.add(addNewTimedItem());
 			}
 		} else if (result == JOptionPane.CANCEL_OPTION) {
 			System.out.println("Cancel selected");
@@ -213,6 +224,18 @@ public final class ShadowrunTrackingControl extends
 		}
 
 		return oTrackablesToAdd;
+	}
+
+	/**
+	 * Get new timed item to add.
+	 * 
+	 * @return timed item to add.
+	 */
+	private TimedItem addNewTimedItem() {
+		// TODO get timed item details
+		final TimedItem oItem = new TimedItem("name", 0, 0, 0, "effect");
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/**
