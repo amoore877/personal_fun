@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<firearm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../src/games/rolePlayingGames/shadowrun/tracking/trackables/xml/xsd/ShadowrunSchema.xsd">
+  <name>Colt Cobra TX-120</name>
+  <id>330669dc-07a6-4407-ae3c-c3a1f9a2fa68</id>
+  <accuracy>5</accuracy>
+  <damageValue>7</damageValue>
+  <armorPiercing>0</armorPiercing>
+  <damageElement>REGULAR</damageElement>
+  <rangedWeaponTypes>
+    <rangedWeaponType>SMG</rangedWeaponType>
+  </rangedWeaponTypes>
+  <firingModes>
+    <firingMode>SA</firingMode>
+    <firingMode>BF</firingMode>
+    <firingMode>FA</firingMode>
+  </firingModes>
+  <clipCapacity>32</clipCapacity>
+  <recoilCompensation>3</recoilCompensation>
+</firearm>

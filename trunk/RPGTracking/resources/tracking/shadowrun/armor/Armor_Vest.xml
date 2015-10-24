@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<armorEquipment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../src/games/rolePlayingGames/shadowrun/tracking/trackables/xml/xsd/ShadowrunSchema.xsd">
+  <name>Armor Vest</name>
+  <id>8c474000-5e91-4ccc-8eca-1a333c177cc5</id>
+  <armor>9</armor>
+  <benefits>none</benefits>
+</armorEquipment>

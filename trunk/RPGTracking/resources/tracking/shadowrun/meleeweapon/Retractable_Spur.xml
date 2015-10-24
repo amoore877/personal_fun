@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<meleeWeapon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../src/games/rolePlayingGames/shadowrun/tracking/trackables/xml/xsd/ShadowrunSchema.xsd" xsi:type="meleeWeapon">
+  <name>Retractable Spur</name>
+  <id>0bc1114b-29b4-4cfa-81e6-e7c2a9835dc0</id>
+  <accuracy>6</accuracy>
+  <damageValue>7</damageValue>
+  <armorPiercing>-2</armorPiercing>
+  <damageElement>REGULAR</damageElement>
+  <benefits>implanted</benefits>
+  <reach>0</reach>
+</meleeWeapon>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<device xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../src/games/rolePlayingGames/shadowrun/tracking/trackables/xml/xsd/ShadowrunSchema.xsd">
-  <name>Commlink3</name>
-  <id>b874c9af-9734-462f-8746-676b3869d666</id>
-  <body>0</body>
-  <armor>0</armor>
-  <rating>3</rating>
-</device>

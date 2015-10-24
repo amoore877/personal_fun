@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<firearm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../src/games/rolePlayingGames/shadowrun/tracking/trackables/xml/xsd/ShadowrunSchema.xsd">
+  <name>Fichetti Security 600</name>
+  <id>5c8780f0-16c6-4086-950e-8e744cbafa0f</id>
+  <accuracy>7</accuracy>
+  <damageValue>7</damageValue>
+  <armorPiercing>0</armorPiercing>
+  <damageElement>REGULAR</damageElement>
+  <rangedWeaponTypes>
+    <rangedWeaponType>LGT_PISTOL</rangedWeaponType>
+  </rangedWeaponTypes>
+  <firingModes>
+    <firingMode>SA</firingMode>
+  </firingModes>
+  <clipCapacity>30</clipCapacity>
+  <recoilCompensation>1</recoilCompensation>
+</firearm>

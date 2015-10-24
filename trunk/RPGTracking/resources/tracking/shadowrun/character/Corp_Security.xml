@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<character xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../../../../src/games/rolePlayingGames/shadowrun/tracking/trackables/xml/xsd/ShadowrunSchema.xsd">
+	<name>Corp Security</name>
+	<special>0</special>
+	<statusEffects>
+	</statusEffects>
+	<inventory>
+		<!-- Rating 3 Commlink -->
+		<inventoryID>b874c9af-9734-462f-8746-676b3869d666</inventoryID>
+		<!-- Colt Cobra TZ-120 -->
+		<inventoryID>330669dc-07a6-4407-ae3c-c3a1f9a2fa68</inventoryID>
+		<!-- Fichetti Security 600 -->
+		<inventoryID>5c8780f0-16c6-4086-950e-8e744cbafa0f</inventoryID>
+		<!-- Stun Baton -->
+		<inventoryID>7f23a4e3-5d1f-4d9f-8b65-e11252672ee2</inventoryID>
+		<!-- Armor Jacket -->
+		<inventoryID>be398a63-797a-47ef-ad93-5d3e05b423bb</inventoryID>
+	</inventory>
+	<qualities>
+	</qualities>
+	<body>4</body>
+	<willpower>3</willpower>
+	<agility>4</agility>
+	<reaction>4</reaction>
+	<strength>3</strength>
+	<logic>2</logic>
+	<intuition>3</intuition>
+	<charisma>3</charisma>
+	<initDice>1</initDice>
+	<skills>
+		<skill>
+			<fullDesc>Automatics</fullDesc>
+			<level>3</level>
+		</skill>
+		<skill>
+			<fullDesc>Perception</fullDesc>
+			<level>2</level>
+		</skill>
+		<skill>
+			<fullDesc>Pistols</fullDesc>
+			<level>4</level>
+		</skill>
+		<skill>
+			<fullDesc>Running</fullDesc>
+			<level>4</level>
+		</skill>
+		<skill>
+			<fullDesc>Unarmed Combat</fullDesc>
+			<level>3</level>
+		</skill>
+	</skills>
+	<spells>
+	</spells>
+	<essence>6</essence>
+</character>

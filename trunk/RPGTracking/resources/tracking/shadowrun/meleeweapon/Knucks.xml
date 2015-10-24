@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<meleeWeapon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../src/games/rolePlayingGames/shadowrun/tracking/trackables/xml/xsd/ShadowrunSchema.xsd" xsi:type="meleeWeapon">
+  <name>Knucks</name>
+  <id>1150fd93-bae4-4c3a-a496-2399c986e34b</id>
+  <accuracy>14</accuracy>
+  <damageValue>1</damageValue>
+  <armorPiercing>0</armorPiercing>
+  <damageElement>REGULAR</damageElement>
+  <benefits>none</benefits>
+  <reach>0</reach>
+</meleeWeapon>
