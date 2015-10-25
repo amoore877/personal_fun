@@ -19,7 +19,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 
 /**
  * Tracking a scenario for Shadowrun.
@@ -267,16 +269,35 @@ public class ShadowrunScenarioTracking extends JFrame implements
 		exitButton.setSize(new Dimension(30, 10));
 		filePanel.add(exitButton);
 
+		final JSplitPane tableAndMemoSplitPane = new JSplitPane();
+		tableAndMemoSplitPane.setOneTouchExpandable(true);
+		tableAndMemoSplitPane.setForeground(Color.DARK_GRAY);
+		tableAndMemoSplitPane.setBackground(Color.DARK_GRAY);
+		mainSplitPane.setLeftComponent(tableAndMemoSplitPane);
+
 		final JScrollPane tableScrollPane = new JScrollPane();
+		tableAndMemoSplitPane.setLeftComponent(tableScrollPane);
 		tableScrollPane.setForeground(Color.DARK_GRAY);
 		tableScrollPane.setBackground(Color.DARK_GRAY);
-		mainSplitPane.setLeftComponent(tableScrollPane);
 
 		trackingTable = new JTable();
 		trackingTable.setForeground(Color.WHITE);
 		trackingTable.setBackground(Color.DARK_GRAY);
 		trackingTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		tableScrollPane.setViewportView(trackingTable);
+
+		final JScrollPane memoScrollPane = new JScrollPane();
+		memoScrollPane.setAutoscrolls(true);
+		memoScrollPane
+				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		tableAndMemoSplitPane.setRightComponent(memoScrollPane);
+
+		final JTextArea memoTextArea = new JTextArea();
+		memoTextArea.setForeground(Color.WHITE);
+		memoTextArea.setBackground(Color.DARK_GRAY);
+		memoTextArea.setToolTipText("List of memos for the scenario");
+		memoScrollPane.setViewportView(memoTextArea);
+		tableAndMemoSplitPane.setDividerLocation(0.95);
 		mainSplitPane.setDividerLocation(0.75);
 		// TODO Auto-generated constructor stub
 	}
