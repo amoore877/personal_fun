@@ -1,9 +1,11 @@
 package games.rolePlayingGames.scenario.tracking.shadowrun;
 
+import games.rolePlayingGames.shadowrun.dice.ShadowrunRollResult;
+import games.rolePlayingGames.shadowrun.dice.ShadowrunRoller;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -22,6 +24,9 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.NumberFormatter;
 
 /**
  * Tracking a scenario for Shadowrun.
@@ -31,14 +36,86 @@ import javax.swing.ScrollPaneConstants;
 public class ShadowrunScenarioTracking extends JFrame implements
 		ActionListener, WindowListener {
 
+	private static final Color DEFAULT_FOREGROUND_COLOR = Color.WHITE;
+	private static final Color DEFAULT_BACKGROUND_COLOR = Color.DARK_GRAY;
+	private static final String RESET_TURN_STRING = "Reset Turn";
+	private static final int LOWER_PANEL_HEIGHT = 210;
+	private static final int LOWER_PANEL_WIDTH = 400;
+	private static final int BUTTON_HEIGHT = 25;
+	private static final int BUTTON_WIDTH = 100;
+	private static final int SMALL_BUTTON_WIDTH = 70;
+	private static final int MAIN_PANEL_HEIGHT = 650;
+	private static final int FRAME_HEIGHT = 700;
+	private static final int FRAME_WIDTH = 900;
+	private static final String DELIMITER = "#";
+	private static final String STORY_NOTE_STRING = "STORY";
+	private static final String COMBAT_NOTE_STRING = "COMBAT";
+	private static final String TRACE_NOTE_STRING = "TRACE";
+	private static final String EXIT_STRING = "Exit";
+	private static final String SAVE_STRING = "Save";
+	private static final String ADD_MEMO_STRING = "Add Memo";
+	private static final String ROLL_STRING = "Roll";
+	private static final String USE_EDGE_STRING = "Use Edge?";
+	private static final String CLEANUP_STRING = "Cleanup";
+	private static final String REMOVE_STRING = "Remove";
+	private static final String ADD_STRING = "Add";
+	private static final String RESORT_STRING = "Resort";
+	private static final String NEXT_TURN_STRING = "Next Turn";
+	private static final String NEXT_PASS_STRING = "Next Pass";
 	/**
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = -3278488966357839811L;
+
+	/**
+	 * Text field to input dice to roll.
+	 */
+	private final JFormattedTextField diceToRollField;
+
+	/**
+	 * Check box to use edge or not on the roll.
+	 */
+	private final JCheckBox edgeCheckbox;
+
+	/**
+	 * Field to show hits result on roll.
+	 */
 	private final JTextField hitsField;
+
+	/**
+	 * Field to show sum of result on roll.
+	 */
 	private final JTextField rollTotalField;
+
+	/**
+	 * Field to input one-line memos.
+	 */
 	private final JTextField memoField;
+
+	/**
+	 * Check box for whether memo is for combat or not.
+	 */
+	private final JCheckBox combatMemoCheckbox;
+
+	/**
+	 * Table for tracking data.
+	 */
 	private final JTable trackingTable;
+
+	/**
+	 * Text area for all memos.
+	 */
+	private final JTextArea memoTextArea;
+
+	/**
+	 * Current initiative pass.
+	 */
+	private int myInitiativePass = 1;
+
+	/**
+	 * Current combat turn.
+	 */
+	private int myCombatTurn = 1;
 
 	public ShadowrunScenarioTracking() {
 		// TODO take name of scenario
@@ -57,91 +134,128 @@ public class ShadowrunScenarioTracking extends JFrame implements
 
 		addWindowListener(this);
 
-		getContentPane().setBackground(Color.DARK_GRAY);
-		getContentPane().setSize(new Dimension(900, 700));
-		getContentPane().setPreferredSize(new Dimension(900, 700));
-		getContentPane().setMinimumSize(new Dimension(900, 700));
-		getContentPane().setMaximumSize(new Dimension(900, 700));
+		getContentPane().setBackground(DEFAULT_BACKGROUND_COLOR);
+		getContentPane().setSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+		getContentPane().setPreferredSize(
+				new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+		getContentPane().setMinimumSize(
+				new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+		getContentPane().setMaximumSize(
+				new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 		setTitle("Shadowrun Scenario Tracking");
 		setResizable(false);
 		getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		final JPanel mainPanel = new JPanel();
-		mainPanel.setBackground(Color.DARK_GRAY);
-		mainPanel.setMinimumSize(new Dimension(900, 650));
-		mainPanel.setMaximumSize(new Dimension(900, 650));
-		mainPanel.setPreferredSize(new Dimension(900, 650));
-		mainPanel.setSize(new Dimension(900, 650));
+		mainPanel.setBackground(DEFAULT_BACKGROUND_COLOR);
+		mainPanel.setMinimumSize(new Dimension(FRAME_WIDTH, MAIN_PANEL_HEIGHT));
+		mainPanel.setMaximumSize(new Dimension(FRAME_WIDTH, MAIN_PANEL_HEIGHT));
+		mainPanel
+				.setPreferredSize(new Dimension(FRAME_WIDTH, MAIN_PANEL_HEIGHT));
+		mainPanel.setSize(new Dimension(FRAME_WIDTH, MAIN_PANEL_HEIGHT));
 		getContentPane().add(mainPanel);
 		mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		final JSplitPane mainSplitPane = new JSplitPane();
-		mainSplitPane.setMaximumSize(new Dimension(900, 650));
-		mainSplitPane.setMinimumSize(new Dimension(900, 650));
-		mainSplitPane.setPreferredSize(new Dimension(900, 650));
-		mainSplitPane.setSize(new Dimension(900, 650));
+		mainSplitPane.setMaximumSize(new Dimension(FRAME_WIDTH,
+				MAIN_PANEL_HEIGHT));
+		mainSplitPane.setMinimumSize(new Dimension(FRAME_WIDTH,
+				MAIN_PANEL_HEIGHT));
+		mainSplitPane.setPreferredSize(new Dimension(FRAME_WIDTH,
+				MAIN_PANEL_HEIGHT));
+		mainSplitPane.setSize(new Dimension(FRAME_WIDTH, MAIN_PANEL_HEIGHT));
 		mainSplitPane.setBackground(Color.BLACK);
 		mainSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		mainPanel.add(mainSplitPane);
 
 		final JPanel controlPanel = new JPanel();
-		controlPanel.setBackground(Color.DARK_GRAY);
+		controlPanel.setBackground(DEFAULT_BACKGROUND_COLOR);
+		controlPanel.setSize(new Dimension(FRAME_WIDTH, LOWER_PANEL_HEIGHT));
+		controlPanel.setPreferredSize(new Dimension(FRAME_WIDTH,
+				LOWER_PANEL_HEIGHT));
+		controlPanel.setMinimumSize(new Dimension(FRAME_WIDTH,
+				LOWER_PANEL_HEIGHT));
+		controlPanel.setMaximumSize(new Dimension(FRAME_WIDTH,
+				LOWER_PANEL_HEIGHT));
 		mainSplitPane.setRightComponent(controlPanel);
-		controlPanel.setLayout(new GridLayout(1, 0, 0, 0));
+		controlPanel.setLayout(null);
 
 		final JPanel tableControlPanel = new JPanel();
-		tableControlPanel.setBackground(Color.DARK_GRAY);
-		tableControlPanel.setSize(new Dimension(300, 160));
-		tableControlPanel.setPreferredSize(new Dimension(300, 160));
-		tableControlPanel.setMinimumSize(new Dimension(300, 160));
-		tableControlPanel.setMaximumSize(new Dimension(300, 160));
+		tableControlPanel.setLocation(0, 0);
+		tableControlPanel.setBackground(DEFAULT_BACKGROUND_COLOR);
+		tableControlPanel.setSize(new Dimension(LOWER_PANEL_WIDTH,
+				LOWER_PANEL_HEIGHT));
+		tableControlPanel.setPreferredSize(new Dimension(LOWER_PANEL_WIDTH,
+				LOWER_PANEL_HEIGHT));
+		tableControlPanel.setMinimumSize(new Dimension(LOWER_PANEL_WIDTH,
+				LOWER_PANEL_HEIGHT));
+		tableControlPanel.setMaximumSize(new Dimension(LOWER_PANEL_WIDTH,
+				LOWER_PANEL_HEIGHT));
 		controlPanel.add(tableControlPanel);
 		tableControlPanel.setLayout(null);
 
-		final JButton nextPassButton = new JButton("Next Pass");
+		final JButton nextPassButton = new JButton(NEXT_PASS_STRING);
+		nextPassButton.addActionListener(this);
 		nextPassButton
-				.setToolTipText("Subtracts 10 from everyone's initiative and unchecks \"Acted\" flag for all.");
-		nextPassButton.setMaximumSize(new Dimension(80, 25));
-		nextPassButton.setMinimumSize(new Dimension(80, 25));
-		nextPassButton.setSize(new Dimension(80, 25));
-		nextPassButton.setPreferredSize(new Dimension(80, 25));
-		nextPassButton.setBounds(10, 11, 81, 23);
+				.setToolTipText("Subtracts 10 from everyone's initiative and unchecks \"Acted\" flag for all. Increments initiative pass.");
+		nextPassButton
+				.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		nextPassButton
+				.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		nextPassButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		nextPassButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
+				BUTTON_HEIGHT));
+		nextPassButton.setBounds(5, 5, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(nextPassButton);
 
-		final JButton nextTurnButton = new JButton("Next Turn");
+		final JButton nextTurnButton = new JButton(NEXT_TURN_STRING);
+		nextTurnButton.addActionListener(this);
 		nextTurnButton
-				.setToolTipText("Sets all initiatives to 0 and unchecks \"Acted\" flag for all.");
-		nextTurnButton.setMaximumSize(new Dimension(80, 25));
-		nextTurnButton.setMinimumSize(new Dimension(80, 25));
-		nextTurnButton.setPreferredSize(new Dimension(80, 25));
-		nextTurnButton.setSize(new Dimension(80, 25));
-		nextTurnButton.setBounds(101, 11, 89, 23);
+				.setToolTipText("Sets all initiatives to 0 and unchecks \"Acted\" flag for all. Sets initiative pass to 1.");
+		nextTurnButton
+				.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		nextTurnButton
+				.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		nextTurnButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
+				BUTTON_HEIGHT));
+		nextTurnButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		nextTurnButton.setBounds(115, 5, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(nextTurnButton);
 
-		final JButton resortButton = new JButton("Resort");
-		resortButton.setMaximumSize(new Dimension(80, 25));
-		resortButton.setMinimumSize(new Dimension(80, 25));
-		resortButton.setPreferredSize(new Dimension(80, 25));
-		resortButton.setSize(new Dimension(80, 25));
+		final JButton resortButton = new JButton(RESORT_STRING);
+		resortButton.addActionListener(this);
+		resortButton.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		resortButton.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		resortButton
+				.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		resortButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		resortButton.setToolTipText("Resorts table by initiative score.");
-		resortButton.setBounds(200, 11, 89, 23);
+		resortButton.setBounds(225, 45, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(resortButton);
 
-		final JButton addActorButton = new JButton("Add");
-		addActorButton.setMaximumSize(new Dimension(80, 25));
-		addActorButton.setMinimumSize(new Dimension(80, 25));
-		addActorButton.setPreferredSize(new Dimension(80, 25));
-		addActorButton.setSize(new Dimension(80, 25));
+		final JButton addActorButton = new JButton(ADD_STRING);
+		addActorButton.addActionListener(this);
+		addActorButton
+				.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		addActorButton
+				.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		addActorButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
+				BUTTON_HEIGHT));
+		addActorButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		addActorButton
 				.setToolTipText("Add some Actor(s) by name to the table, setting initiative to 0.");
-		addActorButton.setBounds(10, 45, 89, 23);
+		addActorButton.setBounds(5, 45, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(addActorButton);
 
-		final JButton removeActorButton = new JButton("Remove");
-		removeActorButton.setMaximumSize(new Dimension(80, 25));
-		removeActorButton.setMinimumSize(new Dimension(80, 25));
-		removeActorButton.setPreferredSize(new Dimension(80, 25));
-		removeActorButton.setSize(new Dimension(80, 25));
+		final JButton removeActorButton = new JButton(REMOVE_STRING);
+		removeActorButton.addActionListener(this);
+		removeActorButton.setMaximumSize(new Dimension(BUTTON_WIDTH,
+				BUTTON_HEIGHT));
+		removeActorButton.setMinimumSize(new Dimension(BUTTON_WIDTH,
+				BUTTON_HEIGHT));
+		removeActorButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
+				BUTTON_HEIGHT));
+		removeActorButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		removeActorButton
 				.setToolTipText("Remove the selected actor from the table.");
 		removeActorButton.addActionListener(new ActionListener() {
@@ -149,140 +263,207 @@ public class ShadowrunScenarioTracking extends JFrame implements
 			public void actionPerformed(final ActionEvent e) {
 			}
 		});
-		removeActorButton.setBounds(101, 45, 89, 23);
+		removeActorButton.setBounds(115, 45, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(removeActorButton);
 
-		final JButton cleanupButton = new JButton("Cleanup");
-		cleanupButton.setMaximumSize(new Dimension(80, 25));
-		cleanupButton.setMinimumSize(new Dimension(80, 25));
-		cleanupButton.setPreferredSize(new Dimension(80, 25));
-		cleanupButton.setSize(new Dimension(80, 25));
+		final JButton cleanupButton = new JButton(CLEANUP_STRING);
+		cleanupButton.addActionListener(this);
+		cleanupButton
+				.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		cleanupButton
+				.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		cleanupButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
+				BUTTON_HEIGHT));
+		cleanupButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		cleanupButton.setToolTipText("Remove all dead actors from the table.");
-		cleanupButton.setBounds(200, 45, 89, 23);
+		cleanupButton.setBounds(225, 81, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(cleanupButton);
 
-		final JLabel rollingLabel = new JLabel("Roll dice:");
-		rollingLabel.setForeground(Color.WHITE);
-		rollingLabel.setBackground(Color.DARK_GRAY);
-		rollingLabel.setBounds(10, 79, 46, 14);
-		tableControlPanel.add(rollingLabel);
-
-		final JLabel diceToRollLabel = new JLabel("Dice to roll:");
-		diceToRollLabel.setForeground(Color.WHITE);
-		diceToRollLabel.setBackground(Color.DARK_GRAY);
-		diceToRollLabel.setBounds(10, 104, 62, 14);
+		final JLabel diceToRollLabel = new JLabel("Dice:");
+		diceToRollLabel.setForeground(DEFAULT_FOREGROUND_COLOR);
+		diceToRollLabel.setBackground(DEFAULT_BACKGROUND_COLOR);
+		diceToRollLabel.setBounds(5, 122, 33, 14);
 		tableControlPanel.add(diceToRollLabel);
 
-		final JFormattedTextField diceToRollField = new JFormattedTextField();
+		final NumberFormatter diceToRollNumberFormatter = new NumberFormatter();
+		diceToRollNumberFormatter.setMinimum(1);
+		diceToRollField = new JFormattedTextField(diceToRollNumberFormatter);
 		diceToRollField.setToolTipText("Number of dice to roll.");
 		diceToRollField.setText("1");
-		diceToRollField.setBounds(67, 101, 46, 20);
+		diceToRollField.setBounds(48, 119, 46, 20);
 		tableControlPanel.add(diceToRollField);
 
-		final JCheckBox edgeCheckbox = new JCheckBox("Use Edge?");
-		edgeCheckbox.setBackground(Color.DARK_GRAY);
-		edgeCheckbox.setForeground(Color.WHITE);
+		edgeCheckbox = new JCheckBox(USE_EDGE_STRING);
+		edgeCheckbox.setBackground(DEFAULT_BACKGROUND_COLOR);
+		edgeCheckbox.setForeground(DEFAULT_FOREGROUND_COLOR);
 		edgeCheckbox.setToolTipText("Use edge on the roll?");
-		edgeCheckbox.setBounds(119, 100, 97, 23);
+		edgeCheckbox.setBounds(96, 118, 89, 23);
 		tableControlPanel.add(edgeCheckbox);
 
 		final JLabel hitsLabel = new JLabel("Hits:");
-		hitsLabel.setBackground(Color.DARK_GRAY);
-		hitsLabel.setForeground(Color.WHITE);
-		hitsLabel.setBounds(10, 129, 22, 14);
+		hitsLabel.setBackground(DEFAULT_BACKGROUND_COLOR);
+		hitsLabel.setForeground(DEFAULT_FOREGROUND_COLOR);
+		hitsLabel.setBounds(5, 150, 33, 14);
 		tableControlPanel.add(hitsLabel);
 
 		hitsField = new JTextField();
 		hitsField.setToolTipText("Number of hits on the roll.");
 		hitsField.setEditable(false);
-		hitsField.setBounds(42, 126, 49, 20);
+		hitsField.setBounds(48, 147, 123, 20);
 		tableControlPanel.add(hitsField);
-		hitsField.setColumns(10);
+		hitsField.setColumns(30);
 
-		final JButton rollButton = new JButton("Roll");
-		rollButton.setMaximumSize(new Dimension(80, 25));
-		rollButton.setMinimumSize(new Dimension(80, 25));
-		rollButton.setPreferredSize(new Dimension(80, 25));
-		rollButton.setSize(new Dimension(80, 25));
+		final JButton rollButton = new JButton(ROLL_STRING);
+		rollButton.addActionListener(this);
+		rollButton.setMaximumSize(new Dimension(SMALL_BUTTON_WIDTH,
+				BUTTON_HEIGHT));
+		rollButton.setMinimumSize(new Dimension(SMALL_BUTTON_WIDTH,
+				BUTTON_HEIGHT));
+		rollButton.setPreferredSize(new Dimension(SMALL_BUTTON_WIDTH,
+				BUTTON_HEIGHT));
+		rollButton.setSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
 		rollButton.setToolTipText("Roll dice with the given parameters.");
-		rollButton.setBounds(200, 100, 89, 23);
+		rollButton.setBounds(191, 117, SMALL_BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(rollButton);
 
 		final JLabel rollTotalLabel = new JLabel("Total:");
-		rollTotalLabel.setForeground(Color.WHITE);
-		rollTotalLabel.setBackground(Color.DARK_GRAY);
-		rollTotalLabel.setBounds(101, 129, 28, 14);
+		rollTotalLabel.setForeground(DEFAULT_FOREGROUND_COLOR);
+		rollTotalLabel.setBackground(DEFAULT_BACKGROUND_COLOR);
+		rollTotalLabel.setBounds(181, 151, 47, 14);
 		tableControlPanel.add(rollTotalLabel);
 
 		rollTotalField = new JTextField();
 		rollTotalField.setToolTipText("Total of the roll.");
 		rollTotalField.setEditable(false);
-		rollTotalField.setBounds(129, 126, 46, 20);
+		rollTotalField.setBounds(238, 147, 46, 20);
 		tableControlPanel.add(rollTotalField);
 		rollTotalField.setColumns(10);
 
+		final JButton resetTurnButton = new JButton(RESET_TURN_STRING);
+		resetTurnButton.setBounds(225, 5, 100, 25);
+		tableControlPanel.add(resetTurnButton);
+		resetTurnButton
+				.setToolTipText("Reset the Combat Turn and Initiative Pass counters.");
+		resetTurnButton.addActionListener(this);
+
 		final JPanel memoPanel = new JPanel();
-		memoPanel.setBackground(Color.DARK_GRAY);
-		memoPanel.setSize(new Dimension(300, 160));
-		memoPanel.setPreferredSize(new Dimension(300, 160));
-		memoPanel.setMinimumSize(new Dimension(300, 160));
-		memoPanel.setMaximumSize(new Dimension(300, 160));
+		memoPanel.setLocation(LOWER_PANEL_WIDTH, 0);
+		memoPanel.setBackground(DEFAULT_BACKGROUND_COLOR);
+		memoPanel.setSize(new Dimension(LOWER_PANEL_WIDTH, LOWER_PANEL_HEIGHT));
+		memoPanel.setPreferredSize(new Dimension(LOWER_PANEL_WIDTH,
+				LOWER_PANEL_HEIGHT));
+		memoPanel.setMinimumSize(new Dimension(LOWER_PANEL_WIDTH,
+				LOWER_PANEL_HEIGHT));
+		memoPanel.setMaximumSize(new Dimension(LOWER_PANEL_WIDTH,
+				LOWER_PANEL_HEIGHT));
 		controlPanel.add(memoPanel);
 		memoPanel.setLayout(null);
 
 		final JLabel memoLabel = new JLabel("Memo:");
-		memoLabel.setForeground(Color.WHITE);
-		memoLabel.setBackground(Color.DARK_GRAY);
+		memoLabel.setForeground(DEFAULT_FOREGROUND_COLOR);
+		memoLabel.setBackground(DEFAULT_BACKGROUND_COLOR);
 		memoLabel.setBounds(10, 11, 46, 14);
 		memoPanel.add(memoLabel);
 
 		memoField = new JTextField();
 		memoField.setToolTipText("Type memo here.");
-		memoField.setBounds(10, 36, 279, 20);
+		memoField.setBounds(10, 36, 380, 20);
 		memoPanel.add(memoField);
 		memoField.setColumns(10);
 
-		final JButton addMemoButton = new JButton("Add Memo");
-		addMemoButton.setMaximumSize(new Dimension(80, 25));
-		addMemoButton.setMinimumSize(new Dimension(80, 25));
-		addMemoButton.setPreferredSize(new Dimension(80, 25));
-		addMemoButton.setSize(new Dimension(80, 25));
+		final JButton addMemoButton = new JButton(ADD_MEMO_STRING);
+		addMemoButton.setEnabled(false);
+		addMemoButton.addActionListener(this);
+		addMemoButton
+				.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		addMemoButton
+				.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		addMemoButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
+				BUTTON_HEIGHT));
+		addMemoButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		addMemoButton.setBounds(10, 67, 89, 23);
 		memoPanel.add(addMemoButton);
 
-		final JPanel filePanel = new JPanel();
-		filePanel.setBackground(Color.DARK_GRAY);
-		controlPanel.add(filePanel);
-		filePanel.setLayout(new GridLayout(0, 1, 0, 20));
+		combatMemoCheckbox = new JCheckBox("Combat Memo?");
+		combatMemoCheckbox.setForeground(DEFAULT_FOREGROUND_COLOR);
+		combatMemoCheckbox.setBackground(DEFAULT_BACKGROUND_COLOR);
+		combatMemoCheckbox.setBounds(105, 67, 120, 23);
+		memoPanel.add(combatMemoCheckbox);
 
-		final JButton saveButton = new JButton("Save");
-		saveButton.setMaximumSize(new Dimension(80, 25));
-		saveButton.setMinimumSize(new Dimension(80, 25));
-		saveButton.setPreferredSize(new Dimension(80, 25));
-		saveButton.setSize(new Dimension(80, 25));
+		memoField.getDocument().addDocumentListener(new DocumentListener() {
+
+			@Override
+			public void removeUpdate(final DocumentEvent e) {
+				checkContents();
+			}
+
+			@Override
+			public void insertUpdate(final DocumentEvent e) {
+				checkContents();
+			}
+
+			@Override
+			public void changedUpdate(final DocumentEvent e) {
+				checkContents();
+			}
+
+			/**
+			 * Check contents of memo field. If empty, disable Add Memo button.
+			 * Else, enable Add Memo button.
+			 */
+			private void checkContents() {
+				if (memoField.getText().isEmpty()) {
+					addMemoButton.setEnabled(false);
+				} else {
+					addMemoButton.setEnabled(true);
+				}
+			}
+		});
+
+		final JPanel filePanel = new JPanel();
+		filePanel.setBounds(2 * LOWER_PANEL_WIDTH, 0, 100, LOWER_PANEL_HEIGHT);
+		filePanel.setBackground(DEFAULT_BACKGROUND_COLOR);
+		controlPanel.add(filePanel);
+
+		final JButton saveButton = new JButton(SAVE_STRING);
+		saveButton.setLocation(10, 11);
+		saveButton.addActionListener(this);
+		filePanel.setLayout(null);
+		saveButton.setMaximumSize(new Dimension(SMALL_BUTTON_WIDTH,
+				BUTTON_HEIGHT));
+		saveButton.setMinimumSize(new Dimension(SMALL_BUTTON_WIDTH,
+				BUTTON_HEIGHT));
+		saveButton.setPreferredSize(new Dimension(SMALL_BUTTON_WIDTH,
+				BUTTON_HEIGHT));
+		saveButton.setSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
 		filePanel.add(saveButton);
 
-		final JButton exitButton = new JButton("Exit");
-		exitButton.setMaximumSize(new Dimension(30, 10));
-		exitButton.setMinimumSize(new Dimension(30, 10));
-		exitButton.setPreferredSize(new Dimension(30, 10));
-		exitButton.setSize(new Dimension(30, 10));
+		final JButton exitButton = new JButton(EXIT_STRING);
+		exitButton.setLocation(10, 157);
+		exitButton.addActionListener(this);
+		exitButton.setMaximumSize(new Dimension(SMALL_BUTTON_WIDTH,
+				BUTTON_HEIGHT));
+		exitButton.setMinimumSize(new Dimension(SMALL_BUTTON_WIDTH,
+				BUTTON_HEIGHT));
+		exitButton.setPreferredSize(new Dimension(SMALL_BUTTON_WIDTH,
+				BUTTON_HEIGHT));
+		exitButton.setSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
 		filePanel.add(exitButton);
 
 		final JSplitPane tableAndMemoSplitPane = new JSplitPane();
 		tableAndMemoSplitPane.setOneTouchExpandable(true);
-		tableAndMemoSplitPane.setForeground(Color.DARK_GRAY);
-		tableAndMemoSplitPane.setBackground(Color.DARK_GRAY);
+		tableAndMemoSplitPane.setForeground(DEFAULT_BACKGROUND_COLOR);
+		tableAndMemoSplitPane.setBackground(DEFAULT_BACKGROUND_COLOR);
 		mainSplitPane.setLeftComponent(tableAndMemoSplitPane);
 
 		final JScrollPane tableScrollPane = new JScrollPane();
 		tableAndMemoSplitPane.setLeftComponent(tableScrollPane);
-		tableScrollPane.setForeground(Color.DARK_GRAY);
-		tableScrollPane.setBackground(Color.DARK_GRAY);
+		tableScrollPane.setForeground(DEFAULT_BACKGROUND_COLOR);
+		tableScrollPane.setBackground(DEFAULT_BACKGROUND_COLOR);
 
 		trackingTable = new JTable();
-		trackingTable.setForeground(Color.WHITE);
-		trackingTable.setBackground(Color.DARK_GRAY);
+		trackingTable.setForeground(DEFAULT_FOREGROUND_COLOR);
+		trackingTable.setBackground(DEFAULT_BACKGROUND_COLOR);
 		trackingTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		tableScrollPane.setViewportView(trackingTable);
 
@@ -292,18 +473,154 @@ public class ShadowrunScenarioTracking extends JFrame implements
 				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		tableAndMemoSplitPane.setRightComponent(memoScrollPane);
 
-		final JTextArea memoTextArea = new JTextArea();
-		memoTextArea.setForeground(Color.WHITE);
-		memoTextArea.setBackground(Color.DARK_GRAY);
+		memoTextArea = new JTextArea();
+		memoTextArea.setForeground(DEFAULT_FOREGROUND_COLOR);
+		memoTextArea.setBackground(DEFAULT_BACKGROUND_COLOR);
 		memoTextArea.setToolTipText("List of memos for the scenario");
 		memoScrollPane.setViewportView(memoTextArea);
 		tableAndMemoSplitPane.setDividerLocation(0.95);
-		mainSplitPane.setDividerLocation(0.75);
-		// TODO Auto-generated constructor stub
+		mainSplitPane.setDividerLocation(0.7);
+
+		pack();
+		setVisible(true);
 	}
 
+	@Override
+	public void actionPerformed(final ActionEvent iEvent) {
+		if (iEvent.getActionCommand().equals(ADD_MEMO_STRING)) {
+			// add memo
+			final String memoText = memoField.getText();
+
+			final boolean isCombatMemo = combatMemoCheckbox.isSelected();
+
+			appendMemo(memoText, isCombatMemo);
+		} else if (iEvent.getActionCommand().equals(ADD_STRING)) {
+			// TODO add character
+		} else if (iEvent.getActionCommand().equals(CLEANUP_STRING)) {
+			// TODO cleanup dead characters
+		} else if (iEvent.getActionCommand().equals(EXIT_STRING)) {
+			// exit program
+			confirmExit();
+		} else if (iEvent.getActionCommand().equals(NEXT_PASS_STRING)) {
+			// next initiative pass
+			// TODO confirm
+			// TODO decrease all initiatives by 10
+
+			// increment initiative pass
+			myInitiativePass++;
+
+			// add memo
+			appendMemo("New initiative pass", true);
+		} else if (iEvent.getActionCommand().equals(NEXT_TURN_STRING)) {
+			// next combat turn
+			// TODO confirm
+			// TODO reset all initiatives to 0
+
+			// reset initiative pass
+			myInitiativePass = 1;
+
+			// increment combat turn
+			myCombatTurn++;
+
+			// add memo
+			appendMemo("New combat turn", true);
+		} else if (iEvent.getActionCommand().equals(REMOVE_STRING)) {
+			// TODO remove selected character
+		} else if (iEvent.getActionCommand().equals(RESET_TURN_STRING)) {
+			// reset turn/pass counters
+			// TODO confirm
+			myInitiativePass = 1;
+
+			myCombatTurn = 1;
+
+			// add memo
+			appendMemo("Reset combat", true);
+		} else if (iEvent.getActionCommand().equals(RESORT_STRING)) {
+			// TODO resort the table by initiative
+		} else if (iEvent.getActionCommand().equals(ROLL_STRING)) {
+			// roll dice
+			try {
+				final int diceToRoll = Integer.valueOf(diceToRollField
+						.getText());
+
+				final boolean useEdge = edgeCheckbox.isSelected();
+
+				final ShadowrunRollResult rollResult = new ShadowrunRollResult(
+						ShadowrunRoller.rollDice(diceToRoll, useEdge));
+
+				rollTotalField.setText(String.valueOf(rollResult.getSum()));
+
+				if (rollResult.isCriticalGlitch()) {
+					hitsField.setText("Critical Glitch!");
+				} else {
+					final StringBuilder hitsText = new StringBuilder(
+							String.valueOf(rollResult.getHits()));
+
+					if (rollResult.isGlitch()) {
+						hitsText.append(" Glitch!");
+					}
+
+					hitsField.setText(hitsText.toString());
+				}
+
+			} catch (final NumberFormatException iException) {
+				showError(iException);
+			}
+		} else if (iEvent.getActionCommand().equals(SAVE_STRING)) {
+			// save
+			save();
+		} else {
+			System.err.println("Unknown action");
+		}
+	}
+
+	/**
+	 * Save function.
+	 */
+	private void save() {
+		// TODO save
+	}
+
+	/**
+	 * Append a memo.
+	 * 
+	 * @param iMemoText
+	 *            text.
+	 * @param iIsCombatMemo
+	 *            whether or not the memo is related to combat.
+	 */
+	private void appendMemo(final String iMemoText, final boolean iIsCombatMemo) {
+		String textToAdd;
+		if (iIsCombatMemo) {
+			textToAdd = "\n" + COMBAT_NOTE_STRING + DELIMITER + "TURN"
+					+ myCombatTurn + "PASS" + myInitiativePass + " "
+					+ iMemoText;
+		} else {
+			textToAdd = "\n" + STORY_NOTE_STRING + DELIMITER + " " + iMemoText;
+		}
+
+		memoTextArea.append(textToAdd);
+	}
+
+	/**
+	 * Main.
+	 * 
+	 * @param args
+	 *            arguments.
+	 */
 	public static void main(final String[] args) {
 		// TODO need name of scenario
+		new ShadowrunScenarioTracking();
+	}
+
+	/**
+	 * Show error message.
+	 * 
+	 * @param iException
+	 *            exception that appeared.
+	 */
+	private void showError(final Exception iException) {
+		// TODO show error message
 	}
 
 	@Override
@@ -313,14 +630,32 @@ public class ShadowrunScenarioTracking extends JFrame implements
 
 	@Override
 	public void windowClosing(final WindowEvent e) {
+		confirmExit();
+	}
+
+	/**
+	 * Confirm exit.
+	 */
+	private void confirmExit() {
 		final int reply = JOptionPane.showConfirmDialog(this,
-				"Are you sure you wish to exit?", "Exit",
+				"Are you sure you wish to exit?", EXIT_STRING,
 				JOptionPane.YES_NO_OPTION);
 
 		if (reply == JOptionPane.YES_OPTION) {
-			// TODO window is being closed; save information
+			// window is being closed; save information
+			save();
 			this.dispose();
+			System.exit(0);
 		}
+	}
+
+	/**
+	 * Override dispose. Close buffers.
+	 */
+	@Override
+	public void dispose() {
+		// TODO close buffers
+		super.dispose();
 	}
 
 	@Override
@@ -346,11 +681,5 @@ public class ShadowrunScenarioTracking extends JFrame implements
 	@Override
 	public void windowDeactivated(final WindowEvent e) {
 		// unimplemented
-	}
-
-	@Override
-	public void actionPerformed(final ActionEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 }
