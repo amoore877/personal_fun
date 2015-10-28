@@ -10,7 +10,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.DefaultRowSorter;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
@@ -23,7 +26,10 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.RowSorter;
+import javax.swing.RowSorter.SortKey;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SortOrder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.NumberFormatter;
@@ -40,13 +46,13 @@ public class ShadowrunScenarioTracking extends JFrame implements
 	private static final Color DEFAULT_BACKGROUND_COLOR = Color.DARK_GRAY;
 	private static final String RESET_TURN_STRING = "Reset Turn";
 	private static final int LOWER_PANEL_HEIGHT = 210;
-	private static final int LOWER_PANEL_WIDTH = 400;
+	private static final int LOWER_PANEL_WIDTH = 450;
 	private static final int BUTTON_HEIGHT = 25;
 	private static final int BUTTON_WIDTH = 100;
 	private static final int SMALL_BUTTON_WIDTH = 70;
 	private static final int MAIN_PANEL_HEIGHT = 650;
 	private static final int FRAME_HEIGHT = 700;
-	private static final int FRAME_WIDTH = 900;
+	private static final int FRAME_WIDTH = 1000;
 	private static final String DELIMITER = "#";
 	private static final String STORY_NOTE_STRING = "STORY";
 	private static final String COMBAT_NOTE_STRING = "COMBAT";
@@ -101,6 +107,11 @@ public class ShadowrunScenarioTracking extends JFrame implements
 	 * Table for tracking data.
 	 */
 	private final JTable trackingTable;
+
+	/**
+	 * Table model for tracking data.
+	 */
+	private final ShadowrunScenarioTrackingTableModel trackingTableModel = new ShadowrunScenarioTrackingTableModel();
 
 	/**
 	 * Text area for all memos.
@@ -219,7 +230,7 @@ public class ShadowrunScenarioTracking extends JFrame implements
 		nextTurnButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
 				BUTTON_HEIGHT));
 		nextTurnButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		nextTurnButton.setBounds(115, 5, BUTTON_WIDTH, BUTTON_HEIGHT);
+		nextTurnButton.setBounds(184, 5, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(nextTurnButton);
 
 		final JButton resortButton = new JButton(RESORT_STRING);
@@ -230,7 +241,7 @@ public class ShadowrunScenarioTracking extends JFrame implements
 				.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		resortButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		resortButton.setToolTipText("Resorts table by initiative score.");
-		resortButton.setBounds(225, 45, BUTTON_WIDTH, BUTTON_HEIGHT);
+		resortButton.setBounds(340, 45, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(resortButton);
 
 		final JButton addActorButton = new JButton(ADD_STRING);
@@ -263,7 +274,7 @@ public class ShadowrunScenarioTracking extends JFrame implements
 			public void actionPerformed(final ActionEvent e) {
 			}
 		});
-		removeActorButton.setBounds(115, 45, BUTTON_WIDTH, BUTTON_HEIGHT);
+		removeActorButton.setBounds(184, 45, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(removeActorButton);
 
 		final JButton cleanupButton = new JButton(CLEANUP_STRING);
@@ -276,7 +287,7 @@ public class ShadowrunScenarioTracking extends JFrame implements
 				BUTTON_HEIGHT));
 		cleanupButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		cleanupButton.setToolTipText("Remove all dead actors from the table.");
-		cleanupButton.setBounds(225, 81, BUTTON_WIDTH, BUTTON_HEIGHT);
+		cleanupButton.setBounds(340, 81, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(cleanupButton);
 
 		final JLabel diceToRollLabel = new JLabel("Dice:");
@@ -340,7 +351,7 @@ public class ShadowrunScenarioTracking extends JFrame implements
 		rollTotalField.setColumns(10);
 
 		final JButton resetTurnButton = new JButton(RESET_TURN_STRING);
-		resetTurnButton.setBounds(225, 5, 100, 25);
+		resetTurnButton.setBounds(340, 5, 100, 25);
 		tableControlPanel.add(resetTurnButton);
 		resetTurnButton
 				.setToolTipText("Reset the Combat Turn and Initiative Pass counters.");
@@ -367,7 +378,7 @@ public class ShadowrunScenarioTracking extends JFrame implements
 
 		memoField = new JTextField();
 		memoField.setToolTipText("Type memo here.");
-		memoField.setBounds(10, 36, 380, 20);
+		memoField.setBounds(10, 36, 430, 20);
 		memoPanel.add(memoField);
 		memoField.setColumns(10);
 
@@ -462,10 +473,30 @@ public class ShadowrunScenarioTracking extends JFrame implements
 		tableScrollPane.setBackground(DEFAULT_BACKGROUND_COLOR);
 
 		trackingTable = new JTable();
+		trackingTable.setModel(trackingTableModel);
+		trackingTable.setAutoCreateRowSorter(true);
+		trackingTable.setDefaultRenderer(Object.class,
+				new ShadowrunScenarioTrackingTableCellRenderer());
 		trackingTable.setForeground(DEFAULT_FOREGROUND_COLOR);
 		trackingTable.setBackground(DEFAULT_BACKGROUND_COLOR);
-		trackingTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		trackingTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		tableScrollPane.setViewportView(trackingTable);
+
+		trackingTable.getColumnModel()
+				.getColumn(ShadowrunScenarioTrackingTableModel.ACTED_COL_INDEX)
+				.setPreferredWidth(15);
+		trackingTable
+				.getColumnModel()
+				.getColumn(
+						ShadowrunScenarioTrackingTableModel.INITIATIVE_COL_INDEX)
+				.setPreferredWidth(25);
+		trackingTable.getColumnModel()
+				.getColumn(ShadowrunScenarioTrackingTableModel.NAME_COL_INDEX)
+				.setPreferredWidth(30);
+		trackingTable
+				.getColumnModel()
+				.getColumn(ShadowrunScenarioTrackingTableModel.STATUS_COL_INDEX)
+				.setPreferredWidth(25);
 
 		final JScrollPane memoScrollPane = new JScrollPane();
 		memoScrollPane.setAutoscrolls(true);
@@ -478,7 +509,7 @@ public class ShadowrunScenarioTracking extends JFrame implements
 		memoTextArea.setBackground(DEFAULT_BACKGROUND_COLOR);
 		memoTextArea.setToolTipText("List of memos for the scenario");
 		memoScrollPane.setViewportView(memoTextArea);
-		tableAndMemoSplitPane.setDividerLocation(0.95);
+		tableAndMemoSplitPane.setDividerLocation(FRAME_WIDTH - 5);
 		mainSplitPane.setDividerLocation(0.7);
 
 		pack();
@@ -504,7 +535,10 @@ public class ShadowrunScenarioTracking extends JFrame implements
 		} else if (iEvent.getActionCommand().equals(NEXT_PASS_STRING)) {
 			// next initiative pass
 			// TODO confirm
-			// TODO decrease all initiatives by 10
+			// TODO reset all acted flags
+
+			// decrease all initiatives by 10
+			trackingTableModel.nextInitiativePass();
 
 			// increment initiative pass
 			myInitiativePass++;
@@ -514,7 +548,10 @@ public class ShadowrunScenarioTracking extends JFrame implements
 		} else if (iEvent.getActionCommand().equals(NEXT_TURN_STRING)) {
 			// next combat turn
 			// TODO confirm
-			// TODO reset all initiatives to 0
+			// TODO reset all acted flags
+
+			// reset all initiatives to 0
+			trackingTableModel.resetInitiative();
 
 			// reset initiative pass
 			myInitiativePass = 1;
@@ -529,14 +566,22 @@ public class ShadowrunScenarioTracking extends JFrame implements
 		} else if (iEvent.getActionCommand().equals(RESET_TURN_STRING)) {
 			// reset turn/pass counters
 			// TODO confirm
+			// TODO reset all acted flags
+
+			// reset all initiatives to 0
+			trackingTableModel.resetInitiative();
+
+			// reset initiative pass
 			myInitiativePass = 1;
 
+			// reset combat turn
 			myCombatTurn = 1;
 
 			// add memo
 			appendMemo("Reset combat", true);
 		} else if (iEvent.getActionCommand().equals(RESORT_STRING)) {
-			// TODO resort the table by initiative
+			// resort the table by initiative
+			resort();
 		} else if (iEvent.getActionCommand().equals(ROLL_STRING)) {
 			// roll dice
 			try {
@@ -572,6 +617,21 @@ public class ShadowrunScenarioTracking extends JFrame implements
 		} else {
 			System.err.println("Unknown action");
 		}
+	}
+
+	/**
+	 * Sort the table. Sorts by initiative, descending.
+	 */
+	private void resort() {
+		// TODO cleanup
+		final DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>) trackingTable
+				.getRowSorter();
+		final List<SortKey> trackingTableSortKeyList = new ArrayList<SortKey>();
+		trackingTableSortKeyList.add(new RowSorter.SortKey(
+				ShadowrunScenarioTrackingTableModel.INITIATIVE_COL_INDEX,
+				SortOrder.DESCENDING));
+		sorter.setSortKeys(trackingTableSortKeyList);
+		sorter.sort();
 	}
 
 	/**
