@@ -37,32 +37,37 @@ public class ShadowrunScenarioTrackingTableModel extends DefaultTableModel {
 	/**
 	 * Column index of name.
 	 */
-	static final int NAME_COL_INDEX = 2;
+	public static final int NAME_COL_INDEX = 2;
 
 	/**
 	 * Column index of physical damage.
 	 */
-	private static final int PHYS_DAM_COL_INDEX = 3;
+	public static final int PHYS_DAM_COL_INDEX = 3;
 
 	/**
 	 * Column index of stun damage.
 	 */
-	private static final int STUN_DAM_COL_INDEX = 4;
+	public static final int STUN_DAM_COL_INDEX = 4;
 
 	/**
 	 * Column index of matrix damage.
 	 */
-	private static final int MAT_DAM_COL_INDEX = 5;
+	public static final int MAT_DAM_COL_INDEX = 5;
 
 	/**
 	 * Column index of notes.
 	 */
-	private static final int NOTE_COL_INDEX = 6;
+	public static final int NOTE_COL_INDEX = 6;
 
 	/**
 	 * Column index of status.
 	 */
 	public static final int STATUS_COL_INDEX = 7;
+
+	/**
+	 * Number of columns.
+	 */
+	public static final int NUM_OF_COLS = 8;
 
 	/**
 	 * Constructor.
@@ -131,5 +136,26 @@ public class ShadowrunScenarioTrackingTableModel extends DefaultTableModel {
 		default:
 			return null;
 		}
+	}
+
+	/**
+	 * Add a character with the given name.
+	 * 
+	 * @param iName
+	 *            name of character to add.
+	 */
+	protected void addCharacter(final String iName) {
+		final Object[] colData = new Object[NUM_OF_COLS];
+
+		colData[ACTED_COL_INDEX] = Boolean.FALSE;
+		colData[INITIATIVE_COL_INDEX] = new Integer(0);
+		colData[MAT_DAM_COL_INDEX] = "";
+		colData[NAME_COL_INDEX] = iName;
+		colData[NOTE_COL_INDEX] = "";
+		colData[PHYS_DAM_COL_INDEX] = "";
+		colData[STATUS_COL_INDEX] = ShadowrunCharacterStatus.OK;
+		colData[STUN_DAM_COL_INDEX] = "";
+
+		addRow(colData);
 	}
 }

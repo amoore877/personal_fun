@@ -11,11 +11,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultRowSorter;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -32,6 +36,10 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SortOrder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.text.NumberFormatter;
 
 /**
@@ -259,6 +267,7 @@ public class ShadowrunScenarioTracking extends JFrame implements
 		tableControlPanel.add(addActorButton);
 
 		final JButton removeActorButton = new JButton(REMOVE_STRING);
+		removeActorButton.setEnabled(false);
 		removeActorButton.addActionListener(this);
 		removeActorButton.setMaximumSize(new Dimension(BUTTON_WIDTH,
 				BUTTON_HEIGHT));
@@ -268,12 +277,7 @@ public class ShadowrunScenarioTracking extends JFrame implements
 				BUTTON_HEIGHT));
 		removeActorButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		removeActorButton
-				.setToolTipText("Remove the selected actor from the table.");
-		removeActorButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-			}
-		});
+				.setToolTipText("Remove the selected actor(s) from the table.");
 		removeActorButton.setBounds(184, 45, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(removeActorButton);
 
@@ -473,15 +477,50 @@ public class ShadowrunScenarioTracking extends JFrame implements
 		tableScrollPane.setBackground(DEFAULT_BACKGROUND_COLOR);
 
 		trackingTable = new JTable();
+
+		// table model
+
 		trackingTable.setModel(trackingTableModel);
+		// table selection
+		trackingTable.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+					// enable/disable remove button on table selection
+					@Override
+					public void valueChanged(final ListSelectionEvent e) {
+						if (trackingTable.getSelectedRows().length != 0) {
+							removeActorButton.setEnabled(true);
+						} else {
+							removeActorButton.setEnabled(false);
+						}
+					}
+				});
+
+		// sorter
 		trackingTable.setAutoCreateRowSorter(true);
+
+		// combox for status enum
+		final JComboBox<ShadowrunCharacterStatus> statusCombox = new JComboBox<ShadowrunCharacterStatus>(
+				ShadowrunCharacterStatus.values());
+		trackingTable
+				.getColumnModel()
+				.getColumn(ShadowrunScenarioTrackingTableModel.STATUS_COL_INDEX)
+				.setCellEditor(new DefaultCellEditor(statusCombox));
+
+		// on cell edit, repaint
+		trackingTableModel.addTableModelListener(new TableModelListener() {
+
+			@Override
+			public void tableChanged(final TableModelEvent e) {
+				repaint();
+			}
+		});
+
+		// renderer
 		trackingTable.setDefaultRenderer(Object.class,
 				new ShadowrunScenarioTrackingTableCellRenderer());
-		trackingTable.setForeground(DEFAULT_FOREGROUND_COLOR);
-		trackingTable.setBackground(DEFAULT_BACKGROUND_COLOR);
 		trackingTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		tableScrollPane.setViewportView(trackingTable);
 
+		// column widths
 		trackingTable.getColumnModel()
 				.getColumn(ShadowrunScenarioTrackingTableModel.ACTED_COL_INDEX)
 				.setPreferredWidth(15);
@@ -497,6 +536,9 @@ public class ShadowrunScenarioTracking extends JFrame implements
 				.getColumnModel()
 				.getColumn(ShadowrunScenarioTrackingTableModel.STATUS_COL_INDEX)
 				.setPreferredWidth(25);
+
+		// add table to scroll pane
+		tableScrollPane.setViewportView(trackingTable);
 
 		final JScrollPane memoScrollPane = new JScrollPane();
 		memoScrollPane.setAutoscrolls(true);
@@ -519,14 +561,10 @@ public class ShadowrunScenarioTracking extends JFrame implements
 	@Override
 	public void actionPerformed(final ActionEvent iEvent) {
 		if (iEvent.getActionCommand().equals(ADD_MEMO_STRING)) {
-			// add memo
-			final String memoText = memoField.getText();
-
-			final boolean isCombatMemo = combatMemoCheckbox.isSelected();
-
-			appendMemo(memoText, isCombatMemo);
+			addMemo();
 		} else if (iEvent.getActionCommand().equals(ADD_STRING)) {
-			// TODO add character
+			// add character(s)
+			addCharacters();
 		} else if (iEvent.getActionCommand().equals(CLEANUP_STRING)) {
 			// TODO cleanup dead characters
 		} else if (iEvent.getActionCommand().equals(EXIT_STRING)) {
@@ -534,39 +572,90 @@ public class ShadowrunScenarioTracking extends JFrame implements
 			confirmExit();
 		} else if (iEvent.getActionCommand().equals(NEXT_PASS_STRING)) {
 			// next initiative pass
-			// TODO confirm
-			// TODO reset all acted flags
-
-			// decrease all initiatives by 10
-			trackingTableModel.nextInitiativePass();
-
-			// increment initiative pass
-			myInitiativePass++;
-
-			// add memo
-			appendMemo("New initiative pass", true);
+			nextPass();
 		} else if (iEvent.getActionCommand().equals(NEXT_TURN_STRING)) {
 			// next combat turn
-			// TODO confirm
-			// TODO reset all acted flags
-
-			// reset all initiatives to 0
-			trackingTableModel.resetInitiative();
-
-			// reset initiative pass
-			myInitiativePass = 1;
-
-			// increment combat turn
-			myCombatTurn++;
-
-			// add memo
-			appendMemo("New combat turn", true);
+			nextTurn();
 		} else if (iEvent.getActionCommand().equals(REMOVE_STRING)) {
-			// TODO remove selected character
+			// remove selected character(s)
+			removeCharacters();
 		} else if (iEvent.getActionCommand().equals(RESET_TURN_STRING)) {
 			// reset turn/pass counters
-			// TODO confirm
-			// TODO reset all acted flags
+			resetTurn();
+		} else if (iEvent.getActionCommand().equals(RESORT_STRING)) {
+			// resort the table by initiative
+			resort();
+		} else if (iEvent.getActionCommand().equals(ROLL_STRING)) {
+			// roll dice
+			rollDice();
+		} else if (iEvent.getActionCommand().equals(SAVE_STRING)) {
+			// save
+			save();
+		} else {
+			System.err.println("Unknown action");
+		}
+	}
+
+	/**
+	 * Add character(s) to table.
+	 */
+	private void addCharacters() {
+		// add character(s)
+		final String name = JOptionPane.showInputDialog(this,
+				"Name for new character(s)?", "Add Character(s)",
+				JOptionPane.QUESTION_MESSAGE);
+		if ((name != null) && !(name.isEmpty())) {
+			final String numOfCharactersString = JOptionPane.showInputDialog(
+					this, "Number of characters to add (1-10)?", 1);
+
+			if ((numOfCharactersString != null)
+					&& !(numOfCharactersString.isEmpty())) {
+				try {
+					final int numOfCharacters = Integer
+							.parseInt(numOfCharactersString);
+
+					if (numOfCharacters < 1) {
+						showError(new Exception(
+								"Bad input for number of new characters: ["
+										+ numOfCharacters + "]. Too small."));
+					} else if (numOfCharacters > 10) {
+						showError(new Exception(
+								"Bad input for number of new characters: ["
+										+ numOfCharacters + "]. Too big."));
+					} else {
+						if (numOfCharacters > 1) {
+							for (int currCharacter = 1; currCharacter <= numOfCharacters; currCharacter++) {
+								trackingTableModel.addCharacter(name + " "
+										+ currCharacter);
+							}
+						} else {
+							trackingTableModel.addCharacter(name);
+						}
+					}
+				} catch (final NumberFormatException iException) {
+					showError(iException);
+				}
+			} else {
+				showError(new Exception(
+						"Bad input for number of new characters"));
+			}
+		} else {
+			showError(new Exception("Bad name input for new character"));
+		}
+	}
+
+	/**
+	 * Reset combat turn/pass.
+	 */
+	private void resetTurn() {
+		// confirm
+		final int result = JOptionPane.showConfirmDialog(this,
+				"Reset combat turns and passes?", "Reset combat?",
+				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+		if (result == JOptionPane.OK_OPTION) {
+			// reset all acted flags
+			resetActedFlags();
 
 			// reset all initiatives to 0
 			trackingTableModel.resetInitiative();
@@ -579,43 +668,165 @@ public class ShadowrunScenarioTracking extends JFrame implements
 
 			// add memo
 			appendMemo("Reset combat", true);
-		} else if (iEvent.getActionCommand().equals(RESORT_STRING)) {
-			// resort the table by initiative
-			resort();
-		} else if (iEvent.getActionCommand().equals(ROLL_STRING)) {
-			// roll dice
-			try {
-				final int diceToRoll = Integer.valueOf(diceToRollField
-						.getText());
+		}
+	}
 
-				final boolean useEdge = edgeCheckbox.isSelected();
+	/**
+	 * Next combat turn.
+	 */
+	private void nextTurn() {
+		// confirm
+		final int result = JOptionPane.showConfirmDialog(this,
+				"Go to next combat turn?", "Next turn?",
+				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
-				final ShadowrunRollResult rollResult = new ShadowrunRollResult(
-						ShadowrunRoller.rollDice(diceToRoll, useEdge));
+		if (result == JOptionPane.OK_OPTION) {
+			// reset all acted flags
+			resetActedFlags();
 
-				rollTotalField.setText(String.valueOf(rollResult.getSum()));
+			// reset all initiatives to 0
+			trackingTableModel.resetInitiative();
 
-				if (rollResult.isCriticalGlitch()) {
-					hitsField.setText("Critical Glitch!");
-				} else {
-					final StringBuilder hitsText = new StringBuilder(
-							String.valueOf(rollResult.getHits()));
+			// reset initiative pass
+			myInitiativePass = 1;
 
-					if (rollResult.isGlitch()) {
-						hitsText.append(" Glitch!");
-					}
+			// increment combat turn
+			myCombatTurn++;
 
-					hitsField.setText(hitsText.toString());
+			// add memo
+			appendMemo("New combat turn", true);
+		}
+	}
+
+	/**
+	 * Next initiative pass.
+	 */
+	private void nextPass() {
+		// confirm
+		final int result = JOptionPane.showConfirmDialog(this,
+				"Go to next initiative pass?", "Next pass?",
+				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+		if (result == JOptionPane.OK_OPTION) {
+			// reset all acted flags
+			resetActedFlags();
+
+			// decrease all initiatives by 10
+			trackingTableModel.nextInitiativePass();
+
+			// increment initiative pass
+			myInitiativePass++;
+
+			// add memo
+			appendMemo("New initiative pass", true);
+		}
+	}
+
+	/**
+	 * Reset all acted flags to false.
+	 */
+	private void resetActedFlags() {
+		// TODO reset all acted flags
+	}
+
+	/**
+	 * Add a memo.
+	 */
+	private void addMemo() {
+		// add memo
+		final String memoText = memoField.getText();
+
+		final boolean isCombatMemo = combatMemoCheckbox.isSelected();
+
+		appendMemo(memoText, isCombatMemo);
+	}
+
+	/**
+	 * Roll dice.
+	 */
+	private void rollDice() {
+		try {
+			final int diceToRoll = Integer.valueOf(diceToRollField.getText());
+
+			final boolean useEdge = edgeCheckbox.isSelected();
+
+			final ShadowrunRollResult rollResult = new ShadowrunRollResult(
+					ShadowrunRoller.rollDice(diceToRoll, useEdge));
+
+			rollTotalField.setText(String.valueOf(rollResult.getSum()));
+
+			if (rollResult.isCriticalGlitch()) {
+				hitsField.setText("Critical Glitch!");
+			} else {
+				final StringBuilder hitsText = new StringBuilder(
+						String.valueOf(rollResult.getHits()));
+
+				if (rollResult.isGlitch()) {
+					hitsText.append(" Glitch!");
 				}
 
-			} catch (final NumberFormatException iException) {
-				showError(iException);
+				hitsField.setText(hitsText.toString());
 			}
-		} else if (iEvent.getActionCommand().equals(SAVE_STRING)) {
-			// save
-			save();
+
+		} catch (final NumberFormatException iException) {
+			showError(iException);
+		}
+	}
+
+	/**
+	 * Removal of characters.
+	 */
+	private void removeCharacters() {
+		final int[] selectedRowsInt = trackingTable.getSelectedRows();
+
+		final Integer[] selectedRowsInteger = new Integer[selectedRowsInt.length];
+		int index = 0;
+		for (final int currRow : selectedRowsInt) {
+			selectedRowsInteger[index++] = currRow;
+		}
+
+		// sort highest index to lowest (to avoid issues in removing rows)
+		Arrays.sort(selectedRowsInteger, new Comparator<Integer>() {
+
+			@Override
+			public int compare(final Integer o1, final Integer o2) {
+				return o2 - o1;
+			}
+		});
+
+		if (selectedRowsInteger.length != 0) {
+			final StringBuilder message = new StringBuilder(
+					"Are you sure you wish to remove the following characters:");
+
+			for (final int currRow : selectedRowsInteger) {
+				try {
+					message.append("\n"
+							+ trackingTableModel
+									.getValueAt(
+											currRow,
+											ShadowrunScenarioTrackingTableModel.NAME_COL_INDEX)
+									.toString());
+
+				} catch (final ArrayIndexOutOfBoundsException iException) {
+					showError(iException);
+				}
+			}
+
+			final int result = JOptionPane.showConfirmDialog(this,
+					message.toString(), "Removal Confirmation",
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+			if (result == JOptionPane.OK_OPTION) {
+				for (final int currRow : selectedRowsInteger) {
+					try {
+						trackingTableModel.removeRow(currRow);
+					} catch (final ArrayIndexOutOfBoundsException iException) {
+						showError(iException);
+					}
+				}
+			}
 		} else {
-			System.err.println("Unknown action");
+			System.err.println("No selected rows");
 		}
 	}
 
@@ -623,7 +834,7 @@ public class ShadowrunScenarioTracking extends JFrame implements
 	 * Sort the table. Sorts by initiative, descending.
 	 */
 	private void resort() {
-		// TODO cleanup
+		// TODO clean up code
 		final DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>) trackingTable
 				.getRowSorter();
 		final List<SortKey> trackingTableSortKeyList = new ArrayList<SortKey>();
@@ -680,7 +891,10 @@ public class ShadowrunScenarioTracking extends JFrame implements
 	 *            exception that appeared.
 	 */
 	private void showError(final Exception iException) {
-		// TODO show error message
+		// show error message, any exception that is caught
+		JOptionPane.showMessageDialog(this, iException.getMessage(), "Error!",
+				JOptionPane.ERROR_MESSAGE);
+		iException.printStackTrace();
 	}
 
 	@Override

@@ -32,8 +32,10 @@ public class ShadowrunScenarioTrackingTableCellRenderer extends
 	public Component getTableCellRendererComponent(final JTable table,
 			final Object value, final boolean isSelected,
 			final boolean hasFocus, final int row, final int column) {
+		// TODO does not affect Acted or Initiative
 		final TableModel model = table.getModel();
 
+		// the component we are interested in
 		final Component c = super.getTableCellRendererComponent(table, value,
 				isSelected, hasFocus, row, column);
 
