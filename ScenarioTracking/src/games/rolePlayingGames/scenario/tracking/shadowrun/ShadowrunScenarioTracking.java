@@ -10,6 +10,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,37 +54,155 @@ import javax.swing.text.NumberFormatter;
 public class ShadowrunScenarioTracking extends JFrame implements
 		ActionListener, WindowListener {
 
-	private static final String CLEAR_SELECTION_STRING = "Clear Selection";
-	private static final Color DEFAULT_FOREGROUND_COLOR = Color.WHITE;
-	private static final Color DEFAULT_BACKGROUND_COLOR = Color.DARK_GRAY;
-	private static final String RESET_COMBAT_STRING = "Reset Combat";
-	private static final int LOWER_PANEL_HEIGHT = 210;
-	private static final int LOWER_PANEL_WIDTH = 550;
-	private static final int BUTTON_HEIGHT = 25;
-	private static final int BUTTON_WIDTH = 150;
-	private static final int SMALL_BUTTON_WIDTH = 70;
-	private static final int MAIN_PANEL_HEIGHT = 650;
-	private static final int FRAME_HEIGHT = 700;
-	private static final int FRAME_WIDTH = 1200;
-	private static final String DELIMITER = "#";
-	private static final String STORY_NOTE_STRING = "STORY";
-	private static final String COMBAT_NOTE_STRING = "COMBAT";
-	private static final String TRACE_NOTE_STRING = "TRACE";
-	private static final String EXIT_STRING = "Exit";
-	private static final String SAVE_STRING = "Save";
-	private static final String ADD_MEMO_STRING = "Add Memo";
-	private static final String ROLL_STRING = "Roll";
-	private static final String USE_EDGE_STRING = "Use Edge?";
-	private static final String CLEANUP_STRING = "Cleanup";
-	private static final String REMOVE_STRING = "Remove";
-	private static final String ADD_STRING = "Add";
-	private static final String RESORT_STRING = "Resort";
-	private static final String NEXT_TURN_STRING = "Next Turn";
-	private static final String NEXT_PASS_STRING = "Next Pass";
 	/**
 	 * Serial ID.
 	 */
 	private static final long serialVersionUID = -3278488966357839811L;
+
+	/**
+	 * Height of control panels in lower section.
+	 */
+	private static final int LOWER_PANEL_HEIGHT = 210;
+
+	/**
+	 * Width of control panels in lower section.
+	 */
+	private static final int LOWER_PANEL_WIDTH = 550;
+
+	/**
+	 * Regular button height.
+	 */
+	private static final int BUTTON_HEIGHT = 25;
+
+	/**
+	 * Regular button width.
+	 */
+	private static final int BUTTON_WIDTH = 150;
+
+	/**
+	 * Small button width.
+	 */
+	private static final int SMALL_BUTTON_WIDTH = 70;
+
+	/**
+	 * Main panel height.
+	 */
+	private static final int MAIN_PANEL_HEIGHT = 650;
+
+	/**
+	 * Frame height.
+	 */
+	private static final int FRAME_HEIGHT = 700;
+
+	/**
+	 * Frame width.
+	 */
+	private static final int FRAME_WIDTH = 1200;
+
+	/**
+	 * Default foreground for much of the GUI.
+	 */
+	private static final Color DEFAULT_FOREGROUND_COLOR = Color.WHITE;
+
+	/**
+	 * Default background for much of the GUI.
+	 */
+	private static final Color DEFAULT_BACKGROUND_COLOR = Color.DARK_GRAY;
+
+	/**
+	 * Clear selection string.
+	 */
+	private static final String CLEAR_SELECTION_STRING = "Clear Selection";
+
+	/**
+	 * Reset combat string.
+	 */
+	private static final String RESET_COMBAT_STRING = "Reset Combat";
+
+	/**
+	 * Exit string.
+	 */
+	private static final String EXIT_STRING = "Exit";
+
+	/**
+	 * Save string.
+	 */
+	private static final String SAVE_STRING = "Save";
+
+	/**
+	 * Add memo string.
+	 */
+	private static final String ADD_MEMO_STRING = "Add Memo";
+
+	/**
+	 * Roll string.
+	 */
+	private static final String ROLL_STRING = "Roll";
+
+	/**
+	 * Use edge string.
+	 */
+	private static final String USE_EDGE_STRING = "Use Edge?";
+
+	/**
+	 * Cleanup string.
+	 */
+	private static final String CLEANUP_STRING = "Cleanup";
+
+	/**
+	 * Remove string.
+	 */
+	private static final String REMOVE_STRING = "Remove";
+
+	/**
+	 * Add string.
+	 */
+	private static final String ADD_STRING = "Add";
+
+	/**
+	 * Resort string.
+	 */
+	private static final String RESORT_STRING = "Resort";
+
+	/**
+	 * Next turn string.
+	 */
+	private static final String NEXT_TURN_STRING = "Next Turn";
+
+	/**
+	 * Next pass string.
+	 */
+	private static final String NEXT_PASS_STRING = "Next Pass";
+
+	/**
+	 * Log delimiter.
+	 */
+	private static final String LOG_DELIMITER = "#";
+
+	/**
+	 * Table delimiter.
+	 */
+	private static final String TABLE_DELIMITER = ",";
+
+	/**
+	 * Story note log string.
+	 */
+	private static final String STORY_NOTE_STRING = "STORY";
+
+	/**
+	 * Combat not log string.
+	 */
+	private static final String COMBAT_NOTE_STRING = "COMBAT";
+
+	/**
+	 * CSV extension.
+	 */
+	private static final String CSV_EXTENSION_STRING = ".csv";
+
+	/**
+	 * Text extension.
+	 */
+	private static final String TXT_EXTENSION_STRING = ".txt";
 
 	/**
 	 * Text field to input dice to roll.
@@ -135,19 +259,18 @@ public class ShadowrunScenarioTracking extends JFrame implements
 	 */
 	private int myCombatTurn = 1;
 
-	public ShadowrunScenarioTracking() {
-		// TODO take name of scenario
+	/**
+	 * Scenario name.
+	 */
+	private final String myScenarioName;
 
-		// TODO check if files exist for this scenario
-
-		// TODO if files exist for this scenario, offer to load or overwrite
-
-		// TODO load
-
-		// TODO overwrite/files did not exist
-
-		// TODO double-check the files exist now
-
+	/**
+	 * Constructor.
+	 * 
+	 * @param iScenarioName
+	 *            name for scenario.
+	 */
+	public ShadowrunScenarioTracking(final String iScenarioName) {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 		addWindowListener(this);
@@ -417,13 +540,13 @@ public class ShadowrunScenarioTracking extends JFrame implements
 				BUTTON_HEIGHT));
 		addMemoButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		addMemoButton.setToolTipText("Add memo to the log.");
-		addMemoButton.setBounds(10, 67, 89, 23);
+		addMemoButton.setBounds(10, 67, BUTTON_WIDTH, BUTTON_HEIGHT);
 		memoPanel.add(addMemoButton);
 
 		combatMemoCheckbox = new JCheckBox("Combat Memo?");
 		combatMemoCheckbox.setForeground(DEFAULT_FOREGROUND_COLOR);
 		combatMemoCheckbox.setBackground(DEFAULT_BACKGROUND_COLOR);
-		combatMemoCheckbox.setBounds(105, 67, 120, 23);
+		combatMemoCheckbox.setBounds(166, 68, 120, 23);
 		memoPanel.add(combatMemoCheckbox);
 
 		memoField.getDocument().addDocumentListener(new DocumentListener() {
@@ -607,8 +730,139 @@ public class ShadowrunScenarioTracking extends JFrame implements
 		tableAndMemoSplitPane.setDividerLocation(FRAME_WIDTH - 5);
 		mainSplitPane.setDividerLocation(0.7);
 
+		// take name of scenario
+		myScenarioName = iScenarioName;
+
+		// check if files exist for this scenario
+		final File logFile = new File(myScenarioName + CSV_EXTENSION_STRING);
+		final File tableFile = new File(myScenarioName + TXT_EXTENSION_STRING);
+
+		try {
+			if (logFile.exists() || tableFile.exists()) {
+				// at least one exists
+				loadLogFile(logFile);
+
+				loadTableFile(tableFile);
+			} else {
+				// neither exist, so create
+				logFile.createNewFile();
+				tableFile.createNewFile();
+			}
+
+		} catch (final IOException iException) {
+			showError(iException);
+			dispose();
+		}
+
 		pack();
 		setVisible(true);
+	}
+
+	/**
+	 * Load table file.
+	 * 
+	 * @param tableFile
+	 *            table file to load.
+	 */
+	private void loadTableFile(final File tableFile) {
+		try {
+			if (tableFile.exists()) {
+				// table file exists
+				// offer to load or overwrite
+				final int result = JOptionPane
+						.showConfirmDialog(null,
+								"Table file [" + tableFile.getName()
+										+ "] found. Load?",
+								"Load existing table file?",
+								JOptionPane.OK_CANCEL_OPTION,
+								JOptionPane.QUESTION_MESSAGE);
+
+				if (result == JOptionPane.OK_OPTION) {
+					// load
+					final BufferedReader tableFileReader = new BufferedReader(
+							new FileReader(tableFile));
+					String line = tableFileReader.readLine();
+					while (line != null) {
+						// split line by delimiter
+						final String[] lineArray = line.split(TABLE_DELIMITER);
+
+						// row to insert
+						final Object[] newRow = new Object[ShadowrunScenarioTrackingTableModel.NUM_OF_COLS];
+
+						newRow[ShadowrunScenarioTrackingTableModel.ACTED_COL_INDEX] = Boolean
+								.parseBoolean(lineArray[ShadowrunScenarioTrackingTableModel.ACTED_COL_INDEX]);
+						newRow[ShadowrunScenarioTrackingTableModel.INITIATIVE_COL_INDEX] = Integer
+								.parseInt(lineArray[ShadowrunScenarioTrackingTableModel.INITIATIVE_COL_INDEX]);
+						newRow[ShadowrunScenarioTrackingTableModel.NAME_COL_INDEX] = lineArray[ShadowrunScenarioTrackingTableModel.NAME_COL_INDEX];
+						newRow[ShadowrunScenarioTrackingTableModel.PHYS_DAM_COL_INDEX] = lineArray[ShadowrunScenarioTrackingTableModel.PHYS_DAM_COL_INDEX];
+						newRow[ShadowrunScenarioTrackingTableModel.STUN_DAM_COL_INDEX] = lineArray[ShadowrunScenarioTrackingTableModel.STUN_DAM_COL_INDEX];
+						newRow[ShadowrunScenarioTrackingTableModel.MAT_DAM_COL_INDEX] = lineArray[ShadowrunScenarioTrackingTableModel.MAT_DAM_COL_INDEX];
+						newRow[ShadowrunScenarioTrackingTableModel.NOTE_COL_INDEX] = lineArray[ShadowrunScenarioTrackingTableModel.NOTE_COL_INDEX];
+						newRow[ShadowrunScenarioTrackingTableModel.STATUS_COL_INDEX] = ShadowrunCharacterStatus
+								.valueOf(lineArray[ShadowrunScenarioTrackingTableModel.STATUS_COL_INDEX]);
+
+						// add to model
+						trackingTableModel.addRow(newRow);
+
+						// new line
+						line = tableFileReader.readLine();
+					}
+
+					tableFileReader.close();
+				} else {
+					// delete and recreate
+					tableFile.delete();
+					tableFile.createNewFile();
+				}
+			}
+		} catch (final IOException iException) {
+			showError(iException);
+		} catch (final ArrayIndexOutOfBoundsException iException) {
+			showError(iException);
+		} catch (final NumberFormatException iException) {
+			showError(iException);
+		} catch (final IllegalArgumentException iException) {
+			showError(iException);
+		}
+	}
+
+	/**
+	 * Load log file.
+	 * 
+	 * @param logFile
+	 *            log file to load.
+	 */
+	private void loadLogFile(final File logFile) {
+		try {
+			if (logFile.exists()) {
+				// log file exists
+				// offer to load or overwrite
+				final int result = JOptionPane.showConfirmDialog(null,
+						"Log file [" + logFile.getName() + "] found. Load?",
+						"Load existing log file?",
+						JOptionPane.OK_CANCEL_OPTION,
+						JOptionPane.QUESTION_MESSAGE);
+
+				if (result == JOptionPane.OK_OPTION) {
+					// load
+					final BufferedReader logFileReader = new BufferedReader(
+							new FileReader(logFile));
+					String line = logFileReader.readLine();
+					while (line != null) {
+						memoTextArea.append(line + "\n");
+						line = logFileReader.readLine();
+					}
+
+					logFileReader.close();
+				} else {
+					// delete and recreate
+					logFile.delete();
+					logFile.createNewFile();
+				}
+			}
+		} catch (final IOException iException) {
+			showError(iException);
+		}
 	}
 
 	@Override
@@ -796,6 +1050,9 @@ public class ShadowrunScenarioTracking extends JFrame implements
 		final boolean isCombatMemo = combatMemoCheckbox.isSelected();
 
 		appendMemo(memoText, isCombatMemo);
+
+		// clear memo field
+		memoField.setText("");
 	}
 
 	/**
@@ -881,13 +1138,101 @@ public class ShadowrunScenarioTracking extends JFrame implements
 				SortOrder.DESCENDING));
 		sorter.setSortKeys(trackingTableSortKeyList);
 		sorter.sort();
+
+		// repaint
+		trackingTable.repaint();
 	}
 
 	/**
 	 * Save function.
 	 */
 	private void save() {
-		// TODO save
+		// save
+		// save log file
+		final boolean logFileSaved = saveLogFile();
+
+		// save table file
+		final boolean tableFileSaved = saveTableFile();
+
+		if (!logFileSaved || !tableFileSaved) {
+			// something wasn't saved
+			JOptionPane.showMessageDialog(null,
+					"Saving unsuccessful. Log file saved: [" + logFileSaved
+							+ "]. Table file saved: [" + tableFileSaved + "].",
+					"Error saving", JOptionPane.ERROR_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(null, "Saved!", "Save successful",
+					JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+
+	/**
+	 * Save log file.
+	 * 
+	 * @return true if successful.
+	 */
+	private boolean saveLogFile() {
+		boolean logFileSaved = false;
+		try {
+			final File logFile = new File(myScenarioName + CSV_EXTENSION_STRING);
+			// remake file
+			logFile.delete();
+			logFile.createNewFile();
+
+			final BufferedWriter logFileWriter = new BufferedWriter(
+					new FileWriter(logFile));
+
+			logFileWriter.write(memoTextArea.getText());
+
+			logFileWriter.flush();
+			logFileWriter.close();
+
+			logFileSaved = true;
+		} catch (final IOException iException) {
+			showError(iException);
+		}
+		return logFileSaved;
+	}
+
+	/**
+	 * Save table file.
+	 * 
+	 * @return true if successful.
+	 */
+	private boolean saveTableFile() {
+		boolean oTableFileSaved = false;
+		try {
+			final File tableFile = new File(myScenarioName
+					+ TXT_EXTENSION_STRING);
+			// remake file
+			tableFile.delete();
+			tableFile.createNewFile();
+
+			final BufferedWriter tableFileWriter = new BufferedWriter(
+					new FileWriter(tableFile));
+
+			// write table
+			for (int currRow = 0; currRow < trackingTableModel.getRowCount(); currRow++) {
+				final StringBuilder lineToWrite = new StringBuilder();
+				for (int currCol = 0; currCol < ShadowrunScenarioTrackingTableModel.NUM_OF_COLS; currCol++) {
+					lineToWrite.append(trackingTableModel.getValueAt(currRow,
+							currCol).toString());
+					lineToWrite.append(TABLE_DELIMITER);
+				}
+				lineToWrite.append("\n");
+				tableFileWriter.write(lineToWrite.toString());
+			}
+
+			tableFileWriter.flush();
+			tableFileWriter.close();
+
+			oTableFileSaved = true;
+		} catch (final IOException iException) {
+			showError(iException);
+		} catch (final ArrayIndexOutOfBoundsException iException) {
+			showError(iException);
+		}
+		return oTableFileSaved;
 	}
 
 	/**
@@ -901,11 +1246,12 @@ public class ShadowrunScenarioTracking extends JFrame implements
 	private void appendMemo(final String iMemoText, final boolean iIsCombatMemo) {
 		String textToAdd;
 		if (iIsCombatMemo) {
-			textToAdd = "\n" + COMBAT_NOTE_STRING + DELIMITER + "TURN"
+			textToAdd = "\n" + COMBAT_NOTE_STRING + LOG_DELIMITER + "TURN"
 					+ myCombatTurn + "PASS" + myInitiativePass + " "
 					+ iMemoText;
 		} else {
-			textToAdd = "\n" + STORY_NOTE_STRING + DELIMITER + " " + iMemoText;
+			textToAdd = "\n" + STORY_NOTE_STRING + LOG_DELIMITER + " "
+					+ iMemoText;
 		}
 
 		memoTextArea.append(textToAdd);
@@ -918,8 +1264,11 @@ public class ShadowrunScenarioTracking extends JFrame implements
 	 *            arguments.
 	 */
 	public static void main(final String[] args) {
-		// TODO need name of scenario
-		new ShadowrunScenarioTracking();
+		if (args.length != 0) {
+			new ShadowrunScenarioTracking(args[0]);
+		} else {
+			System.err.println("Requires name of scenario.");
+		}
 	}
 
 	/**
@@ -954,8 +1303,6 @@ public class ShadowrunScenarioTracking extends JFrame implements
 				JOptionPane.YES_NO_OPTION);
 
 		if (reply == JOptionPane.YES_OPTION) {
-			// window is being closed; save information
-			save();
 			this.dispose();
 			System.exit(0);
 		}
@@ -966,7 +1313,8 @@ public class ShadowrunScenarioTracking extends JFrame implements
 	 */
 	@Override
 	public void dispose() {
-		// TODO close buffers
+		// window is being closed; save information
+		save();
 		super.dispose();
 	}
 
