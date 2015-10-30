@@ -22,6 +22,11 @@ public class ShadowrunScenarioTrackingTableCellRenderer extends
 	private static final long serialVersionUID = 5746258843575162555L;
 
 	/**
+	 * Selected row color.
+	 */
+	private static final Color SELECTED_COLOR = new Color(130, 220, 255);
+
+	/**
 	 * Constructor.
 	 */
 	public ShadowrunScenarioTrackingTableCellRenderer() {
@@ -32,14 +37,28 @@ public class ShadowrunScenarioTrackingTableCellRenderer extends
 	public Component getTableCellRendererComponent(final JTable table,
 			final Object value, final boolean isSelected,
 			final boolean hasFocus, final int row, final int column) {
-		// TODO does not affect Acted or Initiative
+		// does not affect Acted or Initiative
 		final TableModel model = table.getModel();
 
 		// the component we are interested in
 		final Component c = super.getTableCellRendererComponent(table, value,
 				isSelected, hasFocus, row, column);
 
-		c.setBackground(calculateBackgroundColor(row, model));
+		// TODO make light blue if selected row
+		final int[] selectedRows = table.getSelectedRows();
+		boolean selected = false;
+		for (final int currSelectedRow : selectedRows) {
+			if (currSelectedRow == row) {
+				selected = true;
+				break;
+			}
+		}
+
+		if (selected) {
+			c.setBackground(SELECTED_COLOR);
+		} else {
+			c.setBackground(calculateBackgroundColor(row, model));
+		}
 
 		return c;
 	}
