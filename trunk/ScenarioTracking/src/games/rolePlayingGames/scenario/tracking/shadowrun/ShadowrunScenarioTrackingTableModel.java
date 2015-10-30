@@ -1,5 +1,10 @@
 package games.rolePlayingGames.scenario.tracking.shadowrun;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -157,5 +162,91 @@ public class ShadowrunScenarioTrackingTableModel extends DefaultTableModel {
 		colData[STUN_DAM_COL_INDEX] = "";
 
 		addRow(colData);
+	}
+
+	/**
+	 * Reset all acted flags to false.
+	 */
+	protected void resetActedFlags() {
+		// reset all acted flags
+		final int rowCount = getRowCount();
+
+		for (int currRow = 0; currRow < rowCount; currRow++) {
+			try {
+				setValueAt(Boolean.FALSE, currRow, ACTED_COL_INDEX);
+			} catch (final ArrayIndexOutOfBoundsException iException) {
+				ShadowrunScenarioTracking.showError(iException);
+			}
+		}
+	}
+
+	/**
+	 * Remove the characters at the given row indices.
+	 * 
+	 * @param iSelectedRows
+	 *            selected rows to remove.
+	 */
+	protected void removeCharacters(final Integer[] iSelectedRows) {
+		// sort highest index to lowest (to avoid issues in removing rows)
+		Arrays.sort(iSelectedRows, new Comparator<Integer>() {
+
+			@Override
+			public int compare(final Integer o1, final Integer o2) {
+				return o2 - o1;
+			}
+		});
+
+		if (iSelectedRows.length != 0) {
+
+			for (final int currRow : iSelectedRows) {
+				try {
+					removeRow(currRow);
+				} catch (final ArrayIndexOutOfBoundsException iException) {
+					ShadowrunScenarioTracking.showError(iException);
+				}
+			}
+		} else {
+			System.out.println("No selected rows");
+		}
+	}
+
+	/**
+	 * Remove all dead characters.
+	 */
+	protected void removeDeadCharacters() {
+		// cleanup dead characters
+		final List<Integer> deadCharacterRows = new ArrayList<Integer>();
+
+		final int rowCount = getRowCount();
+
+		for (int currRow = 0; currRow < rowCount; currRow++) {
+			try {
+				final Object statusObject = getValueAt(currRow,
+						STATUS_COL_INDEX);
+
+				if ((statusObject != null)
+						&& (statusObject instanceof ShadowrunCharacterStatus)) {
+					final ShadowrunCharacterStatus status = (ShadowrunCharacterStatus) statusObject;
+
+					if (status.equals(ShadowrunCharacterStatus.DEAD)) {
+						deadCharacterRows.add(currRow);
+					}
+				} else {
+					ShadowrunScenarioTracking.showError(new Exception(
+							"Object at [" + currRow + "][" + STATUS_COL_INDEX
+									+ "] is not a non-null Status object."));
+				}
+			} catch (final ArrayIndexOutOfBoundsException iException) {
+				ShadowrunScenarioTracking.showError(iException);
+			}
+		}
+
+		final Integer[] deadCharacterRowArray = new Integer[deadCharacterRows
+				.size()];
+		for (int i = 0; i < deadCharacterRows.size(); i++) {
+			deadCharacterRowArray[i] = deadCharacterRows.get(i);
+		}
+
+		removeCharacters(deadCharacterRowArray);
 	}
 }
