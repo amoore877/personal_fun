@@ -1,30 +1,28 @@
-package games.rolePlayingGames.scenario.tracking.shadowrun;
+package games.rolePlayingGames.scenario.tracking.dnd;
 
 import games.rolePlayingGames.scenario.tracking.AbstractScenarioTrackingTableModel;
 import games.rolePlayingGames.scenario.tracking.CharacterStatus;
 
 /**
- * Tracking table model for Shadowrun Scenario Tracking.
+ * Tracking table model for DND Scenario Tracking.
  * 
  * @author Andrew
  *
  */
-public final class ShadowrunScenarioTrackingTableModel extends
+public final class DNDScenarioTrackingTableModel extends
 		AbstractScenarioTrackingTableModel {
 
 	/**
 	 * Serial ID.
 	 */
-	private static final long serialVersionUID = 3525845688890053147L;
+	private static final long serialVersionUID = 4462173721517626168L;
 
 	/**
 	 * Table columns. 0 is acted on the pass, 1 is initiative, 2 is name, 3 is
-	 * physical damage, 4 is stun damage, 5 is matrix damage, 6 is notes, 7 is
-	 * status.
+	 * physical damage, 4 is subdual damage, 5 is notes, 6 is status.
 	 */
 	private static final String[] TRACKING_COLUMN_NAMES = { "Acted",
-			"Initiative", "Name", "Physical", "Stun", "Matrix", "Note",
-			"Status" };
+			"Initiative", "Name", "Physical", "Subdual", "Note", "Status" };
 
 	/**
 	 * Column index of "acted" flag.
@@ -47,56 +45,40 @@ public final class ShadowrunScenarioTrackingTableModel extends
 	protected static final int PHYS_DAM_COL_INDEX = 3;
 
 	/**
-	 * Column index of stun damage.
+	 * Column index of subdual damage.
 	 */
-	protected static final int STUN_DAM_COL_INDEX = 4;
-
-	/**
-	 * Column index of matrix damage.
-	 */
-	protected static final int MAT_DAM_COL_INDEX = 5;
+	protected static final int SUBDUAL_DAM_COL_INDEX = 4;
 
 	/**
 	 * Column index of notes.
 	 */
-	private static final int NOTE_COL_INDEX = 6;
+	private static final int NOTE_COL_INDEX = 5;
 
 	/**
 	 * Column index of status.
 	 */
-	private static final int STATUS_COL_INDEX = 7;
+	private static final int STATUS_COL_INDEX = 6;
 
 	/**
 	 * Number of columns.
 	 */
-	private static final int NUM_OF_COLS = 8;
+	private static final int NUM_OF_COLS = 7;
 
 	/**
 	 * Constructor.
 	 */
-	public ShadowrunScenarioTrackingTableModel() {
+	public DNDScenarioTrackingTableModel() {
 		super(ACTED_COL_INDEX, INITIATIVE_COL_INDEX, NAME_COL_INDEX,
 				NOTE_COL_INDEX, STATUS_COL_INDEX, NUM_OF_COLS);
 		setColumnIdentifiers(TRACKING_COLUMN_NAMES);
 	}
 
 	/**
-	 * Decrease all initiatives by 10.
+	 * Sets all initiatives to 0.
 	 */
-	public void nextInitiativePass() {
+	public void nextRound() {
 		for (int currRow = 0; currRow < getRowCount(); currRow++) {
-			final int currInitiative;
-
-			final Object currInitiativeObject = getValueAt(currRow,
-					INITIATIVE_COL_INDEX);
-			if ((currInitiativeObject == null)
-					|| !(currInitiativeObject instanceof Integer)) {
-				currInitiative = 0;
-			} else {
-				currInitiative = (int) currInitiativeObject;
-			}
-
-			setValueAt(currInitiative - 10, currRow, INITIATIVE_COL_INDEX);
+			setValueAt(0, currRow, INITIATIVE_COL_INDEX);
 		}
 	}
 
@@ -114,13 +96,10 @@ public final class ShadowrunScenarioTrackingTableModel extends
 			return String.class;
 		case PHYS_DAM_COL_INDEX:
 			// Physical damage
-			return String.class;
-		case STUN_DAM_COL_INDEX:
-			// Stun damage
-			return String.class;
-		case MAT_DAM_COL_INDEX:
-			// Matrix damage
-			return String.class;
+			return Integer.class;
+		case SUBDUAL_DAM_COL_INDEX:
+			// Subdual damage
+			return Integer.class;
 		case NOTE_COL_INDEX:
 			// Note
 			return String.class;
@@ -138,12 +117,11 @@ public final class ShadowrunScenarioTrackingTableModel extends
 
 		colData[ACTED_COL_INDEX] = Boolean.FALSE;
 		colData[INITIATIVE_COL_INDEX] = new Integer(0);
-		colData[MAT_DAM_COL_INDEX] = "";
 		colData[NAME_COL_INDEX] = iName;
 		colData[NOTE_COL_INDEX] = "";
-		colData[PHYS_DAM_COL_INDEX] = "";
+		colData[PHYS_DAM_COL_INDEX] = new Integer(0);
 		colData[STATUS_COL_INDEX] = CharacterStatus.OK;
-		colData[STUN_DAM_COL_INDEX] = "";
+		colData[SUBDUAL_DAM_COL_INDEX] = new Integer(0);
 
 		addRow(colData);
 	}

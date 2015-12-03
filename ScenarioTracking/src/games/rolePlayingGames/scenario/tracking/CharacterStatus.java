@@ -1,14 +1,14 @@
-package games.rolePlayingGames.scenario.tracking.shadowrun;
+package games.rolePlayingGames.scenario.tracking;
 
 import java.awt.Color;
 
 /**
- * Statuses for Shadowrun characters.
+ * Statuses for characters.
  * 
  * @author Andrew
  *
  */
-public enum ShadowrunCharacterStatus {
+public enum CharacterStatus {
 
 	/**
 	 * OK. Fine. Alive. Conscious.
@@ -32,7 +32,7 @@ public enum ShadowrunCharacterStatus {
 	 *            status.
 	 * @return color for that status.
 	 */
-	public static Color getColorForStatus(final ShadowrunCharacterStatus iStatus) {
+	public static Color getColorForStatus(final CharacterStatus iStatus) {
 		switch (iStatus) {
 		case OK:
 			return Color.WHITE;

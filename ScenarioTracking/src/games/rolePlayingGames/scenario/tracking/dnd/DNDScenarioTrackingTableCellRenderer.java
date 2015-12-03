@@ -1,22 +1,22 @@
-package games.rolePlayingGames.scenario.tracking.shadowrun;
+package games.rolePlayingGames.scenario.tracking.dnd;
 
 import games.rolePlayingGames.scenario.tracking.AbstractScenarioTrackingTableCellRenderer;
 
 import java.awt.Color;
 
 /**
- * Table cell renderer for Shadowrun. Colors backgrounds based on row data.
+ * Table cell renderer for DND. Colors backgrounds based on row data.
  * 
  * @author Andrew
  *
  */
-public final class ShadowrunScenarioTrackingTableCellRenderer extends
+public final class DNDScenarioTrackingTableCellRenderer extends
 		AbstractScenarioTrackingTableCellRenderer {
 
 	/**
 	 * Serial ID.
 	 */
-	private static final long serialVersionUID = 5746258843575162555L;
+	private static final long serialVersionUID = 4091722322100028017L;
 
 	/**
 	 * Selected row color.
@@ -29,7 +29,7 @@ public final class ShadowrunScenarioTrackingTableCellRenderer extends
 	 * @param statusColIndex
 	 *            index of status column.
 	 */
-	public ShadowrunScenarioTrackingTableCellRenderer(final int statusColIndex) {
+	public DNDScenarioTrackingTableCellRenderer(final int statusColIndex) {
 		super(SELECTED_COLOR, statusColIndex);
 	}
 }

@@ -1,4 +1,4 @@
-package games.rolePlayingGames.scenario.tracking.shadowrun;
+package games.rolePlayingGames.scenario.tracking.dnd;
 
 import games.rolePlayingGames.scenario.tracking.AbstractScenarioTracking;
 import games.rolePlayingGames.scenario.tracking.AbstractScenarioTrackingTableModel;
@@ -17,7 +17,6 @@ import java.io.IOException;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
@@ -38,16 +37,16 @@ import javax.swing.event.TableModelListener;
 import javax.swing.text.NumberFormatter;
 
 /**
- * Tracking a scenario for Shadowrun.
+ * Tracking a scenario for DND.
  * 
  * @author Andrew
  */
-public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
+public final class DNDScenarioTracking extends AbstractScenarioTracking {
 
 	/**
 	 * Serial ID.
 	 */
-	private static final long serialVersionUID = -3278488966357839811L;
+	private static final long serialVersionUID = -1959535944441064568L;
 
 	/**
 	 * Height of control panels in lower section.
@@ -100,34 +99,14 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 	private static final Color DEFAULT_BACKGROUND_COLOR = Color.DARK_GRAY;
 
 	/**
-	 * Use edge string.
-	 */
-	private static final String USE_EDGE_STRING = "Use Edge?";
-
-	/**
 	 * Next turn string.
 	 */
-	private static final String NEXT_TURN_STRING = "Next Turn";
-
-	/**
-	 * Next pass string.
-	 */
-	private static final String NEXT_PASS_STRING = "Next Pass";
+	private static final String NEXT_ROUND_STRING = "Next Round";
 
 	/**
 	 * Text field to input dice to roll.
 	 */
 	private final JFormattedTextField diceToRollField;
-
-	/**
-	 * Check box to use edge or not on the roll.
-	 */
-	private final JCheckBox edgeCheckbox;
-
-	/**
-	 * Field to show hits result on roll.
-	 */
-	private final JTextField hitsField;
 
 	/**
 	 * Field to show sum of result on roll.
@@ -137,17 +116,12 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 	/**
 	 * Table model for tracking data.
 	 */
-	private final ShadowrunScenarioTrackingTableModel trackingTableModel;
+	private final DNDScenarioTrackingTableModel trackingTableModel;
 
 	/**
-	 * Current initiative pass.
+	 * Current combat round.
 	 */
-	private int myInitiativePass = 1;
-
-	/**
-	 * Current combat turn.
-	 */
-	private int myCombatTurn = 1;
+	private int myRound = 1;
 
 	/**
 	 * Text field to display turn/pass info.
@@ -160,7 +134,7 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 	 * @param iScenarioName
 	 *            name for scenario.
 	 */
-	public ShadowrunScenarioTracking(final String iScenarioName) {
+	public DNDScenarioTracking(final String iScenarioName) {
 		super(iScenarioName);
 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -175,11 +149,11 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 				new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 		getContentPane().setMaximumSize(
 				new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
-		setTitle("Shadowrun Scenario Tracking");
+		setTitle("DND Scenario Tracking");
 		setResizable(false);
 		getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		trackingTableModel = new ShadowrunScenarioTrackingTableModel();
+		trackingTableModel = new DNDScenarioTrackingTableModel();
 
 		final JPanel mainPanel = new JPanel();
 		mainPanel.setBackground(DEFAULT_BACKGROUND_COLOR);
@@ -229,21 +203,7 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		controlPanel.add(tableControlPanel);
 		tableControlPanel.setLayout(null);
 
-		final JButton nextPassButton = new JButton(NEXT_PASS_STRING);
-		nextPassButton.addActionListener(this);
-		nextPassButton
-				.setToolTipText("Subtracts 10 from everyone's initiative and unchecks \"Acted\" flag for all. Increments initiative pass.");
-		nextPassButton
-				.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		nextPassButton
-				.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		nextPassButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		nextPassButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
-				BUTTON_HEIGHT));
-		nextPassButton.setBounds(5, 5, BUTTON_WIDTH, BUTTON_HEIGHT);
-		tableControlPanel.add(nextPassButton);
-
-		final JButton nextTurnButton = new JButton(NEXT_TURN_STRING);
+		final JButton nextTurnButton = new JButton(NEXT_ROUND_STRING);
 		nextTurnButton.addActionListener(this);
 		nextTurnButton
 				.setToolTipText("Sets all initiatives to 0 and unchecks \"Acted\" flag for all. Sets initiative pass to 1.");
@@ -254,7 +214,7 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		nextTurnButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
 				BUTTON_HEIGHT));
 		nextTurnButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		nextTurnButton.setBounds(191, 5, BUTTON_WIDTH, BUTTON_HEIGHT);
+		nextTurnButton.setBounds(5, 5, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(nextTurnButton);
 
 		final JButton resortButton = new JButton(RESORT_STRING);
@@ -338,26 +298,6 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		diceToRollField.setBounds(48, 119, 46, 20);
 		tableControlPanel.add(diceToRollField);
 
-		edgeCheckbox = new JCheckBox(USE_EDGE_STRING);
-		edgeCheckbox.setBackground(DEFAULT_BACKGROUND_COLOR);
-		edgeCheckbox.setForeground(DEFAULT_FOREGROUND_COLOR);
-		edgeCheckbox.setToolTipText("Use edge on the roll?");
-		edgeCheckbox.setBounds(96, 118, 89, 23);
-		tableControlPanel.add(edgeCheckbox);
-
-		final JLabel hitsLabel = new JLabel("Hits:");
-		hitsLabel.setBackground(DEFAULT_BACKGROUND_COLOR);
-		hitsLabel.setForeground(DEFAULT_FOREGROUND_COLOR);
-		hitsLabel.setBounds(5, 150, 33, 14);
-		tableControlPanel.add(hitsLabel);
-
-		hitsField = new JTextField();
-		hitsField.setToolTipText("Number of hits on the roll.");
-		hitsField.setEditable(false);
-		hitsField.setBounds(48, 147, 123, 20);
-		tableControlPanel.add(hitsField);
-		hitsField.setColumns(30);
-
 		final JButton rollButton = new JButton(ROLL_STRING);
 		rollButton.addActionListener(this);
 		rollButton.setMaximumSize(new Dimension(SMALL_BUTTON_WIDTH,
@@ -368,19 +308,19 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 				BUTTON_HEIGHT));
 		rollButton.setSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
 		rollButton.setToolTipText("Roll dice with the given parameters.");
-		rollButton.setBounds(191, 117, SMALL_BUTTON_WIDTH, BUTTON_HEIGHT);
+		rollButton.setBounds(390, 117, SMALL_BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(rollButton);
 
 		final JLabel rollTotalLabel = new JLabel("Total:");
 		rollTotalLabel.setForeground(DEFAULT_FOREGROUND_COLOR);
 		rollTotalLabel.setBackground(DEFAULT_BACKGROUND_COLOR);
-		rollTotalLabel.setBounds(181, 151, 47, 14);
+		rollTotalLabel.setBounds(5, 150, 47, 14);
 		tableControlPanel.add(rollTotalLabel);
 
 		rollTotalField = new JTextField();
 		rollTotalField.setToolTipText("Total of the roll.");
 		rollTotalField.setEditable(false);
-		rollTotalField.setBounds(238, 147, 46, 20);
+		rollTotalField.setBounds(48, 150, 46, 20);
 		tableControlPanel.add(rollTotalField);
 		rollTotalField.setColumns(10);
 
@@ -565,16 +505,16 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		// objects (seems to only handle JCombobox and String)
 		getTrackingTable().setDefaultRenderer(
 				Object.class,
-				new ShadowrunScenarioTrackingTableCellRenderer(
-						trackingTableModel.getStatusColumnIndex()));
+				new DNDScenarioTrackingTableCellRenderer(trackingTableModel
+						.getStatusColumnIndex()));
 		getTrackingTable().setDefaultRenderer(
 				Integer.class,
-				new ShadowrunScenarioTrackingTableCellRenderer(
-						trackingTableModel.getStatusColumnIndex()));
+				new DNDScenarioTrackingTableCellRenderer(trackingTableModel
+						.getStatusColumnIndex()));
 		getTrackingTable().setDefaultRenderer(
 				Boolean.class,
-				new ShadowrunScenarioTrackingTableCellRenderer(
-						trackingTableModel.getStatusColumnIndex()));
+				new DNDScenarioTrackingTableCellRenderer(trackingTableModel
+						.getStatusColumnIndex()));
 		getTrackingTable().setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
 		// column widths
@@ -596,16 +536,6 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		getTrackingTable().getColumnModel()
 				.getColumn(trackingTableModel.getNameColumnIndex())
 				.setMaxWidth(90);
-		getTrackingTable()
-				.getColumnModel()
-				.getColumn(
-						ShadowrunScenarioTrackingTableModel.MAT_DAM_COL_INDEX)
-				.setPreferredWidth(55);
-		getTrackingTable()
-				.getColumnModel()
-				.getColumn(
-						ShadowrunScenarioTrackingTableModel.MAT_DAM_COL_INDEX)
-				.setMaxWidth(55);
 		getTrackingTable().getColumnModel()
 				.getColumn(trackingTableModel.getStatusColumnIndex())
 				.setPreferredWidth(25);
@@ -656,8 +586,7 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 	 * Set text in turn info field.
 	 */
 	private void setTurnInfoFieldText() {
-		myTurnInfoTextField.setText("Turn: " + myCombatTurn + " Pass: "
-				+ myInitiativePass);
+		myTurnInfoTextField.setText("Round: " + myRound);
 	}
 
 	@Override
@@ -695,9 +624,8 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 										.getInitiativeColIndex()]);
 						newRow[getTableModel().getNameColumnIndex()] = lineArray[getTableModel()
 								.getNameColumnIndex()];
-						newRow[ShadowrunScenarioTrackingTableModel.PHYS_DAM_COL_INDEX] = lineArray[ShadowrunScenarioTrackingTableModel.PHYS_DAM_COL_INDEX];
-						newRow[ShadowrunScenarioTrackingTableModel.STUN_DAM_COL_INDEX] = lineArray[ShadowrunScenarioTrackingTableModel.STUN_DAM_COL_INDEX];
-						newRow[ShadowrunScenarioTrackingTableModel.MAT_DAM_COL_INDEX] = lineArray[ShadowrunScenarioTrackingTableModel.MAT_DAM_COL_INDEX];
+						newRow[DNDScenarioTrackingTableModel.PHYS_DAM_COL_INDEX] = lineArray[DNDScenarioTrackingTableModel.PHYS_DAM_COL_INDEX];
+						newRow[DNDScenarioTrackingTableModel.SUBDUAL_DAM_COL_INDEX] = lineArray[DNDScenarioTrackingTableModel.SUBDUAL_DAM_COL_INDEX];
 						newRow[getTableModel().getNoteColumnIndex()] = lineArray[getTableModel()
 								.getNoteColumnIndex()];
 						newRow[getTableModel().getStatusColumnIndex()] = CharacterStatus
@@ -749,17 +677,14 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		} else if (iEvent.getActionCommand().equals(EXIT_STRING)) {
 			// exit program
 			confirmExit();
-		} else if (iEvent.getActionCommand().equals(NEXT_PASS_STRING)) {
-			// next initiative pass
-			nextPass();
-		} else if (iEvent.getActionCommand().equals(NEXT_TURN_STRING)) {
-			// next combat turn
-			nextTurn();
+		} else if (iEvent.getActionCommand().equals(NEXT_ROUND_STRING)) {
+			// next combat round
+			nextRound();
 		} else if (iEvent.getActionCommand().equals(REMOVE_STRING)) {
 			// remove selected character(s)
 			removeCharacters();
 		} else if (iEvent.getActionCommand().equals(RESET_COMBAT_STRING)) {
-			// reset turn/pass counters
+			// reset round counter
 			resetCombat();
 		} else if (iEvent.getActionCommand().equals(RESORT_STRING)) {
 			// resort the table by initiative
@@ -779,12 +704,12 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 	}
 
 	/**
-	 * Reset combat turn/pass.
+	 * Reset combat rounds.
 	 */
 	private void resetCombat() {
 		// confirm
 		final int result = JOptionPane.showConfirmDialog(this,
-				"Reset combat turns and passes?", "Reset combat?",
+				"Reset combat rounds?", "Reset combat?",
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
@@ -794,11 +719,8 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 			// reset all initiatives to 0
 			getTableModel().resetInitiative();
 
-			// reset initiative pass
-			myInitiativePass = 1;
-
-			// reset combat turn
-			myCombatTurn = 1;
+			// reset combat round
+			myRound = 1;
 
 			// add memo
 			appendMemo("Reset combat", true);
@@ -809,12 +731,12 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 	}
 
 	/**
-	 * Next combat turn.
+	 * Next combat round.
 	 */
-	private void nextTurn() {
+	private void nextRound() {
 		// confirm
 		final int result = JOptionPane.showConfirmDialog(this,
-				"Go to next combat turn?", "Next turn?",
+				"Go to next combat round?", "Next round?",
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
@@ -824,41 +746,11 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 			// reset all initiatives to 0
 			getTableModel().resetInitiative();
 
-			// reset initiative pass
-			myInitiativePass = 1;
-
-			// increment combat turn
-			myCombatTurn++;
+			// increment combat round
+			myRound++;
 
 			// add memo
-			appendMemo("New combat turn", true);
-
-			// show turn info
-			setTurnInfoFieldText();
-		}
-	}
-
-	/**
-	 * Next initiative pass.
-	 */
-	private void nextPass() {
-		// confirm
-		final int result = JOptionPane.showConfirmDialog(this,
-				"Go to next initiative pass?", "Next pass?",
-				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-		if (result == JOptionPane.OK_OPTION) {
-			// reset all acted flags
-			trackingTableModel.resetActedFlags();
-
-			// decrease all initiatives by 10
-			trackingTableModel.nextInitiativePass();
-
-			// increment initiative pass
-			myInitiativePass++;
-
-			// add memo
-			appendMemo("New initiative pass", true);
+			appendMemo("New combat round", true);
 
 			// show turn info
 			setTurnInfoFieldText();
@@ -867,28 +759,14 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 
 	@Override
 	protected void rollDice() {
+		// TODO roll dice
 		try {
 			final int diceToRoll = Integer.valueOf(diceToRollField.getText());
 
-			final boolean useEdge = edgeCheckbox.isSelected();
-
 			final ShadowrunRollResult rollResult = new ShadowrunRollResult(
-					ShadowrunRoller.rollDice(diceToRoll, useEdge));
+					ShadowrunRoller.rollDice(diceToRoll, true));
 
 			rollTotalField.setText(String.valueOf(rollResult.getSum()));
-
-			if (rollResult.isCriticalGlitch()) {
-				hitsField.setText("Critical Glitch!");
-			} else {
-				final StringBuilder hitsText = new StringBuilder(
-						String.valueOf(rollResult.getHits()));
-
-				if (rollResult.isGlitch()) {
-					hitsText.append(" Glitch!");
-				}
-
-				hitsField.setText(hitsText.toString());
-			}
 
 		} catch (final NumberFormatException iException) {
 			showError(iException);
@@ -908,9 +786,8 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 			final boolean iIsCombatMemo) {
 		String textToAdd;
 		if (iIsCombatMemo) {
-			textToAdd = "\n" + COMBAT_NOTE_STRING + LOG_DELIMITER + "TURN"
-					+ myCombatTurn + "PASS" + myInitiativePass + " "
-					+ iMemoText;
+			textToAdd = "\n" + COMBAT_NOTE_STRING + LOG_DELIMITER + "Round"
+					+ myRound + " " + iMemoText;
 		} else {
 			textToAdd = "\n" + STORY_NOTE_STRING + LOG_DELIMITER + " "
 					+ iMemoText;
@@ -932,7 +809,7 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 	 */
 	public static void main(final String[] args) {
 		if (args.length != 0) {
-			new ShadowrunScenarioTracking(args[0]);
+			new DNDScenarioTracking(args[0]);
 		} else {
 			System.err.println("Requires name of scenario.");
 		}
