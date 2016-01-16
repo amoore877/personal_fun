@@ -5,7 +5,6 @@ import java.awt.Component;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableModel;
 
 public abstract class AbstractScenarioTrackingTableCellRenderer extends
 		DefaultTableCellRenderer {
@@ -60,9 +59,6 @@ public abstract class AbstractScenarioTrackingTableCellRenderer extends
 	public final Component getTableCellRendererComponent(final JTable table,
 			final Object value, final boolean isSelected,
 			final boolean hasFocus, final int row, final int column) {
-		// does not affect Acted or Initiative
-		final TableModel model = table.getModel();
-
 		// the component we are interested in
 		final Component c = super.getTableCellRendererComponent(table, value,
 				isSelected, hasFocus, row, column);
@@ -80,7 +76,7 @@ public abstract class AbstractScenarioTrackingTableCellRenderer extends
 		if (selected) {
 			c.setBackground(getSelectedColor());
 		} else {
-			c.setBackground(calculateBackgroundColor(row, model));
+			c.setBackground(calculateBackgroundColor(row, table));
 		}
 
 		return c;
@@ -91,15 +87,15 @@ public abstract class AbstractScenarioTrackingTableCellRenderer extends
 	 * 
 	 * @param row
 	 *            index of row to look at.
-	 * @param model
+	 * @param table
 	 *            model to observe.
 	 * @return color to use.
 	 */
 	protected final Color calculateBackgroundColor(final int row,
-			final TableModel model) {
+			final JTable table) {
 		// if OK status, entire row should be white
 		// if non-OK status, color entire row based on status
-		final Object statusObject = model.getValueAt(row, getStatusColIndex());
+		final Object statusObject = table.getValueAt(row, getStatusColIndex());
 		if ((statusObject == null)
 				|| !(statusObject instanceof CharacterStatus)) {
 			return Color.WHITE;
