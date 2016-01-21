@@ -1,10 +1,10 @@
 package games.rolePlayingGames.scenario.tracking.dnd;
 
+import games.rolePlayingGames.dice.DieType;
+import games.rolePlayingGames.dnd.dice.DnDRoller;
 import games.rolePlayingGames.scenario.tracking.AbstractScenarioTracking;
 import games.rolePlayingGames.scenario.tracking.AbstractScenarioTrackingTableModel;
 import games.rolePlayingGames.scenario.tracking.CharacterStatus;
-import games.rolePlayingGames.shadowrun.dice.ShadowrunRollResult;
-import games.rolePlayingGames.shadowrun.dice.ShadowrunRoller;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -127,6 +128,11 @@ public final class DNDScenarioTracking extends AbstractScenarioTracking {
 	 * Text field to display turn/pass info.
 	 */
 	private final JTextField myTurnInfoTextField;
+
+	/**
+	 * Die type combox.
+	 */
+	private final JComboBox<DieType> myDieTypeCombox;
 
 	/**
 	 * Constructor.
@@ -308,7 +314,7 @@ public final class DNDScenarioTracking extends AbstractScenarioTracking {
 				BUTTON_HEIGHT));
 		rollButton.setSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
 		rollButton.setToolTipText("Roll dice with the given parameters.");
-		rollButton.setBounds(390, 117, SMALL_BUTTON_WIDTH, BUTTON_HEIGHT);
+		rollButton.setBounds(206, 117, SMALL_BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(rollButton);
 
 		final JLabel rollTotalLabel = new JLabel("Total:");
@@ -344,6 +350,14 @@ public final class DNDScenarioTracking extends AbstractScenarioTracking {
 		tableControlPanel.add(myTurnInfoTextField);
 		myTurnInfoTextField.setColumns(30);
 		setTurnInfoFieldText();
+
+		myDieTypeCombox = new JComboBox<DieType>();
+		for (final DieType dieType : DieType.values()) {
+			myDieTypeCombox.addItem(dieType);
+		}
+		myDieTypeCombox.setBounds(115, 119, 70, 20);
+		myDieTypeCombox.setSelectedIndex(0);
+		tableControlPanel.add(myDieTypeCombox);
 
 		final JPanel memoPanel = new JPanel();
 		memoPanel.setLocation(LOWER_PANEL_WIDTH, 0);
@@ -759,14 +773,20 @@ public final class DNDScenarioTracking extends AbstractScenarioTracking {
 
 	@Override
 	protected void rollDice() {
-		// TODO roll dice
 		try {
 			final int diceToRoll = Integer.valueOf(diceToRollField.getText());
 
-			final ShadowrunRollResult rollResult = new ShadowrunRollResult(
-					ShadowrunRoller.rollDice(diceToRoll, true));
+			final DieType dieType = (DieType) myDieTypeCombox.getSelectedItem();
 
-			rollTotalField.setText(String.valueOf(rollResult.getSum()));
+			final List<Integer> rollResult = DnDRoller.rollDice(dieType,
+					diceToRoll);
+
+			int result = 0;
+			for (final int rolledDie : rollResult) {
+				result += rolledDie;
+			}
+
+			rollTotalField.setText(String.valueOf(result));
 
 		} catch (final NumberFormatException iException) {
 			showError(iException);
