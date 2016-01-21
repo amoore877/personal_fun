@@ -159,7 +159,7 @@ public abstract class AbstractScenarioTrackingTableModel extends
 	}
 
 	/**
-	 * Remove the characters at the given row indices.
+	 * Remove the characters at the given (model) row indices.
 	 * 
 	 * @param iSelectedRows
 	 *            selected rows to remove.
