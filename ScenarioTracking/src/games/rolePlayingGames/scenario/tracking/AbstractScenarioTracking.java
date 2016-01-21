@@ -149,6 +149,7 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 		myCombatMemoCheckbox = new JCheckBox("Combat Memo?");
 
 		myMemoTextArea = new JTextArea();
+		myMemoTextArea.setEditable(true);
 	}
 
 	/**
