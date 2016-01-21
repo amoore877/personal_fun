@@ -1,7 +1,5 @@
 package games.rolePlayingGames.scenario.tracking;
 
-import games.rolePlayingGames.scenario.tracking.shadowrun.ShadowrunScenarioTracking;
-
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -169,6 +167,19 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 	}
 
 	/**
+	 * Show error message.
+	 * 
+	 * @param iException
+	 *            exception that appeared.
+	 */
+	public static void showError(final Exception iException) {
+		// show error message, any exception that is caught
+		JOptionPane.showMessageDialog(null, iException.getMessage(), "Error!",
+				JOptionPane.ERROR_MESSAGE);
+		iException.printStackTrace();
+	}
+
+	/**
 	 * Removal of characters.
 	 */
 	protected final void removeCharacters() {
@@ -194,7 +205,7 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 								.toString());
 
 			} catch (final ArrayIndexOutOfBoundsException iException) {
-				ShadowrunScenarioTracking.showError(iException);
+				showError(iException);
 			}
 		}
 
@@ -470,19 +481,6 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 			showError(iException);
 		}
 		return oTableFileSaved;
-	}
-
-	/**
-	 * Show error message.
-	 * 
-	 * @param iException
-	 *            exception that appeared.
-	 */
-	public static void showError(final Exception iException) {
-		// show error message, any exception that is caught
-		JOptionPane.showMessageDialog(null, iException.getMessage(), "Error!",
-				JOptionPane.ERROR_MESSAGE);
-		iException.printStackTrace();
 	}
 
 	/**
