@@ -171,12 +171,21 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 	 * Removal of characters.
 	 */
 	protected final void removeCharacters() {
-		final int[] selectedRowsInt = getTrackingTable().getSelectedRows();
+		final int[] selectedTableRowsInt = getTrackingTable().getSelectedRows();
+
+		final int[] selectedModelRowsInt = new int[selectedTableRowsInt.length];
+
+		// convert table rows to model rows
+		int rowToConvert = 0;
+		for (final int currRow : selectedTableRowsInt) {
+			selectedModelRowsInt[rowToConvert++] = getTrackingTable()
+					.convertRowIndexToModel(currRow);
+		}
 
 		final StringBuilder message = new StringBuilder(
 				"Are you sure you wish to remove the following characters:");
 
-		for (final int currRow : selectedRowsInt) {
+		for (final int currRow : selectedModelRowsInt) {
 			try {
 				message.append("\n"
 						+ getTableModel().getValueAt(currRow,
@@ -193,10 +202,10 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
-			final Integer[] selectedRowsInteger = new Integer[selectedRowsInt.length];
-			int index = 0;
-			for (final int currRow : selectedRowsInt) {
-				selectedRowsInteger[index++] = currRow;
+			final Integer[] selectedRowsInteger = new Integer[selectedModelRowsInt.length];
+			int selectedRowIndex = 0;
+			for (final int currRow : selectedModelRowsInt) {
+				selectedRowsInteger[selectedRowIndex++] = currRow;
 			}
 
 			getTableModel().removeCharacters(selectedRowsInteger);
