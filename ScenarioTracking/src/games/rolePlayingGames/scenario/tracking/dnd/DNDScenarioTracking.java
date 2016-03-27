@@ -573,10 +573,22 @@ public final class DNDScenarioTracking extends AbstractScenarioTracking {
 				.setMaxWidth(55);
 		getTrackingTable().getColumnModel()
 				.getColumn(trackingTableModel.getNameColumnIndex())
-				.setPreferredWidth(90);
+				.setPreferredWidth(120);
 		getTrackingTable().getColumnModel()
 				.getColumn(trackingTableModel.getNameColumnIndex())
-				.setMaxWidth(90);
+				.setMaxWidth(120);
+		getTrackingTable().getColumnModel()
+				.getColumn(DNDScenarioTrackingTableModel.PHYS_DAM_COL_INDEX)
+				.setPreferredWidth(60);
+		getTrackingTable().getColumnModel()
+				.getColumn(DNDScenarioTrackingTableModel.PHYS_DAM_COL_INDEX)
+				.setMaxWidth(60);
+		getTrackingTable().getColumnModel()
+				.getColumn(DNDScenarioTrackingTableModel.SUBDUAL_DAM_COL_INDEX)
+				.setPreferredWidth(60);
+		getTrackingTable().getColumnModel()
+				.getColumn(DNDScenarioTrackingTableModel.SUBDUAL_DAM_COL_INDEX)
+				.setMaxWidth(60);
 		getTrackingTable().getColumnModel()
 				.getColumn(trackingTableModel.getStatusColumnIndex())
 				.setPreferredWidth(45);
