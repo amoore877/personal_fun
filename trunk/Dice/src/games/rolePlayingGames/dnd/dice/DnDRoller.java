@@ -12,7 +12,7 @@ import java.util.List;
  * @author Andrew
  *
  */
-public class DnDRoller {
+public class DNDRoller {
 
 	/**
 	 * Roll a number of dice with a number of sides.

@@ -1,5 +1,7 @@
 package games.rolePlayingGames.scenario.tracking;
 
+import games.rolePlayingGames.dice.InitiativeRoller;
+
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -16,7 +18,6 @@ import javax.swing.DefaultRowSorter;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.RowSorter;
@@ -61,6 +62,10 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 	 * Remove string.
 	 */
 	protected static final String REMOVE_STRING = "Remove";
+	/**
+	 * Roll initiative string.
+	 */
+	public static final String ROLL_INITIATIVE_STRING = "Roll Initiative";
 	/**
 	 * Add string.
 	 */
@@ -127,18 +132,31 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 	/**
 	 * Table for tracking data.
 	 */
-	private final JTable myTrackingTable;
+	private final DefaultScenarioTrackingTable myTrackingTable;
+
+	/**
+	 * Constructor. Use default {@link DefaultScenarioTrackingTable} class.
+	 * 
+	 * @param iScenarioName
+	 *            name of scenario.
+	 */
+	public AbstractScenarioTracking(final String iScenarioName) {
+		this(iScenarioName, new DefaultScenarioTrackingTable());
+	}
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param iScenarioName
 	 *            name of scenario.
+	 * @param iTable
+	 *            table to use.
 	 */
-	public AbstractScenarioTracking(final String iScenarioName) {
+	public AbstractScenarioTracking(final String iScenarioName,
+			final DefaultScenarioTrackingTable iTable) {
 		super();
 
-		myTrackingTable = new JTable();
+		myTrackingTable = iTable;
 
 		myScenarioName = iScenarioName;
 
@@ -214,6 +232,7 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
+			// convert int[] to Integer[]
 			final Integer[] selectedRowsInteger = new Integer[selectedModelRowsInt.length];
 			int selectedRowIndex = 0;
 			for (final int currRow : selectedModelRowsInt) {
@@ -221,6 +240,49 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 			}
 
 			getTableModel().removeCharacters(selectedRowsInteger);
+		}
+	}
+
+	/**
+	 * Roll initiative for the selected characters.
+	 */
+	protected final void rollInitiative(final InitiativeRoller iInitiativeRoller) {
+		final int[] selectedTableRowsInt = getTrackingTable().getSelectedRows();
+
+		final int[] selectedModelRowsInt = new int[selectedTableRowsInt.length];
+
+		// convert table rows to model rows
+		int rowToConvert = 0;
+		for (final int currRow : selectedTableRowsInt) {
+			selectedModelRowsInt[rowToConvert++] = getTrackingTable()
+					.convertRowIndexToModel(currRow);
+		}
+
+		final StringBuilder message = new StringBuilder(
+				"Are you sure you wish to set initiative for the following characters:");
+
+		for (final int currRow : selectedModelRowsInt) {
+			try {
+				message.append("\n"
+						+ getTableModel().getValueAt(currRow,
+								getTableModel().getNameColumnIndex())
+								.toString());
+
+			} catch (final ArrayIndexOutOfBoundsException iException) {
+				showError(iException);
+			}
+		}
+
+		final int result = JOptionPane.showConfirmDialog(null,
+				message.toString(), "Set Initiative Confirmation",
+				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+		if (result == JOptionPane.OK_OPTION) {
+			final int initiativeCol = getTableModel().getInitiativeColIndex();
+			for (final int currRow : selectedModelRowsInt) {
+				getTableModel().setValueAt(iInitiativeRoller.rollInitiative(),
+						currRow, initiativeCol);
+			}
 		}
 	}
 
@@ -327,7 +389,7 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 	/**
 	 * @return the table.
 	 */
-	protected final JTable getTrackingTable() {
+	protected final DefaultScenarioTrackingTable getTrackingTable() {
 		return myTrackingTable;
 	}
 

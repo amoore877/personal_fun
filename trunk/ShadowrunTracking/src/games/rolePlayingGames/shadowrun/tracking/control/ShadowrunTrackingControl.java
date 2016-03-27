@@ -275,7 +275,8 @@ public final class ShadowrunTrackingControl extends
 		final NumberFormatter numberFormatter = new NumberFormatter(
 				NumberFormat.getIntegerInstance());
 		numberFormatter.setMinimum(1);
-		final JFormattedTextField numOfTrackablesField = new JFormattedTextField();
+		final JFormattedTextField numOfTrackablesField = new JFormattedTextField(
+				numberFormatter);
 		numOfTrackablesField.setValue(1);
 
 		dialogPanel.add(numOfTrackablesField);
