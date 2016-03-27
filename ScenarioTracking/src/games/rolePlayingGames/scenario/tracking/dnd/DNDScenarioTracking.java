@@ -1,7 +1,8 @@
 package games.rolePlayingGames.scenario.tracking.dnd;
 
 import games.rolePlayingGames.dice.DieType;
-import games.rolePlayingGames.dnd.dice.DnDRoller;
+import games.rolePlayingGames.dnd.dice.DNDInitiativeRoller;
+import games.rolePlayingGames.dnd.dice.DNDRoller;
 import games.rolePlayingGames.scenario.tracking.AbstractScenarioTracking;
 import games.rolePlayingGames.scenario.tracking.AbstractScenarioTrackingTableModel;
 import games.rolePlayingGames.scenario.tracking.CharacterStatus;
@@ -9,11 +10,13 @@ import games.rolePlayingGames.scenario.tracking.CharacterStatus;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.List;
 
 import javax.swing.DefaultCellEditor;
@@ -133,6 +136,12 @@ public final class DNDScenarioTracking extends AbstractScenarioTracking {
 	 * Die type combox.
 	 */
 	private final JComboBox<DieType> myDieTypeCombox;
+
+	/**
+	 * Number formatter for initiative modifier field.
+	 */
+	private static final NumberFormatter INITIATIVE_MODIFIER_NUMBER_FORMATTER = new NumberFormatter(
+			NumberFormat.getIntegerInstance());
 
 	/**
 	 * Constructor.
@@ -276,6 +285,22 @@ public final class DNDScenarioTracking extends AbstractScenarioTracking {
 		clearSelectionButton.setToolTipText("Clear table selection(s).");
 		clearSelectionButton.setBounds(5, 81, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(clearSelectionButton);
+
+		final JButton rollInitiativeButton = new JButton(ROLL_INITIATIVE_STRING);
+		rollInitiativeButton.addActionListener(this);
+		rollInitiativeButton.setMaximumSize(new Dimension(BUTTON_WIDTH * 2,
+				BUTTON_HEIGHT));
+		rollInitiativeButton.setMinimumSize(new Dimension(BUTTON_WIDTH * 2,
+				BUTTON_HEIGHT));
+		rollInitiativeButton.setPreferredSize(new Dimension(BUTTON_WIDTH * 2,
+				BUTTON_HEIGHT));
+		rollInitiativeButton.setSize(new Dimension(BUTTON_WIDTH * 2,
+				BUTTON_HEIGHT));
+		rollInitiativeButton
+				.setToolTipText("Roll Initiative For Selected Character(s).");
+		rollInitiativeButton.setBounds(191, 81, BUTTON_WIDTH, BUTTON_HEIGHT);
+		tableControlPanel.add(rollInitiativeButton);
+		rollInitiativeButton.setEnabled(false);
 
 		final JButton cleanupButton = new JButton(CLEANUP_STRING);
 		cleanupButton.addActionListener(this);
@@ -485,8 +510,10 @@ public final class DNDScenarioTracking extends AbstractScenarioTracking {
 					public void valueChanged(final ListSelectionEvent e) {
 						if (getTrackingTable().getSelectedRows().length != 0) {
 							removeActorButton.setEnabled(true);
+							rollInitiativeButton.setEnabled(true);
 						} else {
 							removeActorButton.setEnabled(false);
+							rollInitiativeButton.setEnabled(false);
 						}
 					}
 				});
@@ -552,7 +579,10 @@ public final class DNDScenarioTracking extends AbstractScenarioTracking {
 				.setMaxWidth(90);
 		getTrackingTable().getColumnModel()
 				.getColumn(trackingTableModel.getStatusColumnIndex())
-				.setPreferredWidth(25);
+				.setPreferredWidth(45);
+		getTrackingTable().getColumnModel()
+				.getColumn(trackingTableModel.getStatusColumnIndex())
+				.setMaxWidth(45);
 
 		// add table to scroll pane
 		tableScrollPane.setViewportView(getTrackingTable());
@@ -697,6 +727,27 @@ public final class DNDScenarioTracking extends AbstractScenarioTracking {
 		} else if (iEvent.getActionCommand().equals(REMOVE_STRING)) {
 			// remove selected character(s)
 			removeCharacters();
+		} else if (iEvent.getActionCommand().equals(ROLL_INITIATIVE_STRING)) {
+			// roll initiative for selected character(s)
+			final JPanel inputPanel = new JPanel(new GridLayout(1, 0));
+
+			inputPanel.add(new JLabel("Initiative Modifier:"));
+
+			final JFormattedTextField modifierField = new JFormattedTextField(
+					INITIATIVE_MODIFIER_NUMBER_FORMATTER);
+			modifierField.setValue(0);
+			inputPanel.add(modifierField);
+
+			final int result = JOptionPane.showConfirmDialog(this, inputPanel,
+					"Please input initiative modifier",
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+			if (result == JOptionPane.OK_OPTION) {
+				rollInitiative(new DNDInitiativeRoller(
+						Integer.parseInt(modifierField.getText())));
+			} else {
+				System.out.println("Initiative rolling cancelled.");
+			}
 		} else if (iEvent.getActionCommand().equals(RESET_COMBAT_STRING)) {
 			// reset round counter
 			resetCombat();
@@ -778,7 +829,7 @@ public final class DNDScenarioTracking extends AbstractScenarioTracking {
 
 			final DieType dieType = (DieType) myDieTypeCombox.getSelectedItem();
 
-			final List<Integer> rollResult = DnDRoller.rollDice(dieType,
+			final List<Integer> rollResult = DNDRoller.rollDice(dieType,
 					diceToRoll);
 
 			int result = 0;

@@ -61,7 +61,7 @@ public class RollForDND {
 						dieType = dieTypeTemp;
 					}
 
-					final List<Integer> rolledResults = DnDRoller.rollDice(
+					final List<Integer> rolledResults = DNDRoller.rollDice(
 							dieType, diceNum);
 
 					int total = 0;

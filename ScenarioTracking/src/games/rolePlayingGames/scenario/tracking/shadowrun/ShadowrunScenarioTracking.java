@@ -3,17 +3,20 @@ package games.rolePlayingGames.scenario.tracking.shadowrun;
 import games.rolePlayingGames.scenario.tracking.AbstractScenarioTracking;
 import games.rolePlayingGames.scenario.tracking.AbstractScenarioTrackingTableModel;
 import games.rolePlayingGames.scenario.tracking.CharacterStatus;
+import games.rolePlayingGames.shadowrun.dice.ShadowrunInitiativeRoller;
 import games.rolePlayingGames.shadowrun.dice.ShadowrunRollResult;
 import games.rolePlayingGames.shadowrun.dice.ShadowrunRoller;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.NumberFormat;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -153,6 +156,22 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 	 * Text field to display turn/pass info.
 	 */
 	private final JTextField myTurnInfoTextField;
+
+	/**
+	 * Formatter for initiative dice field.
+	 */
+	private static final NumberFormatter INITIATIVE_DICE_NUMBER_FORMATTER = new NumberFormatter(
+			NumberFormat.getIntegerInstance());
+	static {
+		INITIATIVE_DICE_NUMBER_FORMATTER.setMinimum(1);
+		INITIATIVE_DICE_NUMBER_FORMATTER.setMaximum(5);
+	}
+
+	/**
+	 * Formatter for initiative base field.
+	 */
+	private static final NumberFormatter INITIATIVE_BASE_FORMATTER = new NumberFormatter(
+			NumberFormat.getIntegerInstance());
 
 	/**
 	 * Constructor.
@@ -310,6 +329,22 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		clearSelectionButton.setToolTipText("Clear table selection(s).");
 		clearSelectionButton.setBounds(5, 81, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(clearSelectionButton);
+
+		final JButton rollInitiativeButton = new JButton(ROLL_INITIATIVE_STRING);
+		rollInitiativeButton.addActionListener(this);
+		rollInitiativeButton.setMaximumSize(new Dimension(BUTTON_WIDTH * 2,
+				BUTTON_HEIGHT));
+		rollInitiativeButton.setMinimumSize(new Dimension(BUTTON_WIDTH * 2,
+				BUTTON_HEIGHT));
+		rollInitiativeButton.setPreferredSize(new Dimension(BUTTON_WIDTH * 2,
+				BUTTON_HEIGHT));
+		rollInitiativeButton.setSize(new Dimension(BUTTON_WIDTH * 2,
+				BUTTON_HEIGHT));
+		rollInitiativeButton
+				.setToolTipText("Roll Initiative For Selected Character(s).");
+		rollInitiativeButton.setBounds(191, 81, BUTTON_WIDTH, BUTTON_HEIGHT);
+		tableControlPanel.add(rollInitiativeButton);
+		rollInitiativeButton.setEnabled(false);
 
 		final JButton cleanupButton = new JButton(CLEANUP_STRING);
 		cleanupButton.addActionListener(this);
@@ -531,8 +566,10 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 					public void valueChanged(final ListSelectionEvent e) {
 						if (getTrackingTable().getSelectedRows().length != 0) {
 							removeActorButton.setEnabled(true);
+							rollInitiativeButton.setEnabled(true);
 						} else {
 							removeActorButton.setEnabled(false);
+							rollInitiativeButton.setEnabled(false);
 						}
 					}
 				});
@@ -608,7 +645,10 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 				.setMaxWidth(55);
 		getTrackingTable().getColumnModel()
 				.getColumn(trackingTableModel.getStatusColumnIndex())
-				.setPreferredWidth(25);
+				.setPreferredWidth(45);
+		getTrackingTable().getColumnModel()
+				.getColumn(trackingTableModel.getStatusColumnIndex())
+				.setMaxWidth(45);
 
 		// add table to scroll pane
 		tableScrollPane.setViewportView(getTrackingTable());
@@ -758,6 +798,41 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		} else if (iEvent.getActionCommand().equals(REMOVE_STRING)) {
 			// remove selected character(s)
 			removeCharacters();
+		} else if (iEvent.getActionCommand().equals(ROLL_INITIATIVE_STRING)) {
+			// roll initiative for selected character(s)
+			final JPanel inputPanel = new JPanel(new GridLayout(0, 1));
+
+			final JPanel diceNumberPanel = new JPanel(new GridLayout(1, 0));
+			diceNumberPanel.add(new JLabel("Number of Initiative Dice:"));
+
+			final JFormattedTextField initiativeDiceField = new JFormattedTextField(
+					INITIATIVE_DICE_NUMBER_FORMATTER);
+			initiativeDiceField.setValue(1);
+			diceNumberPanel.add(initiativeDiceField);
+
+			inputPanel.add(diceNumberPanel);
+
+			final JPanel initiativeBasePanel = new JPanel(new GridLayout(1, 0));
+			initiativeBasePanel.add(new JLabel("Initiative Base:"));
+
+			final JFormattedTextField initiativeBaseField = new JFormattedTextField(
+					INITIATIVE_BASE_FORMATTER);
+			initiativeBaseField.setValue(0);
+			initiativeBasePanel.add(initiativeBaseField);
+
+			inputPanel.add(initiativeBasePanel);
+
+			final int result = JOptionPane.showConfirmDialog(this, inputPanel,
+					"Please input initiative information",
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+			if (result == JOptionPane.OK_OPTION) {
+				rollInitiative(new ShadowrunInitiativeRoller(
+						Integer.parseInt(initiativeBaseField.getText()),
+						Integer.parseInt(initiativeDiceField.getText())));
+			} else {
+				System.out.println("Initiative rolling cancelled.");
+			}
 		} else if (iEvent.getActionCommand().equals(RESET_COMBAT_STRING)) {
 			// reset turn/pass counters
 			resetCombat();
