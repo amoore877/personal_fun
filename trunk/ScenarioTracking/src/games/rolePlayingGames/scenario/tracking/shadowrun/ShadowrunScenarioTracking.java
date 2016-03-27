@@ -629,10 +629,10 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 				.setMaxWidth(55);
 		getTrackingTable().getColumnModel()
 				.getColumn(trackingTableModel.getNameColumnIndex())
-				.setPreferredWidth(90);
+				.setPreferredWidth(120);
 		getTrackingTable().getColumnModel()
 				.getColumn(trackingTableModel.getNameColumnIndex())
-				.setMaxWidth(90);
+				.setMaxWidth(120);
 		getTrackingTable()
 				.getColumnModel()
 				.getColumn(
