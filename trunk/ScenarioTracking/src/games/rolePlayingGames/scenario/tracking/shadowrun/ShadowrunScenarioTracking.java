@@ -389,7 +389,7 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		hitsField = new JTextField();
 		hitsField.setToolTipText("Number of hits on the roll.");
 		hitsField.setEditable(false);
-		hitsField.setBounds(48, 147, 123, 20);
+		hitsField.setBounds(48, 147, 46, 20);
 		tableControlPanel.add(hitsField);
 		hitsField.setColumns(30);
 
@@ -409,13 +409,13 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		final JLabel rollTotalLabel = new JLabel("Total:");
 		rollTotalLabel.setForeground(DEFAULT_FOREGROUND_COLOR);
 		rollTotalLabel.setBackground(DEFAULT_BACKGROUND_COLOR);
-		rollTotalLabel.setBounds(181, 151, 47, 14);
+		rollTotalLabel.setBounds(101, 151, 47, 14);
 		tableControlPanel.add(rollTotalLabel);
 
 		rollTotalField = new JTextField();
 		rollTotalField.setToolTipText("Total of the roll.");
 		rollTotalField.setEditable(false);
-		rollTotalField.setBounds(238, 147, 46, 20);
+		rollTotalField.setBounds(158, 147, 46, 20);
 		tableControlPanel.add(rollTotalField);
 		rollTotalField.setColumns(10);
 
