@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ASCII"?>
+<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmi:id="_8T17sCBbEeaT2-SwgKbwfQ" elementId="cyanide.tool.rpgtracking.application">
+  <children xsi:type="basic:TrimmedWindow" xmi:id="_AVYegCBcEeaT2-SwgKbwfQ" elementId="cyanide.tool.rpgtracking.trimmedwindow.rpgtracking-main" label="RPG Tracking - Main" x="100" y="100" width="600" height="400">
+    <children xsi:type="advanced:PerspectiveStack" xmi:id="_ntP1sCBcEeaT2-SwgKbwfQ" elementId="cyanide.tool.rpgtracking.perspectivestack.0">
+      <children xsi:type="advanced:Perspective" xmi:id="_qu4asCBcEeaT2-SwgKbwfQ" elementId="cyanide.tool.rpgtracking.perspective.to-do" label="To-do">
+        <children xsi:type="basic:PartSashContainer" xmi:id="_3aqw0CBcEeaT2-SwgKbwfQ" elementId="cyanide.tool.rpgtracking.partsashcontainer.main" horizontal="true">
+          <children xsi:type="basic:PartStack" xmi:id="_JavrECBdEeaT2-SwgKbwfQ" elementId="cyanide.tool.rpgtracking.partstack.0">
+            <children xsi:type="basic:Part" xmi:id="_XekyMCBdEeaT2-SwgKbwfQ" elementId="cyanide.tool.rpgtracking.part.control" contributionURI="bundleclass://cyanide.tool.rpgtracking/cyanide.tool.rpgtracking.parts.Control" label="Control"/>
+          </children>
+          <children xsi:type="basic:PartSashContainer" xmi:id="_Jx8DECBdEeaT2-SwgKbwfQ" elementId="cyanide.tool.rpgtracking.partsashcontainer.0">
+            <children xsi:type="basic:PartStack" xmi:id="_KlbVgCBdEeaT2-SwgKbwfQ" elementId="cyanide.tool.rpgtracking.partstack.1">
+              <children xsi:type="basic:Part" xmi:id="_bTAtICBdEeaT2-SwgKbwfQ" elementId="cyanide.tool.rpgtracking.part.view" contributionURI="bundleclass://cyanide.tool.rpgtracking/cyanide.tool.rpgtracking.parts.View" label="View"/>
+            </children>
+            <children xsi:type="basic:PartStack" xmi:id="_K9AIACBdEeaT2-SwgKbwfQ" elementId="cyanide.tool.rpgtracking.partstack.2">
+              <children xsi:type="basic:Part" xmi:id="_dq6YoCBdEeaT2-SwgKbwfQ" elementId="cyanide.tool.rpgtracking.part.log" contributionURI="bundleclass://cyanide.tool.rpgtracking/cyanide.tool.rpgtracking.parts.Log" label="Log"/>
+            </children>
+          </children>
+        </children>
+      </children>
+    </children>
+  </children>
+  <addons xmi:id="_8T17sSBbEeaT2-SwgKbwfQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
+  <addons xmi:id="_8T17siBbEeaT2-SwgKbwfQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
+  <addons xmi:id="_8T17syBbEeaT2-SwgKbwfQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>
+  <addons xmi:id="_8T17tCBbEeaT2-SwgKbwfQ" elementId="org.eclipse.e4.ui.workbench.commands.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.CommandProcessingAddon"/>
+  <addons xmi:id="_8T17tSBbEeaT2-SwgKbwfQ" elementId="org.eclipse.e4.ui.workbench.contexts.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.ContextProcessingAddon"/>
+  <addons xmi:id="_8T17tiBbEeaT2-SwgKbwfQ" elementId="org.eclipse.e4.ui.workbench.bindings.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.swt/org.eclipse.e4.ui.workbench.swt.util.BindingProcessingAddon"/>
+  <addons xmi:id="_8T17tyBbEeaT2-SwgKbwfQ" elementId="org.eclipse.e4.ui.workbench.handler.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.HandlerProcessingAddon"/>
+</application:Application>

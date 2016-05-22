@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="cyanide.tool.rpgtracking.shadowrun.feature"
-      label="Feature"
-      version="1.0.0.qualifier"
-      provider-name="Andrew Moore">
+      id="cyanide.tool.rpgtracking.feature"
+      label="RPG Tracking Feature"
+      version="1.0.0.qualifier">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -16,5 +15,12 @@
    <license url="http://www.example.com/license">
       [Enter License Description here.]
    </license>
+
+   <plugin
+         id="cyanide.tool.rpgtracking"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
