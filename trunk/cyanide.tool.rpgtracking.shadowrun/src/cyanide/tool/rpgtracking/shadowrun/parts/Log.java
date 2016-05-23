@@ -1,5 +1,5 @@
  
-package cyanide.tool.rpgtracking.parts;
+package cyanide.tool.rpgtracking.shadowrun.parts;
 
 import javax.inject.Inject;
 import javax.annotation.PostConstruct;

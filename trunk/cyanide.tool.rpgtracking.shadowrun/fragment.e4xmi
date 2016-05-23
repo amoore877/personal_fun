@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmlns:ui="http://www.eclipse.org/ui/2010/UIModel/application/ui" xmi:id="_LHTOUCBvEeaAOvhZChNWNA">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_WZ_DgCBvEeaAOvhZChNWNA" featurename="commands" parentElementId="cyanide.tool.rpgtracking.application">
+    <elements xsi:type="commands:Command" xmi:id="_tnEOICBvEeaAOvhZChNWNA" elementId="cyanide.tool.rpgtracking.shadowrun.command.new" commandName="New"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_zeO10CBvEeaAOvhZChNWNA" featurename="handlers" parentElementId="cyanide.tool.rpgtracking.application">
+    <elements xsi:type="commands:Handler" xmi:id="_1ugPUCBvEeaAOvhZChNWNA" elementId="cyanide.tool.rpgtracking.shadowrun.handler.new" contributionURI="bundleclass://cyanide.tool.rpgtracking.shadowrun/cyanide.tool.rpgtracking.shadowrun.handlers.NewShadowrunScenarioHandler" command="_tnEOICBvEeaAOvhZChNWNA"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_JUVUgCByEeaAOvhZChNWNA" featurename="children" parentElementId="cyanide.tool.rpgtracking.perspectivestack.0">
+    <elements xsi:type="advanced:Perspective" xmi:id="_Q0M_YCByEeaAOvhZChNWNA" elementId="cyanide.tool.rpgtracking.shadowrun.perspective.shadowrun" label="Shadowrun">
+      <children xsi:type="basic:PartSashContainer" xmi:id="_e1RtcCByEeaAOvhZChNWNA" elementId="cyanide.tool.rpgtracking.shadowrun.partsashcontainer.main" containerData="" accessibilityPhrase="" horizontal="true">
+        <children xsi:type="basic:PartStack" xmi:id="_rg4dYCByEeaAOvhZChNWNA" elementId="cyanide.tool.rpgtracking.shadowrun.partstack.controlpanel" accessibilityPhrase="">
+          <children xsi:type="basic:Part" xmi:id="_zBS60CByEeaAOvhZChNWNA" elementId="cyanide.tool.rpgtracking.shadowrun.part.control" contributionURI="bundleclass://cyanide.tool.rpgtracking.shadowrun/cyanide.tool.rpgtracking.shadowrun.parts.Control" label="Control"/>
+          <children xsi:type="basic:Part" xmi:id="_3cRRUCByEeaAOvhZChNWNA" elementId="cyanide.tool.rpgtracking.shadowrun.part.roll" label="Roll"/>
+        </children>
+        <children xsi:type="basic:PartSashContainer" xmi:id="_lqSdcCByEeaAOvhZChNWNA" elementId="cyanide.tool.rpgtracking.shadowrun.partsashcontainer.right">
+          <children xsi:type="basic:PartStack" xmi:id="_5E8fUCByEeaAOvhZChNWNA" elementId="cyanide.tool.rpgtracking.shadowrun.partstack.overview">
+            <children xsi:type="basic:Part" xmi:id="_9Tx3QCByEeaAOvhZChNWNA" elementId="cyanide.tool.rpgtracking.shadowrun.part.table" contributionURI="bundleclass://cyanide.tool.rpgtracking.shadowrun/cyanide.tool.rpgtracking.shadowrun.parts.View" label="Table"/>
+          </children>
+          <children xsi:type="basic:PartStack" xmi:id="_6y85QCByEeaAOvhZChNWNA" elementId="cyanide.tool.rpgtracking.shadowrun.partstack.log">
+            <children xsi:type="basic:Part" xmi:id="_8FNLUCByEeaAOvhZChNWNA" elementId="cyanide.tool.rpgtracking.shadowrun.part.log" contributionURI="bundleclass://cyanide.tool.rpgtracking.shadowrun/cyanide.tool.rpgtracking.shadowrun.parts.Log" label="Log"/>
+          </children>
+        </children>
+      </children>
+    </elements>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_7GZSUCB1EeaAOvhZChNWNA" featurename="children" parentElementId="cyanide.tool.rpgtracking.main.menu">
+    <elements xsi:type="menu:Menu" xmi:id="_Bc3k0CB5EeaAOvhZChNWNA" elementId="cyanide.tool.rpgtracking.shadowrun.menu.file" label="File">
+      <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_QcrzECB5EeaAOvhZChNWNA" coreExpressionId="cyanide.tool.rpgtracking.shadowrun.perspectivewatch"/>
+      <children xsi:type="menu:HandledMenuItem" xmi:id="_tGz8kCB2EeaAOvhZChNWNA" elementId="cyanide.tool.rpgtracking.shadowrun.handledmenuitem.file.new" label="New" command="_tnEOICBvEeaAOvhZChNWNA"/>
+    </elements>
+  </fragments>
+</fragment:ModelFragments>

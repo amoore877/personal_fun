@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+
+   <extension
+         id="cyanide.tool.rpgtracking.shadowrun.fragment"
+         point="org.eclipse.e4.workbench.model">
+      <fragment
+            uri="fragment.e4xmi">
+      </fragment>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="cyanide.tool.rpgtracking.shadowrun.perspectivewatch">
+         <with
+               variable="org.eclipse.ui.selection">
+            <iterate
+                  ifEmpty="false"
+                  operator="or">
+               <instanceof
+                     value="cyanide.tool.rpgtracking.shadowrun.perspective">
+               </instanceof>
+            </iterate>
+         </with>
+      </definition>
+   </extension>
+
+</plugin>
