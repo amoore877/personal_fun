@@ -14,10 +14,46 @@ public class RecipeStep {
 	private String myInstruct;
 
 	/**
-	 * Time for the step.
+	 * Time for the step in minutes.
 	 */
 	private int myTime;
 
+	/**
+	 * Construct from save string.
+	 * 
+	 * @param input
+	 */
+	public RecipeStep(String input) {
+		String[] inputParts = input.split(Separators.DATA_PART_SEPARATOR);
+		// TODO element count
+
+		// instructions
+		myInstruct = inputParts[0];
+
+		// time
+		// TODO num format exception
+		myTime = Integer.parseInt(inputParts[1]);
+	}
+
+	/**
+	 * Output to a save string.
+	 * 
+	 * @return
+	 */
+	public String toSaveString() {
+		StringBuilder saveString = new StringBuilder(myInstruct);
+		saveString.append(Separators.DATA_PART_SEPARATOR);
+		saveString.append(myTime);
+
+		return saveString.toString();
+	}
+
+	/**
+	 * Construct from object data.
+	 * 
+	 * @param iInstruct
+	 * @param iTime
+	 */
 	public RecipeStep(String iInstruct, int iTime) {
 		myInstruct = iInstruct;
 		myTime = iTime;
@@ -39,4 +75,26 @@ public class RecipeStep {
 		this.myTime = iTime;
 	}
 
+	/**
+	 * To printing string.
+	 */
+	@Override
+	public String toString() {
+		StringBuilder out = new StringBuilder(myInstruct);
+		out.append("\n");
+
+		String timeToPrint;
+		if (myTime > 60) {
+			int minutes = myTime % 60;
+			int hours = (myTime - minutes) / 60;
+
+			timeToPrint = hours + "h " + minutes + "m";
+		} else {
+			timeToPrint = myTime + "m";
+		}
+
+		out.append(timeToPrint);
+
+		return out.toString();
+	}
 }
