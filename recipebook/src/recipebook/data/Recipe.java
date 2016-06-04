@@ -188,4 +188,45 @@ public class Recipe {
 	public List<RecipeIngredient> getIngredients() {
 		return myIngredients;
 	}
+
+	/**
+	 * For visual list convenience.
+	 */
+	@Override
+	public String toString() {
+		return myName;
+	}
+
+	/**
+	 * To printing string.
+	 * 
+	 * @return
+	 */
+	public String toPrintString() {
+		StringBuilder out = new StringBuilder(myName);
+		out.append("\n");
+		out.append(myServings + " Servings\n");
+		out.append("Ingredients:\n");
+		for (RecipeIngredient ingredient : myIngredients) {
+			out.append(ingredient.toPrintString());
+			out.append("\n");
+		}
+
+		out.append("Steps:\n");
+
+		int stepCount = 0;
+		for (RecipeStep step : mySteps) {
+			stepCount++;
+			out.append(stepCount + ". ");
+			out.append(step.toPrintString());
+			out.append("\n");
+		}
+
+		out.append("\nTags:\n");
+		for (String tag : myTags) {
+			out.append("[" + tag + "] ");
+		}
+
+		return out.toString();
+	}
 }

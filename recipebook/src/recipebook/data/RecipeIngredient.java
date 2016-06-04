@@ -90,8 +90,7 @@ public class RecipeIngredient {
 	/**
 	 * Printing string.
 	 */
-	@Override
-	public String toString() {
+	public String toPrintString() {
 		StringBuilder out = new StringBuilder(myIngredient.getName());
 		out.append(", ");
 
