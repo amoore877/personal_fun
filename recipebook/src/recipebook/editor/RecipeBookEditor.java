@@ -21,10 +21,6 @@ public class RecipeBookEditor extends JFrame implements ActionListener, WindowLi
 	 * Constructor.
 	 */
 	public RecipeBookEditor() {
-		getContentPane().setSize(new Dimension(800, 600));
-		getContentPane().setPreferredSize(new Dimension(800, 600));
-		getContentPane().setMinimumSize(new Dimension(800, 600));
-		getContentPane().setMaximumSize(new Dimension(800, 600));
 		setSize(new Dimension(1000, 545));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setTitle("Recipe Book Editor");
@@ -195,6 +191,6 @@ public class RecipeBookEditor extends JFrame implements ActionListener, WindowLi
 
 	public static void main(String[] args) {
 		new RecipeBookEditor().setVisible(true);
-	
+
 	}
 }
