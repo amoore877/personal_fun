@@ -78,8 +78,7 @@ public class RecipeStep {
 	/**
 	 * To printing string.
 	 */
-	@Override
-	public String toString() {
+	public String toPrintString() {
 		StringBuilder out = new StringBuilder(myInstruct);
 		out.append("\n");
 
