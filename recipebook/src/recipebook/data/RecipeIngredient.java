@@ -1,5 +1,7 @@
 package recipebook.data;
 
+import java.math.BigDecimal;
+
 import recipebook.data.IngredientMeasurement.Units;
 
 /**
@@ -20,6 +22,50 @@ public class RecipeIngredient {
 	 */
 	private IngredientMeasurement myMeasurement;
 
+	/**
+	 * Construct from save string.
+	 * 
+	 * @param input
+	 */
+	public RecipeIngredient(String input) {
+		String[] inputParts = input.split(Separators.DATA_PART_SEPARATOR);
+		// TODO check part count
+
+		// ingredient
+		String ingredientName = inputParts[0];
+		myIngredient = new BasicIngredient(ingredientName);
+
+		// ingredient quantity
+		// TODO num format exception
+		BigDecimal ingredientQuantity = BigDecimal.valueOf(Double.parseDouble(inputParts[1]));
+		// ingredient units
+		// TODO enum exception
+		Units ingredientUnits = Units.valueOf(inputParts[2]);
+
+		myMeasurement = new IngredientMeasurement(ingredientQuantity, ingredientUnits);
+	}
+
+	/**
+	 * Output to a save string.
+	 * 
+	 * @return
+	 */
+	public String toSaveString() {
+		StringBuilder saveString = new StringBuilder(myIngredient.getName());
+		saveString.append(Separators.DATA_PART_SEPARATOR);
+		saveString.append(myMeasurement.getQuantity().toString());
+		saveString.append(Separators.DATA_PART_SEPARATOR);
+		saveString.append(myMeasurement.getUnits().toString());
+
+		return saveString.toString();
+	}
+
+	/**
+	 * Construct from object data.
+	 * 
+	 * @param iIngredient
+	 * @param iMeasurement
+	 */
 	public RecipeIngredient(BasicIngredient iIngredient, IngredientMeasurement iMeasurement) {
 		myIngredient = iIngredient;
 		myMeasurement = iMeasurement;
@@ -41,6 +87,9 @@ public class RecipeIngredient {
 		this.myMeasurement = iMeasurement;
 	}
 
+	/**
+	 * Printing string.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder out = new StringBuilder(myIngredient.getName());

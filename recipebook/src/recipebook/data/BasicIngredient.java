@@ -20,25 +20,45 @@ public class BasicIngredient {
 	private String myName;
 
 	/**
-	 * Constructor. If name matches "whatever" "we" "w/e" or "w\e" ignoring
-	 * case, {@link #WHATEVER} will be used.
+	 * Constructor. Trim and replace new lines with spaces. If name matches
+	 * "whatever" "we" "w/e" or "w\e" ignoring case, {@link #WHATEVER} will be
+	 * used.
 	 * 
 	 * @param iName
 	 */
 	public BasicIngredient(String iName) {
-		if (iName.equalsIgnoreCase(WHATEVER) || iName.equalsIgnoreCase("we") || iName.equalsIgnoreCase("w\\e")
-				|| iName.equalsIgnoreCase("w/e")) {
-			myName = WHATEVER;
-		} else {
-			myName = iName;
-		}
+		setName(iName);
 	}
 
 	public String getName() {
 		return myName;
 	}
 
+	/**
+	 * Trim and replace new lines with spaces. If name matches "whatever" "we"
+	 * "w/e" or "w\e" ignoring case, {@link #WHATEVER} will be used.
+	 * 
+	 * @param iName
+	 */
 	public void setName(String iName) {
-		this.myName = iName;
+		// TODO empty name
+		String trimmedName = iName.replace("\n", " ").trim();
+		if (trimmedName.equalsIgnoreCase(WHATEVER) || trimmedName.equalsIgnoreCase("we")
+				|| trimmedName.equalsIgnoreCase("w\\e") || trimmedName.equalsIgnoreCase("w/e")) {
+			myName = WHATEVER;
+		} else {
+			myName = trimmedName;
+		}
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof BasicIngredient) {
+			if (myName.equalsIgnoreCase(((BasicIngredient) other).getName())) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
