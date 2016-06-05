@@ -2,15 +2,15 @@ package recipebook.gui.editor;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.File;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -22,9 +22,10 @@ import recipebook.data.Recipe;
 import recipebook.data.RecipeBook;
 import recipebook.data.RecipeIngredient;
 import recipebook.data.RecipeStep;
+import recipebook.gui.RecipeBookFrame;
 import recipebook.gui.RecipeBookGUIUtil;
 
-public class RecipeBookEditor extends JFrame implements ActionListener, WindowListener {
+public final class RecipeBookEditor extends RecipeBookFrame {
 
 	/**
 	 * Constants.
@@ -52,18 +53,23 @@ public class RecipeBookEditor extends JFrame implements ActionListener, WindowLi
 	private final JButton btnOpenBook = new JButton(OPEN_BOOK);
 	private final JButton btnSaveBook = new JButton(SAVE_BOOK);
 	private final JButton btnCloseBook = new JButton(CLOSE_BOOK);
-	private final JList<Recipe> recipeList = new JList<Recipe>();
+	private final DefaultListModel<Recipe> recipeListModel = new DefaultListModel<Recipe>();
+	private final JList<Recipe> recipeList = new JList<Recipe>(recipeListModel);
 	private final JButton btnAddRecipe = new JButton(ADD_RECIPE);
 	private final JButton btnRemoveRecipe = new JButton(REMOVE_RECIPE);
-	private final JList<RecipeIngredient> ingredientsList = new JList<RecipeIngredient>();
+	private final DefaultListModel<RecipeIngredient> ingredientsListModel = new DefaultListModel<RecipeIngredient>();
+	private final JList<RecipeIngredient> ingredientsList = new JList<RecipeIngredient>(ingredientsListModel);
 	private final JButton btnAddIngredient = new JButton(ADD_ING);
 	private final JButton btnRemoveIngredient = new JButton(REMOVE_ING);
 	private final JButton btnAddStep = new JButton(ADD_STEP);
 	private final JButton btnRemoveStep = new JButton(REMOVE_STEP);
-	private final JList<RecipeStep> stepsList = new JList<RecipeStep>();
+	private final DefaultListModel<RecipeStep> stepsListModel = new DefaultListModel<RecipeStep>();
+	private final JList<RecipeStep> stepsList = new JList<RecipeStep>(stepsListModel);
 	private final JButton btnAddTag = new JButton(ADD_TAG);
 	private final JButton btnRemoveTag = new JButton(REMOVE_TAG);
-	private final JList<String> tagsList = new JList<String>();
+	private final DefaultListModel<String> tagsListModel = new DefaultListModel<String>();
+	private final JList<String> tagsList = new JList<String>(tagsListModel);
+	private final JTextField servingsField = new JTextField();
 
 	/**
 	 * Logic field parts.
@@ -125,7 +131,47 @@ public class RecipeBookEditor extends JFrame implements ActionListener, WindowLi
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				// TODO Auto-generated method stub
+				// make sure valid index
+				if (recipeList.getSelectedValue() != null) {
+					Recipe recipe = recipeList.getSelectedValue();
+
+					recipeViewField.setText(recipe.toPrintString());
+
+					for (RecipeIngredient ingredient : recipe.getIngredients()) {
+						ingredientsListModel.addElement(ingredient);
+					}
+
+					for (RecipeStep step : recipe.getSteps()) {
+						stepsListModel.addElement(step);
+					}
+
+					for (String tag : recipe.getTags()) {
+						tagsListModel.addElement(tag);
+					}
+
+					btnAddIngredient.setEnabled(true);
+					btnAddStep.setEnabled(true);
+					btnAddTag.setEnabled(true);
+
+					ingredientsList.setEnabled(true);
+					stepsList.setEnabled(true);
+					tagsList.setEnabled(true);
+
+					servingsField.setEnabled(true);
+					servingsField.setText(String.valueOf(recipe.getServings()));
+				} else {
+					recipeViewField.setText("");
+
+					btnAddIngredient.setEnabled(false);
+					btnAddStep.setEnabled(false);
+					btnAddTag.setEnabled(false);
+
+					ingredientsList.setEnabled(false);
+					stepsList.setEnabled(false);
+					tagsList.setEnabled(false);
+
+					servingsField.setEnabled(false);
+				}
 
 			}
 		});
@@ -160,8 +206,11 @@ public class RecipeBookEditor extends JFrame implements ActionListener, WindowLi
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				// TODO Auto-generated method stub
-
+				if (ingredientsList.getSelectedValue() != null) {
+					btnRemoveIngredient.setEnabled(true);
+				} else {
+					btnRemoveIngredient.setEnabled(false);
+				}
 			}
 		});
 		getContentPane().add(ingredientsList);
@@ -192,8 +241,11 @@ public class RecipeBookEditor extends JFrame implements ActionListener, WindowLi
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				// TODO Auto-generated method stub
-
+				if (stepsList.getSelectedValue() != null) {
+					btnRemoveStep.setEnabled(true);
+				} else {
+					btnRemoveStep.setEnabled(false);
+				}
 			}
 		});
 		getContentPane().add(stepsList);
@@ -218,8 +270,11 @@ public class RecipeBookEditor extends JFrame implements ActionListener, WindowLi
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				// TODO Auto-generated method stub
-
+				if (tagsList.getSelectedValue() != null) {
+					btnRemoveTag.setEnabled(true);
+				} else {
+					btnRemoveTag.setEnabled(false);
+				}
 			}
 		});
 		getContentPane().add(tagsList);
@@ -227,48 +282,48 @@ public class RecipeBookEditor extends JFrame implements ActionListener, WindowLi
 		JLabel lblTags = new JLabel("Tags");
 		lblTags.setBounds(652, 299, 77, 14);
 		getContentPane().add(lblTags);
+
+		JLabel lblServings = new JLabel("Servings:");
+		lblServings.setBounds(794, 211, 46, 14);
+		getContentPane().add(lblServings);
+
+		// TODO formatter
+		// TODO listener
+		servingsField.setColumns(10);
+		servingsField.setBounds(842, 208, 40, 20);
+		getContentPane().add(servingsField);
+
+		bookOpenedClosed(false);
+	}
+
+	@Override
+	protected void save() {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -289,17 +344,99 @@ public class RecipeBookEditor extends JFrame implements ActionListener, WindowLi
 		} else if (command.equals(OPEN_BOOK)) {
 			// TODO
 		} else if (command.equals(REMOVE_ING)) {
-			// TODO
+			removeIngredient();
 		} else if (command.equals(REMOVE_RECIPE)) {
-			// TODO
+			removeRecipe();
 		} else if (command.equals(REMOVE_STEP)) {
-			// TODO
+			removeStep();
 		} else if (command.equals(REMOVE_TAG)) {
-			// TODO
+			removeTag();
 		} else if (command.equals(SAVE_BOOK)) {
 			// TODO
 		} else {
 			System.err.println("Unknown command: [" + command + "]");
+		}
+	}
+
+	private void removeRecipe() {
+		Recipe recipe = recipeList.getSelectedValue();
+
+		if (recipe != null) {
+			final int reply = JOptionPane.showConfirmDialog(this,
+					"Are you sure you wish to remove [" + recipe.getName() + "]?", "Remove Recipe",
+					JOptionPane.YES_NO_OPTION);
+
+			if (reply == JOptionPane.YES_OPTION) {
+				currBook.getRecipes().remove(recipe);
+				recipeListModel.removeElement(recipe);
+			}
+		} else {
+			System.err.println("Null recipe selected.");
+		}
+	}
+
+	private void removeTag() {
+		String tag = tagsList.getSelectedValue();
+
+		if (tag != null) {
+			final int reply = JOptionPane.showConfirmDialog(this, "Are you sure you wish to remove [" + tag + "]?",
+					"Remove Tag", JOptionPane.YES_NO_OPTION);
+
+			if (reply == JOptionPane.YES_OPTION) {
+				Recipe recipe = recipeList.getSelectedValue();
+				recipe.getTags().remove(tag);
+				recipeViewField.setText(recipe.toPrintString());
+				tagsListModel.clear();
+				for (String refreshedTag : recipe.getTags()) {
+					tagsListModel.addElement(refreshedTag);
+				}
+			}
+		} else {
+			System.err.println("Null tag selected.");
+		}
+	}
+
+	private void removeStep() {
+		RecipeStep step = stepsList.getSelectedValue();
+
+		if (step != null) {
+			final int reply = JOptionPane.showConfirmDialog(this,
+					"Are you sure you wish to remove [" + step.toPrintString() + "]?", "Remove Step",
+					JOptionPane.YES_NO_OPTION);
+
+			if (reply == JOptionPane.YES_OPTION) {
+				Recipe recipe = recipeList.getSelectedValue();
+				recipe.getSteps().remove(step);
+				recipeViewField.setText(recipe.toPrintString());
+				stepsListModel.clear();
+				for (RecipeStep refreshedStep : recipe.getSteps()) {
+					stepsListModel.addElement(refreshedStep);
+				}
+			}
+		} else {
+			System.err.println("Null step selected.");
+		}
+	}
+
+	private void removeIngredient() {
+		RecipeIngredient ingredient = ingredientsList.getSelectedValue();
+
+		if (ingredient != null) {
+			final int reply = JOptionPane.showConfirmDialog(this,
+					"Are you sure you wish to remove [" + ingredient.toPrintString() + "]?", "Remove Ingredient",
+					JOptionPane.YES_NO_OPTION);
+
+			if (reply == JOptionPane.YES_OPTION) {
+				Recipe recipe = recipeList.getSelectedValue();
+				recipe.getIngredients().remove(ingredient);
+				recipeViewField.setText(recipe.toPrintString());
+				ingredientsListModel.clear();
+				for (RecipeIngredient refreshedIngredient : recipe.getIngredients()) {
+					ingredientsListModel.addElement(refreshedIngredient);
+				}
+			}
+		} else {
+			System.err.println("Null ingredient selected.");
 		}
 	}
 
@@ -311,38 +448,26 @@ public class RecipeBookEditor extends JFrame implements ActionListener, WindowLi
 	 *            true if book was opened, false if book was closed.
 	 */
 	private void bookOpenedClosed(boolean opened) {
-		btnAddIngredient.setEnabled(opened);
 		btnAddRecipe.setEnabled(opened);
-		btnAddStep.setEnabled(opened);
-		btnAddTag.setEnabled(opened);
 		btnCloseBook.setEnabled(opened);
 		btnSaveBook.setEnabled(opened);
 
 		recipeBookNameField.setEnabled(opened);
 
-		ingredientsList.setEnabled(opened);
 		recipeList.setEnabled(opened);
-		stepsList.setEnabled(opened);
-		tagsList.setEnabled(opened);
-
-		recipeViewField.setEnabled(opened);
 
 		if (!opened) {
 			// specific to book being closed
 			recipeBookNameField.setText("");
 
-			// TODO lists, need to make default models
-			// ingredientsList.removeAll();;
-			// recipeList.removeAll();
-			// stepsList.removeAll();
-			// tagsList.removeAll();
-
-			recipeViewField.setText("");
+			recipeListModel.clear();
 		} else {
 			// specific to book being opened
 			recipeBookNameField.setText(currFile.getName());
 
-			// TODO lists, need to make default models
+			for (Recipe recipe : currBook.getRecipes()) {
+				recipeListModel.addElement(recipe);
+			}
 		}
 	}
 
