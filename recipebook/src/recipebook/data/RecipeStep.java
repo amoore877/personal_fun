@@ -96,4 +96,12 @@ public class RecipeStep {
 
 		return out.toString();
 	}
+
+	/**
+	 * Convenience for lists.
+	 */
+	@Override
+	public String toString() {
+		return toPrintString();
+	}
 }

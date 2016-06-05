@@ -107,4 +107,12 @@ public class RecipeIngredient {
 			return out.toString();
 		}
 	}
+
+	/**
+	 * Convenience for lists.
+	 */
+	@Override
+	public String toString() {
+		return toPrintString();
+	}
 }
