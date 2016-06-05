@@ -1,4 +1,4 @@
-package recipebook.editor;
+package recipebook.gui.editor;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -22,6 +22,7 @@ import recipebook.data.Recipe;
 import recipebook.data.RecipeBook;
 import recipebook.data.RecipeIngredient;
 import recipebook.data.RecipeStep;
+import recipebook.gui.RecipeBookGUIUtil;
 
 public class RecipeBookEditor extends JFrame implements ActionListener, WindowListener {
 
@@ -67,8 +68,8 @@ public class RecipeBookEditor extends JFrame implements ActionListener, WindowLi
 	/**
 	 * Logic field parts.
 	 */
-	private RecipeBook currBook;
-	private File currFile;
+	private RecipeBook currBook = null;
+	private File currFile = null;
 
 	/**
 	 * Constructor.
@@ -88,22 +89,22 @@ public class RecipeBookEditor extends JFrame implements ActionListener, WindowLi
 		getContentPane().add(controlPanel);
 		controlPanel.setLayout(null);
 
-		btnNewBook.setBounds(10, 11, 121, 23);
+		btnNewBook.setBounds(10, 11, RecipeBookGUIUtil.BUTTON_WIDTH, RecipeBookGUIUtil.BUTTON_HEIGHT);
 		btnNewBook.addActionListener(this);
 		btnNewBook.setActionCommand(NEW_BOOK);
 		controlPanel.add(btnNewBook);
 
-		btnOpenBook.setBounds(141, 11, 121, 23);
+		btnOpenBook.setBounds(141, 11, RecipeBookGUIUtil.BUTTON_WIDTH, RecipeBookGUIUtil.BUTTON_HEIGHT);
 		btnOpenBook.addActionListener(this);
 		btnOpenBook.setActionCommand(OPEN_BOOK);
 		controlPanel.add(btnOpenBook);
 
-		btnSaveBook.setBounds(699, 11, 121, 23);
+		btnSaveBook.setBounds(699, 11, RecipeBookGUIUtil.BUTTON_WIDTH, RecipeBookGUIUtil.BUTTON_HEIGHT);
 		btnSaveBook.addActionListener(this);
 		btnSaveBook.setActionCommand(SAVE_BOOK);
 		controlPanel.add(btnSaveBook);
 
-		btnCloseBook.setBounds(272, 11, 121, 23);
+		btnCloseBook.setBounds(272, 11, RecipeBookGUIUtil.BUTTON_WIDTH, RecipeBookGUIUtil.BUTTON_HEIGHT);
 		btnCloseBook.addActionListener(this);
 		btnCloseBook.setActionCommand(CLOSE_BOOK);
 		controlPanel.add(btnCloseBook);
@@ -139,12 +140,12 @@ public class RecipeBookEditor extends JFrame implements ActionListener, WindowLi
 		recipeViewPane.setViewportView(recipeViewField);
 		recipeViewField.setColumns(10);
 
-		btnAddRecipe.setBounds(794, 91, 121, 23);
+		btnAddRecipe.setBounds(794, 91, RecipeBookGUIUtil.BUTTON_WIDTH, RecipeBookGUIUtil.BUTTON_HEIGHT);
 		btnAddRecipe.addActionListener(this);
 		btnAddRecipe.setActionCommand(ADD_RECIPE);
 		getContentPane().add(btnAddRecipe);
 
-		btnRemoveRecipe.setBounds(794, 143, 121, 23);
+		btnRemoveRecipe.setBounds(794, 143, RecipeBookGUIUtil.BUTTON_WIDTH, RecipeBookGUIUtil.BUTTON_HEIGHT);
 		btnRemoveRecipe.addActionListener(this);
 		btnRemoveRecipe.setActionCommand(REMOVE_RECIPE);
 		getContentPane().add(btnRemoveRecipe);
@@ -165,22 +166,22 @@ public class RecipeBookEditor extends JFrame implements ActionListener, WindowLi
 		});
 		getContentPane().add(ingredientsList);
 
-		btnAddIngredient.setBounds(200, 321, 121, 23);
+		btnAddIngredient.setBounds(200, 321, RecipeBookGUIUtil.BUTTON_WIDTH, RecipeBookGUIUtil.BUTTON_HEIGHT);
 		btnAddIngredient.addActionListener(this);
 		btnAddIngredient.setActionCommand(ADD_ING);
 		getContentPane().add(btnAddIngredient);
 
-		btnRemoveIngredient.setBounds(200, 355, 121, 23);
+		btnRemoveIngredient.setBounds(200, 355, RecipeBookGUIUtil.BUTTON_WIDTH, RecipeBookGUIUtil.BUTTON_HEIGHT);
 		btnRemoveIngredient.addActionListener(this);
 		btnRemoveIngredient.setActionCommand(REMOVE_ING);
 		getContentPane().add(btnRemoveIngredient);
 
-		btnAddStep.setBounds(521, 321, 121, 23);
+		btnAddStep.setBounds(521, 321, RecipeBookGUIUtil.BUTTON_WIDTH, RecipeBookGUIUtil.BUTTON_HEIGHT);
 		btnAddStep.addActionListener(this);
 		btnAddStep.setActionCommand(ADD_STEP);
 		getContentPane().add(btnAddStep);
 
-		btnRemoveStep.setBounds(521, 355, 121, 23);
+		btnRemoveStep.setBounds(521, 355, RecipeBookGUIUtil.BUTTON_WIDTH, RecipeBookGUIUtil.BUTTON_HEIGHT);
 		btnRemoveStep.addActionListener(this);
 		btnRemoveStep.setActionCommand(REMOVE_STEP);
 		getContentPane().add(btnRemoveStep);
@@ -201,12 +202,12 @@ public class RecipeBookEditor extends JFrame implements ActionListener, WindowLi
 		lblSteps.setBounds(331, 299, 77, 14);
 		getContentPane().add(lblSteps);
 
-		btnAddTag.setBounds(842, 321, 121, 23);
+		btnAddTag.setBounds(842, 321, RecipeBookGUIUtil.BUTTON_WIDTH, RecipeBookGUIUtil.BUTTON_HEIGHT);
 		btnAddTag.addActionListener(this);
 		btnAddTag.setActionCommand(ADD_TAG);
 		getContentPane().add(btnAddTag);
 
-		btnRemoveTag.setBounds(842, 355, 121, 23);
+		btnRemoveTag.setBounds(842, 355, RecipeBookGUIUtil.BUTTON_WIDTH, RecipeBookGUIUtil.BUTTON_HEIGHT);
 		btnRemoveTag.addActionListener(this);
 		btnRemoveTag.setActionCommand(REMOVE_TAG);
 		getContentPane().add(btnRemoveTag);
@@ -299,6 +300,49 @@ public class RecipeBookEditor extends JFrame implements ActionListener, WindowLi
 			// TODO
 		} else {
 			System.err.println("Unknown command: [" + command + "]");
+		}
+	}
+
+	/**
+	 * Clean up after book has been open/closed and set appropriate components
+	 * to enabled/disabled.
+	 * 
+	 * @param opened
+	 *            true if book was opened, false if book was closed.
+	 */
+	private void bookOpenedClosed(boolean opened) {
+		btnAddIngredient.setEnabled(opened);
+		btnAddRecipe.setEnabled(opened);
+		btnAddStep.setEnabled(opened);
+		btnAddTag.setEnabled(opened);
+		btnCloseBook.setEnabled(opened);
+		btnSaveBook.setEnabled(opened);
+
+		recipeBookNameField.setEnabled(opened);
+
+		ingredientsList.setEnabled(opened);
+		recipeList.setEnabled(opened);
+		stepsList.setEnabled(opened);
+		tagsList.setEnabled(opened);
+
+		recipeViewField.setEnabled(opened);
+
+		if (!opened) {
+			// specific to book being closed
+			recipeBookNameField.setText("");
+
+			// TODO lists, need to make default models
+			// ingredientsList.removeAll();;
+			// recipeList.removeAll();
+			// stepsList.removeAll();
+			// tagsList.removeAll();
+
+			recipeViewField.setText("");
+		} else {
+			// specific to book being opened
+			recipeBookNameField.setText(currFile.getName());
+
+			// TODO lists, need to make default models
 		}
 	}
 
