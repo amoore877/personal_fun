@@ -32,15 +32,4 @@ public abstract class RecipeBookFrame extends JFrame implements ActionListener, 
 		}
 	}
 
-	/**
-	 * Override dispose.
-	 */
-	@Override
-	public final void dispose() {
-		// window is being closed; save information
-		save();
-		super.dispose();
-	}
-
-	protected abstract void save();
 }
