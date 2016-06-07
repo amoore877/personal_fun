@@ -3,7 +3,10 @@ package recipebook.gui.editor;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -296,10 +299,60 @@ public final class RecipeBookEditor extends RecipeBookFrame {
 		bookOpenedClosed(false);
 	}
 
-	@Override
-	protected void save() {
-		// TODO Auto-generated method stub
+	private void save() {
+		if (currFile != null) {
+			boolean fileSaved = false;
+			try {
+				// remake file
+				currFile.delete();
+				currFile.createNewFile();
 
+				final BufferedWriter fileWriter = new BufferedWriter(new FileWriter(currFile));
+
+				fileWriter.write(currBook.toSaveString());
+
+				fileWriter.flush();
+				fileWriter.close();
+
+				fileSaved = true;
+			} catch (final IOException iException) {
+				showError(iException);
+			}
+
+			if (!fileSaved) {
+				// something wasn't saved
+				JOptionPane.showMessageDialog(null, "Saving unsuccessful.", "Error saving", JOptionPane.ERROR_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(null, "Saved!", "Save successful", JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+	}
+
+	/**
+	 * Show error message.
+	 * 
+	 * @param iException
+	 *            exception that appeared.
+	 */
+	public static void showError(final Exception iException) {
+		// show error message, any exception that is caught
+		JOptionPane.showMessageDialog(null, iException.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
+		iException.printStackTrace();
+	}
+
+	/**
+	 * Override dispose.
+	 */
+	@Override
+	public final void dispose() {
+		// window is being closed; save information
+		final int reply = JOptionPane.showConfirmDialog(this, "Save before closing?", "Closing Program",
+				JOptionPane.YES_NO_OPTION);
+
+		if (reply == JOptionPane.YES_OPTION) {
+			save();
+		}
+		super.dispose();
 	}
 
 	@Override
@@ -338,7 +391,7 @@ public final class RecipeBookEditor extends RecipeBookFrame {
 		} else if (command.equals(ADD_TAG)) {
 			// TODO
 		} else if (command.equals(CLOSE_BOOK)) {
-			// TODO
+			closeBook();
 		} else if (command.equals(NEW_BOOK)) {
 			// TODO
 		} else if (command.equals(OPEN_BOOK)) {
@@ -352,9 +405,23 @@ public final class RecipeBookEditor extends RecipeBookFrame {
 		} else if (command.equals(REMOVE_TAG)) {
 			removeTag();
 		} else if (command.equals(SAVE_BOOK)) {
-			// TODO
+			save();
 		} else {
 			System.err.println("Unknown command: [" + command + "]");
+		}
+	}
+
+	private void closeBook() {
+		final int reply = JOptionPane.showConfirmDialog(this,
+				"Are you sure you wish to close the book?" + " Unsaved changes will be lost.", "Close book?",
+				JOptionPane.YES_NO_OPTION);
+
+		if (reply == JOptionPane.YES_OPTION) {
+			currFile = null;
+
+			currBook = null;
+
+			bookOpenedClosed(false);
 		}
 	}
 
