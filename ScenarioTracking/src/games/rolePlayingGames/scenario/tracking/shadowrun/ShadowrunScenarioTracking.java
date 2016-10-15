@@ -1,12 +1,5 @@
 package games.rolePlayingGames.scenario.tracking.shadowrun;
 
-import games.rolePlayingGames.scenario.tracking.AbstractScenarioTracking;
-import games.rolePlayingGames.scenario.tracking.AbstractScenarioTrackingTableModel;
-import games.rolePlayingGames.scenario.tracking.CharacterStatus;
-import games.rolePlayingGames.shadowrun.dice.ShadowrunInitiativeRoller;
-import games.rolePlayingGames.shadowrun.dice.ShadowrunRollResult;
-import games.rolePlayingGames.shadowrun.dice.ShadowrunRoller;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -39,6 +32,13 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.text.NumberFormatter;
+
+import games.rolePlayingGames.scenario.tracking.AbstractScenarioTracking;
+import games.rolePlayingGames.scenario.tracking.AbstractScenarioTrackingTableModel;
+import games.rolePlayingGames.scenario.tracking.CharacterStatus;
+import games.rolePlayingGames.shadowrun.dice.ShadowrunInitiativeRoller;
+import games.rolePlayingGames.shadowrun.dice.ShadowrunRollResult;
+import games.rolePlayingGames.shadowrun.dice.ShadowrunRoller;
 
 /**
  * Tracking a scenario for Shadowrun.
@@ -188,12 +188,9 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 
 		getContentPane().setBackground(DEFAULT_BACKGROUND_COLOR);
 		getContentPane().setSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
-		getContentPane().setPreferredSize(
-				new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
-		getContentPane().setMinimumSize(
-				new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
-		getContentPane().setMaximumSize(
-				new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+		getContentPane().setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+		getContentPane().setMinimumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+		getContentPane().setMaximumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 		setTitle("Shadowrun Scenario Tracking");
 		setResizable(false);
 		getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -204,19 +201,15 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		mainPanel.setBackground(DEFAULT_BACKGROUND_COLOR);
 		mainPanel.setMinimumSize(new Dimension(FRAME_WIDTH, MAIN_PANEL_HEIGHT));
 		mainPanel.setMaximumSize(new Dimension(FRAME_WIDTH, MAIN_PANEL_HEIGHT));
-		mainPanel
-				.setPreferredSize(new Dimension(FRAME_WIDTH, MAIN_PANEL_HEIGHT));
+		mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, MAIN_PANEL_HEIGHT));
 		mainPanel.setSize(new Dimension(FRAME_WIDTH, MAIN_PANEL_HEIGHT));
 		getContentPane().add(mainPanel);
 		mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		final JSplitPane mainSplitPane = new JSplitPane();
-		mainSplitPane.setMaximumSize(new Dimension(FRAME_WIDTH,
-				MAIN_PANEL_HEIGHT));
-		mainSplitPane.setMinimumSize(new Dimension(FRAME_WIDTH,
-				MAIN_PANEL_HEIGHT));
-		mainSplitPane.setPreferredSize(new Dimension(FRAME_WIDTH,
-				MAIN_PANEL_HEIGHT));
+		mainSplitPane.setMaximumSize(new Dimension(FRAME_WIDTH, MAIN_PANEL_HEIGHT));
+		mainSplitPane.setMinimumSize(new Dimension(FRAME_WIDTH, MAIN_PANEL_HEIGHT));
+		mainSplitPane.setPreferredSize(new Dimension(FRAME_WIDTH, MAIN_PANEL_HEIGHT));
 		mainSplitPane.setSize(new Dimension(FRAME_WIDTH, MAIN_PANEL_HEIGHT));
 		mainSplitPane.setBackground(Color.BLACK);
 		mainSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
@@ -225,53 +218,40 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		final JPanel controlPanel = new JPanel();
 		controlPanel.setBackground(DEFAULT_BACKGROUND_COLOR);
 		controlPanel.setSize(new Dimension(FRAME_WIDTH, LOWER_PANEL_HEIGHT));
-		controlPanel.setPreferredSize(new Dimension(FRAME_WIDTH,
-				LOWER_PANEL_HEIGHT));
-		controlPanel.setMinimumSize(new Dimension(FRAME_WIDTH,
-				LOWER_PANEL_HEIGHT));
-		controlPanel.setMaximumSize(new Dimension(FRAME_WIDTH,
-				LOWER_PANEL_HEIGHT));
+		controlPanel.setPreferredSize(new Dimension(FRAME_WIDTH, LOWER_PANEL_HEIGHT));
+		controlPanel.setMinimumSize(new Dimension(FRAME_WIDTH, LOWER_PANEL_HEIGHT));
+		controlPanel.setMaximumSize(new Dimension(FRAME_WIDTH, LOWER_PANEL_HEIGHT));
 		mainSplitPane.setRightComponent(controlPanel);
 		controlPanel.setLayout(null);
 
 		final JPanel tableControlPanel = new JPanel();
 		tableControlPanel.setLocation(0, 0);
 		tableControlPanel.setBackground(DEFAULT_BACKGROUND_COLOR);
-		tableControlPanel.setSize(new Dimension(LOWER_PANEL_WIDTH,
-				LOWER_PANEL_HEIGHT));
-		tableControlPanel.setPreferredSize(new Dimension(LOWER_PANEL_WIDTH,
-				LOWER_PANEL_HEIGHT));
-		tableControlPanel.setMinimumSize(new Dimension(LOWER_PANEL_WIDTH,
-				LOWER_PANEL_HEIGHT));
-		tableControlPanel.setMaximumSize(new Dimension(LOWER_PANEL_WIDTH,
-				LOWER_PANEL_HEIGHT));
+		tableControlPanel.setSize(new Dimension(LOWER_PANEL_WIDTH, LOWER_PANEL_HEIGHT));
+		tableControlPanel.setPreferredSize(new Dimension(LOWER_PANEL_WIDTH, LOWER_PANEL_HEIGHT));
+		tableControlPanel.setMinimumSize(new Dimension(LOWER_PANEL_WIDTH, LOWER_PANEL_HEIGHT));
+		tableControlPanel.setMaximumSize(new Dimension(LOWER_PANEL_WIDTH, LOWER_PANEL_HEIGHT));
 		controlPanel.add(tableControlPanel);
 		tableControlPanel.setLayout(null);
 
 		final JButton nextPassButton = new JButton(NEXT_PASS_STRING);
 		nextPassButton.addActionListener(this);
-		nextPassButton
-				.setToolTipText("Subtracts 10 from everyone's initiative and unchecks \"Acted\" flag for all. Increments initiative pass.");
-		nextPassButton
-				.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		nextPassButton
-				.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		nextPassButton.setToolTipText(
+				"Subtracts 10 from everyone's initiative and unchecks \"Acted\" flag for all. Increments initiative pass.");
+		nextPassButton.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		nextPassButton.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		nextPassButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		nextPassButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
-				BUTTON_HEIGHT));
+		nextPassButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		nextPassButton.setBounds(5, 5, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(nextPassButton);
 
 		final JButton nextTurnButton = new JButton(NEXT_TURN_STRING);
 		nextTurnButton.addActionListener(this);
-		nextTurnButton
-				.setToolTipText("Sets all initiatives to 0 and unchecks \"Acted\" flag for all. Sets initiative pass to 1.");
-		nextTurnButton
-				.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		nextTurnButton
-				.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		nextTurnButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
-				BUTTON_HEIGHT));
+		nextTurnButton.setToolTipText(
+				"Sets all initiatives to 0 and unchecks \"Acted\" flag for all. Sets initiative pass to 1.");
+		nextTurnButton.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		nextTurnButton.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		nextTurnButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		nextTurnButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		nextTurnButton.setBounds(191, 5, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(nextTurnButton);
@@ -280,8 +260,7 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		resortButton.addActionListener(this);
 		resortButton.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		resortButton.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		resortButton
-				.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		resortButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		resortButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		resortButton.setToolTipText("Resorts table by initiative score.");
 		resortButton.setBounds(390, 45, BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -289,71 +268,51 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 
 		final JButton addActorButton = new JButton(ADD_STRING);
 		addActorButton.addActionListener(this);
-		addActorButton
-				.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		addActorButton
-				.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		addActorButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
-				BUTTON_HEIGHT));
+		addActorButton.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		addActorButton.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		addActorButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		addActorButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		addActorButton
-				.setToolTipText("Add some Actor(s) by name to the table, setting initiative to 0.");
+		addActorButton.setToolTipText("Add some Actor(s) by name to the table, setting initiative to 0.");
 		addActorButton.setBounds(5, 45, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(addActorButton);
 
 		final JButton removeActorButton = new JButton(REMOVE_STRING);
 		removeActorButton.setEnabled(false);
 		removeActorButton.addActionListener(this);
-		removeActorButton.setMaximumSize(new Dimension(BUTTON_WIDTH,
-				BUTTON_HEIGHT));
-		removeActorButton.setMinimumSize(new Dimension(BUTTON_WIDTH,
-				BUTTON_HEIGHT));
-		removeActorButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
-				BUTTON_HEIGHT));
+		removeActorButton.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		removeActorButton.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		removeActorButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		removeActorButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		removeActorButton
-				.setToolTipText("Remove the selected actor(s) from the table.");
+		removeActorButton.setToolTipText("Remove the selected actor(s) from the table.");
 		removeActorButton.setBounds(191, 45, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(removeActorButton);
 
 		final JButton clearSelectionButton = new JButton(CLEAR_SELECTION_STRING);
 		clearSelectionButton.addActionListener(this);
-		clearSelectionButton.setMaximumSize(new Dimension(BUTTON_WIDTH * 2,
-				BUTTON_HEIGHT));
-		clearSelectionButton.setMinimumSize(new Dimension(BUTTON_WIDTH * 2,
-				BUTTON_HEIGHT));
-		clearSelectionButton.setPreferredSize(new Dimension(BUTTON_WIDTH * 2,
-				BUTTON_HEIGHT));
-		clearSelectionButton.setSize(new Dimension(BUTTON_WIDTH * 2,
-				BUTTON_HEIGHT));
+		clearSelectionButton.setMaximumSize(new Dimension(BUTTON_WIDTH * 2, BUTTON_HEIGHT));
+		clearSelectionButton.setMinimumSize(new Dimension(BUTTON_WIDTH * 2, BUTTON_HEIGHT));
+		clearSelectionButton.setPreferredSize(new Dimension(BUTTON_WIDTH * 2, BUTTON_HEIGHT));
+		clearSelectionButton.setSize(new Dimension(BUTTON_WIDTH * 2, BUTTON_HEIGHT));
 		clearSelectionButton.setToolTipText("Clear table selection(s).");
 		clearSelectionButton.setBounds(5, 81, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(clearSelectionButton);
 
 		final JButton rollInitiativeButton = new JButton(ROLL_INITIATIVE_STRING);
 		rollInitiativeButton.addActionListener(this);
-		rollInitiativeButton.setMaximumSize(new Dimension(BUTTON_WIDTH * 2,
-				BUTTON_HEIGHT));
-		rollInitiativeButton.setMinimumSize(new Dimension(BUTTON_WIDTH * 2,
-				BUTTON_HEIGHT));
-		rollInitiativeButton.setPreferredSize(new Dimension(BUTTON_WIDTH * 2,
-				BUTTON_HEIGHT));
-		rollInitiativeButton.setSize(new Dimension(BUTTON_WIDTH * 2,
-				BUTTON_HEIGHT));
-		rollInitiativeButton
-				.setToolTipText("Roll Initiative For Selected Character(s).");
+		rollInitiativeButton.setMaximumSize(new Dimension(BUTTON_WIDTH * 2, BUTTON_HEIGHT));
+		rollInitiativeButton.setMinimumSize(new Dimension(BUTTON_WIDTH * 2, BUTTON_HEIGHT));
+		rollInitiativeButton.setPreferredSize(new Dimension(BUTTON_WIDTH * 2, BUTTON_HEIGHT));
+		rollInitiativeButton.setSize(new Dimension(BUTTON_WIDTH * 2, BUTTON_HEIGHT));
+		rollInitiativeButton.setToolTipText("Roll Initiative For Selected Character(s).");
 		rollInitiativeButton.setBounds(191, 81, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(rollInitiativeButton);
 		rollInitiativeButton.setEnabled(false);
 
 		final JButton cleanupButton = new JButton(CLEANUP_STRING);
 		cleanupButton.addActionListener(this);
-		cleanupButton
-				.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		cleanupButton
-				.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		cleanupButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
-				BUTTON_HEIGHT));
+		cleanupButton.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		cleanupButton.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		cleanupButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		cleanupButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		cleanupButton.setToolTipText("Remove all dead actors from the table.");
 		cleanupButton.setBounds(390, 81, BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -389,18 +348,15 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		hitsField = new JTextField();
 		hitsField.setToolTipText("Number of hits on the roll.");
 		hitsField.setEditable(false);
-		hitsField.setBounds(48, 147, 46, 20);
+		hitsField.setBounds(48, 147, 92, 20);
 		tableControlPanel.add(hitsField);
 		hitsField.setColumns(30);
 
 		final JButton rollButton = new JButton(ROLL_STRING);
 		rollButton.addActionListener(this);
-		rollButton.setMaximumSize(new Dimension(SMALL_BUTTON_WIDTH,
-				BUTTON_HEIGHT));
-		rollButton.setMinimumSize(new Dimension(SMALL_BUTTON_WIDTH,
-				BUTTON_HEIGHT));
-		rollButton.setPreferredSize(new Dimension(SMALL_BUTTON_WIDTH,
-				BUTTON_HEIGHT));
+		rollButton.setMaximumSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
+		rollButton.setMinimumSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
+		rollButton.setPreferredSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
 		rollButton.setSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
 		rollButton.setToolTipText("Roll dice with the given parameters.");
 		rollButton.setBounds(191, 117, SMALL_BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -409,27 +365,23 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		final JLabel rollTotalLabel = new JLabel("Total:");
 		rollTotalLabel.setForeground(DEFAULT_FOREGROUND_COLOR);
 		rollTotalLabel.setBackground(DEFAULT_BACKGROUND_COLOR);
-		rollTotalLabel.setBounds(101, 151, 47, 14);
+		rollTotalLabel.setBounds(150, 150, 47, 14);
 		tableControlPanel.add(rollTotalLabel);
 
 		rollTotalField = new JTextField();
 		rollTotalField.setToolTipText("Total of the roll.");
 		rollTotalField.setEditable(false);
-		rollTotalField.setBounds(158, 147, 46, 20);
+		rollTotalField.setBounds(201, 147, 46, 20);
 		tableControlPanel.add(rollTotalField);
 		rollTotalField.setColumns(10);
 
 		final JButton resetTurnButton = new JButton(RESET_COMBAT_STRING);
 		resetTurnButton.addActionListener(this);
-		resetTurnButton.setMaximumSize(new Dimension(BUTTON_WIDTH,
-				BUTTON_HEIGHT));
-		resetTurnButton.setMinimumSize(new Dimension(BUTTON_WIDTH,
-				BUTTON_HEIGHT));
-		resetTurnButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
-				BUTTON_HEIGHT));
+		resetTurnButton.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		resetTurnButton.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		resetTurnButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		resetTurnButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		resetTurnButton
-				.setToolTipText("Reset the Combat Turn and Initiative Pass counters.");
+		resetTurnButton.setToolTipText("Reset the Combat Turn and Initiative Pass counters.");
 		resetTurnButton.setBounds(390, 5, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(resetTurnButton);
 
@@ -444,12 +396,9 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		memoPanel.setLocation(LOWER_PANEL_WIDTH, 0);
 		memoPanel.setBackground(DEFAULT_BACKGROUND_COLOR);
 		memoPanel.setSize(new Dimension(LOWER_PANEL_WIDTH, LOWER_PANEL_HEIGHT));
-		memoPanel.setPreferredSize(new Dimension(LOWER_PANEL_WIDTH,
-				LOWER_PANEL_HEIGHT));
-		memoPanel.setMinimumSize(new Dimension(LOWER_PANEL_WIDTH,
-				LOWER_PANEL_HEIGHT));
-		memoPanel.setMaximumSize(new Dimension(LOWER_PANEL_WIDTH,
-				LOWER_PANEL_HEIGHT));
+		memoPanel.setPreferredSize(new Dimension(LOWER_PANEL_WIDTH, LOWER_PANEL_HEIGHT));
+		memoPanel.setMinimumSize(new Dimension(LOWER_PANEL_WIDTH, LOWER_PANEL_HEIGHT));
+		memoPanel.setMaximumSize(new Dimension(LOWER_PANEL_WIDTH, LOWER_PANEL_HEIGHT));
 		controlPanel.add(memoPanel);
 		memoPanel.setLayout(null);
 
@@ -467,12 +416,9 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		final JButton addMemoButton = new JButton(ADD_MEMO_STRING);
 		addMemoButton.setEnabled(false);
 		addMemoButton.addActionListener(this);
-		addMemoButton
-				.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		addMemoButton
-				.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
-		addMemoButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
-				BUTTON_HEIGHT));
+		addMemoButton.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		addMemoButton.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+		addMemoButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		addMemoButton.setSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		addMemoButton.setToolTipText("Add memo to the log.");
 		addMemoButton.setBounds(10, 67, BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -483,36 +429,35 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		getCombatMemoCheckBox().setBounds(166, 68, 120, 23);
 		memoPanel.add(getCombatMemoCheckBox());
 
-		getMemoField().getDocument().addDocumentListener(
-				new DocumentListener() {
+		getMemoField().getDocument().addDocumentListener(new DocumentListener() {
 
-					@Override
-					public void removeUpdate(final DocumentEvent e) {
-						checkContents();
-					}
+			@Override
+			public void removeUpdate(final DocumentEvent e) {
+				checkContents();
+			}
 
-					@Override
-					public void insertUpdate(final DocumentEvent e) {
-						checkContents();
-					}
+			@Override
+			public void insertUpdate(final DocumentEvent e) {
+				checkContents();
+			}
 
-					@Override
-					public void changedUpdate(final DocumentEvent e) {
-						checkContents();
-					}
+			@Override
+			public void changedUpdate(final DocumentEvent e) {
+				checkContents();
+			}
 
-					/**
-					 * Check contents of memo field. If empty, disable Add Memo
-					 * button. Else, enable Add Memo button.
-					 */
-					private void checkContents() {
-						if (getMemoField().getText().isEmpty()) {
-							addMemoButton.setEnabled(false);
-						} else {
-							addMemoButton.setEnabled(true);
-						}
-					}
-				});
+			/**
+			 * Check contents of memo field. If empty, disable Add Memo button.
+			 * Else, enable Add Memo button.
+			 */
+			private void checkContents() {
+				if (getMemoField().getText().isEmpty()) {
+					addMemoButton.setEnabled(false);
+				} else {
+					addMemoButton.setEnabled(true);
+				}
+			}
+		});
 
 		final JPanel filePanel = new JPanel();
 		filePanel.setBounds(2 * LOWER_PANEL_WIDTH, 0, 100, LOWER_PANEL_HEIGHT);
@@ -523,24 +468,18 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		saveButton.setLocation(10, 11);
 		saveButton.addActionListener(this);
 		filePanel.setLayout(null);
-		saveButton.setMaximumSize(new Dimension(SMALL_BUTTON_WIDTH,
-				BUTTON_HEIGHT));
-		saveButton.setMinimumSize(new Dimension(SMALL_BUTTON_WIDTH,
-				BUTTON_HEIGHT));
-		saveButton.setPreferredSize(new Dimension(SMALL_BUTTON_WIDTH,
-				BUTTON_HEIGHT));
+		saveButton.setMaximumSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
+		saveButton.setMinimumSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
+		saveButton.setPreferredSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
 		saveButton.setSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
 		filePanel.add(saveButton);
 
 		final JButton exitButton = new JButton(EXIT_STRING);
 		exitButton.setLocation(10, 157);
 		exitButton.addActionListener(this);
-		exitButton.setMaximumSize(new Dimension(SMALL_BUTTON_WIDTH,
-				BUTTON_HEIGHT));
-		exitButton.setMinimumSize(new Dimension(SMALL_BUTTON_WIDTH,
-				BUTTON_HEIGHT));
-		exitButton.setPreferredSize(new Dimension(SMALL_BUTTON_WIDTH,
-				BUTTON_HEIGHT));
+		exitButton.setMaximumSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
+		exitButton.setMinimumSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
+		exitButton.setPreferredSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
 		exitButton.setSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
 		filePanel.add(exitButton);
 
@@ -559,20 +498,19 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 
 		getTrackingTable().setModel(trackingTableModel);
 		// table selection and removal button
-		getTrackingTable().getSelectionModel().addListSelectionListener(
-				new ListSelectionListener() {
-					// enable/disable remove button on table selection
-					@Override
-					public void valueChanged(final ListSelectionEvent e) {
-						if (getTrackingTable().getSelectedRows().length != 0) {
-							removeActorButton.setEnabled(true);
-							rollInitiativeButton.setEnabled(true);
-						} else {
-							removeActorButton.setEnabled(false);
-							rollInitiativeButton.setEnabled(false);
-						}
-					}
-				});
+		getTrackingTable().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			// enable/disable remove button on table selection
+			@Override
+			public void valueChanged(final ListSelectionEvent e) {
+				if (getTrackingTable().getSelectedRows().length != 0) {
+					removeActorButton.setEnabled(true);
+					rollInitiativeButton.setEnabled(true);
+				} else {
+					removeActorButton.setEnabled(false);
+					rollInitiativeButton.setEnabled(false);
+				}
+			}
+		});
 
 		// sorter
 		getTrackingTable().setAutoCreateRowSorter(true);
@@ -585,8 +523,7 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		for (final CharacterStatus status : CharacterStatus.values()) {
 			statusCombox.addItem(status);
 		}
-		getTrackingTable().getColumnModel()
-				.getColumn(trackingTableModel.getStatusColumnIndex())
+		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getStatusColumnIndex())
 				.setCellEditor(new DefaultCellEditor(statusCombox));
 
 		// on cell edit, repaint
@@ -600,63 +537,34 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 
 		// renderer
 		// objects (seems to only handle JCombobox and String)
-		getTrackingTable().setDefaultRenderer(
-				Object.class,
-				new ShadowrunScenarioTrackingTableCellRenderer(
-						trackingTableModel.getStatusColumnIndex()));
-		getTrackingTable().setDefaultRenderer(
-				Integer.class,
-				new ShadowrunScenarioTrackingTableCellRenderer(
-						trackingTableModel.getStatusColumnIndex()));
-		getTrackingTable().setDefaultRenderer(
-				Boolean.class,
-				new ShadowrunScenarioTrackingTableCellRenderer(
-						trackingTableModel.getStatusColumnIndex()));
+		getTrackingTable().setDefaultRenderer(Object.class,
+				new ShadowrunScenarioTrackingTableCellRenderer(trackingTableModel.getStatusColumnIndex()));
+		getTrackingTable().setDefaultRenderer(Integer.class,
+				new ShadowrunScenarioTrackingTableCellRenderer(trackingTableModel.getStatusColumnIndex()));
+		getTrackingTable().setDefaultRenderer(Boolean.class,
+				new ShadowrunScenarioTrackingTableCellRenderer(trackingTableModel.getStatusColumnIndex()));
 		getTrackingTable().setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
 		// column widths
-		getTrackingTable().getColumnModel()
-				.getColumn(trackingTableModel.getActedColIndex())
-				.setPreferredWidth(45);
-		getTrackingTable().getColumnModel()
-				.getColumn(trackingTableModel.getActedColIndex())
-				.setMaxWidth(45);
-		getTrackingTable().getColumnModel()
-				.getColumn(trackingTableModel.getInitiativeColIndex())
+		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getActedColIndex()).setPreferredWidth(45);
+		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getActedColIndex()).setMaxWidth(45);
+		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getInitiativeColIndex()).setPreferredWidth(55);
+		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getInitiativeColIndex()).setMaxWidth(55);
+		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getNameColumnIndex()).setPreferredWidth(120);
+		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getNameColumnIndex()).setMaxWidth(120);
+		getTrackingTable().getColumnModel().getColumn(ShadowrunScenarioTrackingTableModel.MAT_DAM_COL_INDEX)
 				.setPreferredWidth(55);
-		getTrackingTable().getColumnModel()
-				.getColumn(trackingTableModel.getInitiativeColIndex())
+		getTrackingTable().getColumnModel().getColumn(ShadowrunScenarioTrackingTableModel.MAT_DAM_COL_INDEX)
 				.setMaxWidth(55);
-		getTrackingTable().getColumnModel()
-				.getColumn(trackingTableModel.getNameColumnIndex())
-				.setPreferredWidth(120);
-		getTrackingTable().getColumnModel()
-				.getColumn(trackingTableModel.getNameColumnIndex())
-				.setMaxWidth(120);
-		getTrackingTable()
-				.getColumnModel()
-				.getColumn(
-						ShadowrunScenarioTrackingTableModel.MAT_DAM_COL_INDEX)
-				.setPreferredWidth(55);
-		getTrackingTable()
-				.getColumnModel()
-				.getColumn(
-						ShadowrunScenarioTrackingTableModel.MAT_DAM_COL_INDEX)
-				.setMaxWidth(55);
-		getTrackingTable().getColumnModel()
-				.getColumn(trackingTableModel.getStatusColumnIndex())
-				.setPreferredWidth(45);
-		getTrackingTable().getColumnModel()
-				.getColumn(trackingTableModel.getStatusColumnIndex())
-				.setMaxWidth(45);
+		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getStatusColumnIndex()).setPreferredWidth(45);
+		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getStatusColumnIndex()).setMaxWidth(45);
 
 		// add table to scroll pane
 		tableScrollPane.setViewportView(getTrackingTable());
 
 		final JScrollPane memoScrollPane = new JScrollPane();
 		memoScrollPane.setAutoscrolls(true);
-		memoScrollPane
-				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		memoScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		tableAndMemoSplitPane.setRightComponent(memoScrollPane);
 
 		getMemoTextArea().setForeground(DEFAULT_FOREGROUND_COLOR);
@@ -668,8 +576,7 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 
 		// check if files exist for this scenario
 		final File logFile = new File(getScenarioName() + CSV_EXTENSION_STRING);
-		final File tableFile = new File(getScenarioName()
-				+ TXT_EXTENSION_STRING);
+		final File tableFile = new File(getScenarioName() + TXT_EXTENSION_STRING);
 
 		try {
 			if (logFile.exists() || tableFile.exists()) {
@@ -696,8 +603,7 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 	 * Set text in turn info field.
 	 */
 	private void setTurnInfoFieldText() {
-		myTurnInfoTextField.setText("Turn: " + myCombatTurn + " Pass: "
-				+ myInitiativePass);
+		myTurnInfoTextField.setText("Turn: " + myCombatTurn + " Pass: " + myInitiativePass);
 	}
 
 	@Override
@@ -706,43 +612,32 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 			if (tableFile.exists()) {
 				// table file exists
 				// offer to load or overwrite
-				final int result = JOptionPane
-						.showConfirmDialog(null,
-								"Table file [" + tableFile.getName()
-										+ "] found. Load?",
-								"Load existing table file?",
-								JOptionPane.OK_CANCEL_OPTION,
-								JOptionPane.QUESTION_MESSAGE);
+				final int result = JOptionPane.showConfirmDialog(null,
+						"Table file [" + tableFile.getName() + "] found. Load?", "Load existing table file?",
+						JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 				if (result == JOptionPane.OK_OPTION) {
 					// load
-					final BufferedReader tableFileReader = new BufferedReader(
-							new FileReader(tableFile));
+					final BufferedReader tableFileReader = new BufferedReader(new FileReader(tableFile));
 					String line = tableFileReader.readLine();
 					while (line != null) {
 						// split line by delimiter
 						final String[] lineArray = line.split(TABLE_DELIMITER);
 
 						// row to insert
-						final Object[] newRow = new Object[getTableModel()
-								.getNumOfCols()];
+						final Object[] newRow = new Object[getTableModel().getNumOfCols()];
 
 						newRow[getTableModel().getActedColIndex()] = Boolean
-								.parseBoolean(lineArray[getTableModel()
-										.getActedColIndex()]);
+								.parseBoolean(lineArray[getTableModel().getActedColIndex()]);
 						newRow[getTableModel().getInitiativeColIndex()] = Integer
-								.parseInt(lineArray[getTableModel()
-										.getInitiativeColIndex()]);
-						newRow[getTableModel().getNameColumnIndex()] = lineArray[getTableModel()
-								.getNameColumnIndex()];
+								.parseInt(lineArray[getTableModel().getInitiativeColIndex()]);
+						newRow[getTableModel().getNameColumnIndex()] = lineArray[getTableModel().getNameColumnIndex()];
 						newRow[ShadowrunScenarioTrackingTableModel.PHYS_DAM_COL_INDEX] = lineArray[ShadowrunScenarioTrackingTableModel.PHYS_DAM_COL_INDEX];
 						newRow[ShadowrunScenarioTrackingTableModel.STUN_DAM_COL_INDEX] = lineArray[ShadowrunScenarioTrackingTableModel.STUN_DAM_COL_INDEX];
 						newRow[ShadowrunScenarioTrackingTableModel.MAT_DAM_COL_INDEX] = lineArray[ShadowrunScenarioTrackingTableModel.MAT_DAM_COL_INDEX];
-						newRow[getTableModel().getNoteColumnIndex()] = lineArray[getTableModel()
-								.getNoteColumnIndex()];
+						newRow[getTableModel().getNoteColumnIndex()] = lineArray[getTableModel().getNoteColumnIndex()];
 						newRow[getTableModel().getStatusColumnIndex()] = CharacterStatus
-								.valueOf(lineArray[getTableModel()
-										.getStatusColumnIndex()]);
+								.valueOf(lineArray[getTableModel().getStatusColumnIndex()]);
 
 						// add to model
 						getTableModel().addRow(newRow);
@@ -779,8 +674,7 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		} else if (iEvent.getActionCommand().equals(CLEANUP_STRING)) {
 			// cleanup dead characters
 			// confirm
-			final int result = JOptionPane.showConfirmDialog(this,
-					"Remove dead characters?", "Bring out the dead?",
+			final int result = JOptionPane.showConfirmDialog(this, "Remove dead characters?", "Bring out the dead?",
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 			if (result == JOptionPane.OK_OPTION) {
@@ -805,8 +699,7 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 			final JPanel diceNumberPanel = new JPanel(new GridLayout(1, 0));
 			diceNumberPanel.add(new JLabel("Number of Initiative Dice:"));
 
-			final JFormattedTextField initiativeDiceField = new JFormattedTextField(
-					INITIATIVE_DICE_NUMBER_FORMATTER);
+			final JFormattedTextField initiativeDiceField = new JFormattedTextField(INITIATIVE_DICE_NUMBER_FORMATTER);
 			initiativeDiceField.setValue(1);
 			diceNumberPanel.add(initiativeDiceField);
 
@@ -815,20 +708,17 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 			final JPanel initiativeBasePanel = new JPanel(new GridLayout(1, 0));
 			initiativeBasePanel.add(new JLabel("Initiative Base:"));
 
-			final JFormattedTextField initiativeBaseField = new JFormattedTextField(
-					INITIATIVE_BASE_FORMATTER);
+			final JFormattedTextField initiativeBaseField = new JFormattedTextField(INITIATIVE_BASE_FORMATTER);
 			initiativeBaseField.setValue(0);
 			initiativeBasePanel.add(initiativeBaseField);
 
 			inputPanel.add(initiativeBasePanel);
 
-			final int result = JOptionPane.showConfirmDialog(this, inputPanel,
-					"Please input initiative information",
+			final int result = JOptionPane.showConfirmDialog(this, inputPanel, "Please input initiative information",
 					JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 			if (result == JOptionPane.OK_OPTION) {
-				rollInitiative(new ShadowrunInitiativeRoller(
-						Integer.parseInt(initiativeBaseField.getText()),
+				rollInitiative(new ShadowrunInitiativeRoller(Integer.parseInt(initiativeBaseField.getText()),
 						Integer.parseInt(initiativeDiceField.getText())));
 			} else {
 				System.out.println("Initiative rolling cancelled.");
@@ -858,8 +748,7 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 	 */
 	private void resetCombat() {
 		// confirm
-		final int result = JOptionPane.showConfirmDialog(this,
-				"Reset combat turns and passes?", "Reset combat?",
+		final int result = JOptionPane.showConfirmDialog(this, "Reset combat turns and passes?", "Reset combat?",
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
@@ -888,8 +777,7 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 	 */
 	private void nextTurn() {
 		// confirm
-		final int result = JOptionPane.showConfirmDialog(this,
-				"Go to next combat turn?", "Next turn?",
+		final int result = JOptionPane.showConfirmDialog(this, "Go to next combat turn?", "Next turn?",
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
@@ -918,8 +806,7 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 	 */
 	private void nextPass() {
 		// confirm
-		final int result = JOptionPane.showConfirmDialog(this,
-				"Go to next initiative pass?", "Next pass?",
+		final int result = JOptionPane.showConfirmDialog(this, "Go to next initiative pass?", "Next pass?",
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
@@ -955,8 +842,7 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 			if (rollResult.isCriticalGlitch()) {
 				hitsField.setText("Critical Glitch!");
 			} else {
-				final StringBuilder hitsText = new StringBuilder(
-						String.valueOf(rollResult.getHits()));
+				final StringBuilder hitsText = new StringBuilder(String.valueOf(rollResult.getHits()));
 
 				if (rollResult.isGlitch()) {
 					hitsText.append(" Glitch!");
@@ -979,16 +865,13 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 	 *            whether or not the memo is related to combat.
 	 */
 	@Override
-	protected void appendMemo(final String iMemoText,
-			final boolean iIsCombatMemo) {
+	protected void appendMemo(final String iMemoText, final boolean iIsCombatMemo) {
 		String textToAdd;
 		if (iIsCombatMemo) {
-			textToAdd = "\n" + COMBAT_NOTE_STRING + LOG_DELIMITER + "TURN"
-					+ myCombatTurn + "PASS" + myInitiativePass + " "
-					+ iMemoText;
+			textToAdd = "\n" + COMBAT_NOTE_STRING + LOG_DELIMITER + "TURN" + myCombatTurn + "PASS" + myInitiativePass
+					+ " " + iMemoText;
 		} else {
-			textToAdd = "\n" + STORY_NOTE_STRING + LOG_DELIMITER + " "
-					+ iMemoText;
+			textToAdd = "\n" + STORY_NOTE_STRING + LOG_DELIMITER + " " + iMemoText;
 		}
 
 		getMemoTextArea().append(textToAdd);
