@@ -558,6 +558,10 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 				.setMaxWidth(55);
 		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getStatusColumnIndex()).setPreferredWidth(45);
 		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getStatusColumnIndex()).setMaxWidth(45);
+		getTrackingTable().getColumnModel().getColumn(ShadowrunScenarioTrackingTableModel.STUN_DAM_COL_INDEX)
+				.setPreferredWidth(80);
+		getTrackingTable().getColumnModel().getColumn(ShadowrunScenarioTrackingTableModel.STUN_DAM_COL_INDEX)
+				.setMaxWidth(80);
 
 		// add table to scroll pane
 		tableScrollPane.setViewportView(getTrackingTable());
