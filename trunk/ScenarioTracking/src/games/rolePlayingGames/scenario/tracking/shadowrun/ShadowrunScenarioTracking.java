@@ -10,6 +10,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -118,6 +121,11 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 	private static final String NEXT_PASS_STRING = "Next Pass";
 
 	/**
+	 * Mass roll string.
+	 */
+	private static final String MASS_ROLL_STRING = "Mass Roll";
+
+	/**
 	 * Text field to input dice to roll.
 	 */
 	private final JFormattedTextField diceToRollField;
@@ -172,6 +180,28 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 	 */
 	private static final NumberFormatter INITIATIVE_BASE_FORMATTER = new NumberFormatter(
 			NumberFormat.getIntegerInstance());
+	static {
+		INITIATIVE_BASE_FORMATTER.setMinimum(2);
+		INITIATIVE_BASE_FORMATTER.setMaximum(32);
+	}
+
+	/**
+	 * Formatter for number of dice on a roll.
+	 */
+	private static final NumberFormatter DICE_NUMBER_FORMATTER = new NumberFormatter(NumberFormat.getIntegerInstance());
+	static {
+		DICE_NUMBER_FORMATTER.setMinimum(1);
+		DICE_NUMBER_FORMATTER.setMaximum(100);
+	}
+
+	/**
+	 * Formatter for number of dice sets.
+	 */
+	private static final NumberFormatter SETS_NUMBER_FORMATTER = new NumberFormatter(NumberFormat.getIntegerInstance());
+	static {
+		SETS_NUMBER_FORMATTER.setMinimum(2);
+		SETS_NUMBER_FORMATTER.setMaximum(999);
+	}
 
 	/**
 	 * Constructor.
@@ -317,6 +347,16 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		cleanupButton.setToolTipText("Remove all dead actors from the table.");
 		cleanupButton.setBounds(390, 81, BUTTON_WIDTH, BUTTON_HEIGHT);
 		tableControlPanel.add(cleanupButton);
+
+		final JButton massRollButton = new JButton(MASS_ROLL_STRING);
+		massRollButton.addActionListener(this);
+		massRollButton.setMaximumSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
+		massRollButton.setMinimumSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
+		massRollButton.setPreferredSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
+		massRollButton.setSize(new Dimension(SMALL_BUTTON_WIDTH, BUTTON_HEIGHT));
+		massRollButton.setToolTipText("Roll many sets of dice.");
+		massRollButton.setBounds(390, 117, BUTTON_WIDTH, BUTTON_HEIGHT);
+		tableControlPanel.add(massRollButton);
 
 		final JLabel diceToRollLabel = new JLabel("Dice:");
 		diceToRollLabel.setForeground(DEFAULT_FOREGROUND_COLOR);
@@ -562,6 +602,10 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 				.setPreferredWidth(80);
 		getTrackingTable().getColumnModel().getColumn(ShadowrunScenarioTrackingTableModel.STUN_DAM_COL_INDEX)
 				.setMaxWidth(80);
+		getTrackingTable().getColumnModel().getColumn(ShadowrunScenarioTrackingTableModel.PHYS_DAM_COL_INDEX)
+				.setPreferredWidth(300);
+		getTrackingTable().getColumnModel().getColumn(ShadowrunScenarioTrackingTableModel.PHYS_DAM_COL_INDEX)
+				.setMaxWidth(300);
 
 		// add table to scroll pane
 		tableScrollPane.setViewportView(getTrackingTable());
@@ -713,7 +757,7 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 			initiativeBasePanel.add(new JLabel("Initiative Base:"));
 
 			final JFormattedTextField initiativeBaseField = new JFormattedTextField(INITIATIVE_BASE_FORMATTER);
-			initiativeBaseField.setValue(0);
+			initiativeBaseField.setValue(2);
 			initiativeBasePanel.add(initiativeBaseField);
 
 			inputPanel.add(initiativeBasePanel);
@@ -736,6 +780,82 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		} else if (iEvent.getActionCommand().equals(ROLL_STRING)) {
 			// roll dice
 			rollDice();
+		} else if (iEvent.getActionCommand().equals(MASS_ROLL_STRING)) {
+			// roll many sets of dice
+			final JPanel inputPanel = new JPanel(new GridLayout(0, 1));
+
+			final JPanel diceNumberPanel = new JPanel(new GridLayout(1, 0));
+			diceNumberPanel.add(new JLabel("Number of Dice:"));
+
+			final JFormattedTextField diceField = new JFormattedTextField(DICE_NUMBER_FORMATTER);
+			diceField.setValue(1);
+			diceNumberPanel.add(diceField);
+
+			inputPanel.add(diceNumberPanel);
+
+			final JPanel setsPanel = new JPanel(new GridLayout(1, 0));
+			setsPanel.add(new JLabel("Sets:"));
+
+			final JFormattedTextField setsField = new JFormattedTextField(SETS_NUMBER_FORMATTER);
+			setsField.setValue(2);
+			setsPanel.add(setsField);
+
+			inputPanel.add(setsPanel);
+
+			final JPanel outliersPanel = new JPanel(new GridLayout(1, 0));
+
+			final JCheckBox allowOutliersBox = new JCheckBox("Allow outliers?", false);
+			allowOutliersBox
+					.setToolTipText("1 out of a 81 people will have +2 dice. 1 out of a 729 will have +4 dice.");
+			outliersPanel.add(allowOutliersBox);
+
+			inputPanel.add(outliersPanel);
+
+			final int choice = JOptionPane.showConfirmDialog(this, inputPanel, "Please input rolling information",
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+			if (choice == JOptionPane.OK_OPTION) {
+				SortedMap<Integer, Integer> resultsMap = new TreeMap<>();
+
+				int sets = Integer.parseInt(setsField.getText());
+
+				int baseDice = Integer.parseInt(diceField.getText());
+
+				for (int i = 0; i < sets; i++) {
+					int outlierDice = 0;
+					if (allowOutliersBox.isSelected()) {
+						if (new ShadowrunRollResult(ShadowrunRoller.rollDice(4, false)).getHits() == 4) {
+							// 1 out of 81 people get +2
+							outlierDice = 2;
+						} else if (new ShadowrunRollResult(ShadowrunRoller.rollDice(6, false)).getHits() == 6) {
+							// 1 out of 729 people with get +4
+							outlierDice = 4;
+						}
+					}
+
+					int hits = new ShadowrunRollResult(ShadowrunRoller.rollDice(baseDice + outlierDice, false))
+							.getHits();
+
+					// add count to map
+					if (resultsMap.get(hits) != null) {
+						// in map already; increment
+						resultsMap.put(hits, resultsMap.get(hits) + 1);
+					} else {
+						// not in map yet; add
+						resultsMap.put(hits, 1);
+					}
+				}
+
+				StringBuilder resultsBuilder = new StringBuilder("Roll Results");
+				for (Entry<Integer, Integer> result : resultsMap.entrySet()) {
+					resultsBuilder.append("\n").append(result.getKey()).append(" hits: ").append(result.getValue());
+				}
+
+				JOptionPane.showMessageDialog(this, resultsBuilder.toString(), "Mass Roll Results",
+						JOptionPane.INFORMATION_MESSAGE);
+			} else {
+				System.out.println("Mass rolling cancelled.");
+			}
 		} else if (iEvent.getActionCommand().equals(SAVE_STRING)) {
 			// save
 			save();
