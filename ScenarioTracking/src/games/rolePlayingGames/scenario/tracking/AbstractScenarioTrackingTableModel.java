@@ -12,8 +12,7 @@ import javax.swing.table.DefaultTableModel;
  * 
  * @author Andrew
  */
-public abstract class AbstractScenarioTrackingTableModel extends
-		DefaultTableModel {
+public abstract class AbstractScenarioTrackingTableModel extends DefaultTableModel {
 
 	/**
 	 * Serial ID.
@@ -41,6 +40,11 @@ public abstract class AbstractScenarioTrackingTableModel extends
 	private final int myNoteColumnIndex;
 
 	/**
+	 * Index of initiative roll column.
+	 */
+	private final int myInitiativeRollColumnIndex;
+
+	/**
 	 * Index of status column.
 	 */
 	private final int myStatusColumnIndex;
@@ -63,12 +67,13 @@ public abstract class AbstractScenarioTrackingTableModel extends
 	 *            index of note column.
 	 * @param statusColIndex
 	 *            index of status column.
+	 * @param initiativeRollColIndex
+	 *            index of initiative roll column.
 	 * @param numOfCols
 	 *            number of columns.
 	 */
-	public AbstractScenarioTrackingTableModel(final int actedColIndex,
-			final int initiativeColIndex, final int nameColIndex,
-			final int noteColIndex, final int statusColIndex,
+	public AbstractScenarioTrackingTableModel(final int actedColIndex, final int initiativeColIndex,
+			final int nameColIndex, final int noteColIndex, final int statusColIndex, final int initiativeRollColIndex,
 			final int numOfCols) {
 		super();
 
@@ -77,6 +82,7 @@ public abstract class AbstractScenarioTrackingTableModel extends
 		myNameColumnIndex = nameColIndex;
 		myNoteColumnIndex = noteColIndex;
 		myStatusColumnIndex = statusColIndex;
+		myInitiativeRollColumnIndex = initiativeRollColIndex;
 		myNumOfCols = numOfCols;
 	}
 
@@ -123,6 +129,13 @@ public abstract class AbstractScenarioTrackingTableModel extends
 	}
 
 	/**
+	 * @return column index of initiative roll.
+	 */
+	public int getInitiativeRollColumnIndex() {
+		return myInitiativeRollColumnIndex;
+	}
+
+	/**
 	 * Set the initiative column values all to 0.
 	 */
 	public final void resetInitiative() {
@@ -135,12 +148,14 @@ public abstract class AbstractScenarioTrackingTableModel extends
 	public abstract Class<?> getColumnClass(final int columnIndex);
 
 	/**
-	 * Add a character with the given name.
+	 * Add a character with the given name and initiative roll.
 	 * 
 	 * @param iName
 	 *            name of character to add.
+	 * @param iRoll
+	 *            initiative roll.
 	 */
-	public abstract void addCharacter(final String iName);
+	public abstract void addCharacter(final String iName, final String iRoll);
 
 	/**
 	 * Reset all acted flags to false.
@@ -199,29 +214,24 @@ public abstract class AbstractScenarioTrackingTableModel extends
 
 		for (int currRow = 0; currRow < rowCount; currRow++) {
 			try {
-				final Object statusObject = getValueAt(currRow,
-						getStatusColumnIndex());
+				final Object statusObject = getValueAt(currRow, getStatusColumnIndex());
 
-				if ((statusObject != null)
-						&& (statusObject instanceof CharacterStatus)) {
+				if ((statusObject != null) && (statusObject instanceof CharacterStatus)) {
 					final CharacterStatus status = (CharacterStatus) statusObject;
 
 					if (status.equals(CharacterStatus.DEAD)) {
 						deadCharacterRows.add(currRow);
 					}
 				} else {
-					AbstractScenarioTracking.showError(new Exception(
-							"Object at [" + currRow + "]["
-									+ getStatusColumnIndex()
-									+ "] is not a non-null Status object."));
+					AbstractScenarioTracking.showError(new Exception("Object at [" + currRow + "]["
+							+ getStatusColumnIndex() + "] is not a non-null Status object."));
 				}
 			} catch (final ArrayIndexOutOfBoundsException iException) {
 				AbstractScenarioTracking.showError(iException);
 			}
 		}
 
-		final Integer[] deadCharacterRowArray = new Integer[deadCharacterRows
-				.size()];
+		final Integer[] deadCharacterRowArray = new Integer[deadCharacterRows.size()];
 		for (int i = 0; i < deadCharacterRows.size(); i++) {
 			deadCharacterRowArray[i] = deadCharacterRows.get(i);
 		}

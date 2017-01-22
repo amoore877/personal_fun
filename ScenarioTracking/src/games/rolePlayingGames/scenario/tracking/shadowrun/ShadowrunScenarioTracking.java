@@ -50,6 +50,10 @@ import games.rolePlayingGames.shadowrun.dice.ShadowrunRoller;
  */
 public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 
+	private static final String INITIATIVE_ROLL_REGEX = "^\\d+\\+\\dd6$";
+
+	private static final String DEFAULT_INITIATIVE = "2+1d6";
+
 	/**
 	 * Serial ID.
 	 */
@@ -588,8 +592,8 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 		// column widths
 		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getActedColIndex()).setPreferredWidth(45);
 		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getActedColIndex()).setMaxWidth(45);
-		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getInitiativeColIndex()).setPreferredWidth(55);
-		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getInitiativeColIndex()).setMaxWidth(55);
+		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getInitiativeColIndex()).setPreferredWidth(30);
+		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getInitiativeColIndex()).setMaxWidth(30);
 		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getNameColumnIndex()).setPreferredWidth(120);
 		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getNameColumnIndex()).setMaxWidth(120);
 		getTrackingTable().getColumnModel().getColumn(ShadowrunScenarioTrackingTableModel.MAT_DAM_COL_INDEX)
@@ -606,6 +610,10 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 				.setPreferredWidth(300);
 		getTrackingTable().getColumnModel().getColumn(ShadowrunScenarioTrackingTableModel.PHYS_DAM_COL_INDEX)
 				.setMaxWidth(300);
+		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getInitiativeRollColumnIndex())
+				.setPreferredWidth(50);
+		getTrackingTable().getColumnModel().getColumn(trackingTableModel.getInitiativeRollColumnIndex())
+				.setMaxWidth(50);
 
 		// add table to scroll pane
 		tableScrollPane.setViewportView(getTrackingTable());
@@ -684,6 +692,8 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 						newRow[ShadowrunScenarioTrackingTableModel.STUN_DAM_COL_INDEX] = lineArray[ShadowrunScenarioTrackingTableModel.STUN_DAM_COL_INDEX];
 						newRow[ShadowrunScenarioTrackingTableModel.MAT_DAM_COL_INDEX] = lineArray[ShadowrunScenarioTrackingTableModel.MAT_DAM_COL_INDEX];
 						newRow[getTableModel().getNoteColumnIndex()] = lineArray[getTableModel().getNoteColumnIndex()];
+						newRow[trackingTableModel.getInitiativeRollColumnIndex()] = lineArray[trackingTableModel
+								.getInitiativeRollColumnIndex()];
 						newRow[getTableModel().getStatusColumnIndex()] = CharacterStatus
 								.valueOf(lineArray[getTableModel().getStatusColumnIndex()]);
 
@@ -742,35 +752,7 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 			removeCharacters();
 		} else if (iEvent.getActionCommand().equals(ROLL_INITIATIVE_STRING)) {
 			// roll initiative for selected character(s)
-			final JPanel inputPanel = new JPanel(new GridLayout(0, 1));
-
-			final JPanel diceNumberPanel = new JPanel(new GridLayout(1, 0));
-			diceNumberPanel.add(new JLabel("Number of Initiative Dice:"));
-
-			final JFormattedTextField initiativeDiceField = new JFormattedTextField(INITIATIVE_DICE_NUMBER_FORMATTER);
-			initiativeDiceField.setValue(1);
-			diceNumberPanel.add(initiativeDiceField);
-
-			inputPanel.add(diceNumberPanel);
-
-			final JPanel initiativeBasePanel = new JPanel(new GridLayout(1, 0));
-			initiativeBasePanel.add(new JLabel("Initiative Base:"));
-
-			final JFormattedTextField initiativeBaseField = new JFormattedTextField(INITIATIVE_BASE_FORMATTER);
-			initiativeBaseField.setValue(2);
-			initiativeBasePanel.add(initiativeBaseField);
-
-			inputPanel.add(initiativeBasePanel);
-
-			final int result = JOptionPane.showConfirmDialog(this, inputPanel, "Please input initiative information",
-					JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-			if (result == JOptionPane.OK_OPTION) {
-				rollInitiative(new ShadowrunInitiativeRoller(Integer.parseInt(initiativeBaseField.getText()),
-						Integer.parseInt(initiativeDiceField.getText())));
-			} else {
-				System.out.println("Initiative rolling cancelled.");
-			}
+			rollInitiativeConfirm();
 		} else if (iEvent.getActionCommand().equals(RESET_COMBAT_STRING)) {
 			// reset turn/pass counters
 			resetCombat();
@@ -922,6 +904,8 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 
 			// show turn info
 			setTurnInfoFieldText();
+
+			// TODO roll initiative for all
 		}
 	}
 
@@ -1017,6 +1001,58 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 			new ShadowrunScenarioTracking(args[0]);
 		} else {
 			System.err.println("Requires name of scenario.");
+		}
+	}
+
+	@Override
+	protected boolean validInitiativeRollString(String initiativeRoll) {
+		// either just a number (some timed device) or the format X+Yd6
+		if (initiativeRoll.replaceAll("\\s", "").matches(INITIATIVE_ROLL_REGEX)) {
+			return true;
+		}
+
+		try {
+			Integer.parseInt(initiativeRoll);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
+	@Override
+	protected Object getDefaultInitiative() {
+		return DEFAULT_INITIATIVE;
+	}
+
+	@Override
+	protected void rollInitiative(AbstractScenarioTrackingTableModel tableModel, int currRow) {
+		String roll = tableModel.getValueAt(currRow, tableModel.getInitiativeRollColumnIndex()).toString()
+				.replaceAll("\\s", "");
+		if (roll.matches(INITIATIVE_ROLL_REGEX)) {
+			// standard roll
+			String[] splitByPlus = roll.split("\\+");
+			try {
+				int base = Integer.parseInt(splitByPlus[0]);
+
+				// number of dice is always single digit in Shadowrun; assume
+				// typed correctly
+				try {
+					int numDice = Integer.parseInt(splitByPlus[1].substring(0, 1));
+
+					ShadowrunInitiativeRoller roller = new ShadowrunInitiativeRoller(base, numDice);
+
+					tableModel.setValueAt(roller.rollInitiative(), currRow, tableModel.getInitiativeColIndex());
+				} catch (NumberFormatException e) {
+					showError(new Exception("Error getting number of dice for initiative from string: [" + roll
+							+ "] using first character from: [" + splitByPlus[1] + "]"));
+				}
+			} catch (NumberFormatException e) {
+				showError(new Exception("Error getting base initiative from string: [" + roll + "] using base: ["
+						+ splitByPlus[0] + "]"));
+			}
+		} else {
+			// assume regular, constant number
+			tableModel.setValueAt(roll, currRow, tableModel.getInitiativeColIndex());
 		}
 	}
 }
