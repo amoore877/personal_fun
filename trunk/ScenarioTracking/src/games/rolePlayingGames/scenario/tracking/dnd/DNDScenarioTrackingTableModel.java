@@ -9,8 +9,7 @@ import games.rolePlayingGames.scenario.tracking.CharacterStatus;
  * @author Andrew
  *
  */
-public final class DNDScenarioTrackingTableModel extends
-		AbstractScenarioTrackingTableModel {
+public final class DNDScenarioTrackingTableModel extends AbstractScenarioTrackingTableModel {
 
 	/**
 	 * Serial ID.
@@ -19,10 +18,11 @@ public final class DNDScenarioTrackingTableModel extends
 
 	/**
 	 * Table columns. 0 is acted on the pass, 1 is initiative, 2 is name, 3 is
-	 * physical damage, 4 is subdual damage, 5 is notes, 6 is status.
+	 * physical damage, 4 is subdual damage, 5 is notes, 6 is initiative bonus,
+	 * 7 is status.
 	 */
-	private static final String[] TRACKING_COLUMN_NAMES = { "Acted",
-			"Initiative", "Name", "Physical", "Subdual", "Note", "Status" };
+	private static final String[] TRACKING_COLUMN_NAMES = { "Acted", "Init", "Name", "Physical", "Subdual", "Note",
+			"Init+", "Status" };
 
 	/**
 	 * Column index of "acted" flag.
@@ -55,21 +55,26 @@ public final class DNDScenarioTrackingTableModel extends
 	private static final int NOTE_COL_INDEX = 5;
 
 	/**
+	 * Column index of initiative roll.
+	 */
+	private static final int INITIATIVE_ROLL_COL_INDEX = 6;
+
+	/**
 	 * Column index of status.
 	 */
-	private static final int STATUS_COL_INDEX = 6;
+	private static final int STATUS_COL_INDEX = 7;
 
 	/**
 	 * Number of columns.
 	 */
-	private static final int NUM_OF_COLS = 7;
+	private static final int NUM_OF_COLS = 8;
 
 	/**
 	 * Constructor.
 	 */
 	public DNDScenarioTrackingTableModel() {
-		super(ACTED_COL_INDEX, INITIATIVE_COL_INDEX, NAME_COL_INDEX,
-				NOTE_COL_INDEX, STATUS_COL_INDEX, NUM_OF_COLS);
+		super(ACTED_COL_INDEX, INITIATIVE_COL_INDEX, NAME_COL_INDEX, NOTE_COL_INDEX, STATUS_COL_INDEX,
+				INITIATIVE_ROLL_COL_INDEX, NUM_OF_COLS);
 		setColumnIdentifiers(TRACKING_COLUMN_NAMES);
 	}
 
@@ -103,6 +108,9 @@ public final class DNDScenarioTrackingTableModel extends
 		case NOTE_COL_INDEX:
 			// Note
 			return String.class;
+		case INITIATIVE_ROLL_COL_INDEX:
+			// initiative roll
+			return String.class;
 		case STATUS_COL_INDEX:
 			// Status
 			return CharacterStatus.class;
@@ -112,7 +120,7 @@ public final class DNDScenarioTrackingTableModel extends
 	}
 
 	@Override
-	public void addCharacter(final String iName) {
+	public void addCharacter(final String iName, final String iRoll) {
 		final Object[] colData = new Object[NUM_OF_COLS];
 
 		colData[ACTED_COL_INDEX] = Boolean.FALSE;
@@ -120,6 +128,7 @@ public final class DNDScenarioTrackingTableModel extends
 		colData[NAME_COL_INDEX] = iName;
 		colData[NOTE_COL_INDEX] = "";
 		colData[PHYS_DAM_COL_INDEX] = new Integer(0);
+		colData[INITIATIVE_ROLL_COL_INDEX] = iRoll;
 		colData[STATUS_COL_INDEX] = CharacterStatus.OK;
 		colData[SUBDUAL_DAM_COL_INDEX] = new Integer(0);
 

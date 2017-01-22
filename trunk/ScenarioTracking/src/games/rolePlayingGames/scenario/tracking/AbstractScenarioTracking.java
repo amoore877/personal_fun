@@ -1,7 +1,5 @@
 package games.rolePlayingGames.scenario.tracking;
 
-import games.rolePlayingGames.dice.InitiativeRoller;
-
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -30,8 +28,7 @@ import javax.swing.SortOrder;
  * @author Andrew
  *
  */
-public abstract class AbstractScenarioTracking extends JFrame implements
-		ActionListener, WindowListener {
+public abstract class AbstractScenarioTracking extends JFrame implements ActionListener, WindowListener {
 
 	/**
 	 * Serial ID.
@@ -152,8 +149,7 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 	 * @param iTable
 	 *            table to use.
 	 */
-	public AbstractScenarioTracking(final String iScenarioName,
-			final DefaultScenarioTrackingTable iTable) {
+	public AbstractScenarioTracking(final String iScenarioName, final DefaultScenarioTrackingTable iTable) {
 		super();
 
 		myTrackingTable = iTable;
@@ -172,11 +168,10 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 	 * Sort the table. Sorts by initiative, descending.
 	 */
 	protected final void resort() {
-		final DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>) getTrackingTable()
-				.getRowSorter();
+		final DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>) getTrackingTable().getRowSorter();
 		final List<SortKey> trackingTableSortKeyList = new ArrayList<SortKey>();
-		trackingTableSortKeyList.add(new RowSorter.SortKey(getTableModel()
-				.getInitiativeColIndex(), SortOrder.DESCENDING));
+		trackingTableSortKeyList
+				.add(new RowSorter.SortKey(getTableModel().getInitiativeColIndex(), SortOrder.DESCENDING));
 		sorter.setSortKeys(trackingTableSortKeyList);
 		sorter.sort();
 
@@ -192,8 +187,7 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 	 */
 	public static void showError(final Exception iException) {
 		// show error message, any exception that is caught
-		JOptionPane.showMessageDialog(null, iException.getMessage(), "Error!",
-				JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(null, iException.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
 		iException.printStackTrace();
 	}
 
@@ -208,27 +202,22 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 		// convert table rows to model rows
 		int rowToConvert = 0;
 		for (final int currRow : selectedTableRowsInt) {
-			selectedModelRowsInt[rowToConvert++] = getTrackingTable()
-					.convertRowIndexToModel(currRow);
+			selectedModelRowsInt[rowToConvert++] = getTrackingTable().convertRowIndexToModel(currRow);
 		}
 
-		final StringBuilder message = new StringBuilder(
-				"Are you sure you wish to remove the following characters:");
+		final StringBuilder message = new StringBuilder("Are you sure you wish to remove the following characters:");
 
 		for (final int currRow : selectedModelRowsInt) {
 			try {
-				message.append("\n"
-						+ getTableModel().getValueAt(currRow,
-								getTableModel().getNameColumnIndex())
-								.toString());
+				message.append(
+						"\n" + getTableModel().getValueAt(currRow, getTableModel().getNameColumnIndex()).toString());
 
 			} catch (final ArrayIndexOutOfBoundsException iException) {
 				showError(iException);
 			}
 		}
 
-		final int result = JOptionPane.showConfirmDialog(null,
-				message.toString(), "Removal Confirmation",
+		final int result = JOptionPane.showConfirmDialog(null, message.toString(), "Removal Confirmation",
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
@@ -246,7 +235,7 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 	/**
 	 * Roll initiative for the selected characters.
 	 */
-	protected final void rollInitiative(final InitiativeRoller iInitiativeRoller) {
+	protected final void rollInitiativeConfirm() {
 		final int[] selectedTableRowsInt = getTrackingTable().getSelectedRows();
 
 		final int[] selectedModelRowsInt = new int[selectedTableRowsInt.length];
@@ -254,8 +243,7 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 		// convert table rows to model rows
 		int rowToConvert = 0;
 		for (final int currRow : selectedTableRowsInt) {
-			selectedModelRowsInt[rowToConvert++] = getTrackingTable()
-					.convertRowIndexToModel(currRow);
+			selectedModelRowsInt[rowToConvert++] = getTrackingTable().convertRowIndexToModel(currRow);
 		}
 
 		final StringBuilder message = new StringBuilder(
@@ -263,28 +251,31 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 
 		for (final int currRow : selectedModelRowsInt) {
 			try {
-				message.append("\n"
-						+ getTableModel().getValueAt(currRow,
-								getTableModel().getNameColumnIndex())
-								.toString());
+				message.append(
+						"\n" + getTableModel().getValueAt(currRow, getTableModel().getNameColumnIndex()).toString());
 
 			} catch (final ArrayIndexOutOfBoundsException iException) {
 				showError(iException);
 			}
 		}
 
-		final int result = JOptionPane.showConfirmDialog(null,
-				message.toString(), "Set Initiative Confirmation",
+		final int result = JOptionPane.showConfirmDialog(null, message.toString(), "Set Initiative Confirmation",
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
-			final int initiativeCol = getTableModel().getInitiativeColIndex();
 			for (final int currRow : selectedModelRowsInt) {
-				getTableModel().setValueAt(iInitiativeRoller.rollInitiative(),
-						currRow, initiativeCol);
+				rollInitiative(getTableModel(), currRow);
 			}
 		}
 	}
+
+	/**
+	 * Roll initiative using the given table model, at the given row.
+	 * 
+	 * @param tableModel
+	 * @param currRow
+	 */
+	protected abstract void rollInitiative(AbstractScenarioTrackingTableModel tableModel, int currRow);
 
 	/**
 	 * Roll dice.
@@ -296,48 +287,63 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 	 */
 	protected final void addCharacters() {
 		// add character(s)
-		final String name = JOptionPane.showInputDialog(this,
-				"Name for new character(s)?", "Add Character(s)",
+		final String name = JOptionPane.showInputDialog(this, "Name for new character(s)?", "Add Character(s)",
 				JOptionPane.QUESTION_MESSAGE);
 		if ((name != null) && !(name.isEmpty())) {
-			final String numOfCharactersString = JOptionPane.showInputDialog(
-					this, "Number of characters to add (1-10)?", 1);
 
-			if ((numOfCharactersString != null)
-					&& !(numOfCharactersString.isEmpty())) {
-				try {
-					final int numOfCharacters = Integer
-							.parseInt(numOfCharactersString);
+			final String initiativeRoll = JOptionPane.showInputDialog(this, "Initiative roll/bonus?",
+					getDefaultInitiative());
 
-					if (numOfCharacters < 1) {
-						showError(new Exception(
-								"Bad input for number of new characters: ["
-										+ numOfCharacters + "]. Too small."));
-					} else if (numOfCharacters > 10) {
-						showError(new Exception(
-								"Bad input for number of new characters: ["
-										+ numOfCharacters + "]. Too big."));
-					} else {
-						if (numOfCharacters > 1) {
-							for (int currCharacter = 1; currCharacter <= numOfCharacters; currCharacter++) {
-								getTableModel().addCharacter(
-										name + " " + currCharacter);
-							}
+			if ((initiativeRoll != null) && validInitiativeRollString(initiativeRoll)) {
+
+				final String numOfCharactersString = JOptionPane.showInputDialog(this,
+						"Number of characters to add (1-10)?", 1);
+
+				if ((numOfCharactersString != null) && !(numOfCharactersString.isEmpty())) {
+					try {
+						final int numOfCharacters = Integer.parseInt(numOfCharactersString);
+
+						if (numOfCharacters < 1) {
+							showError(new Exception(
+									"Bad input for number of new characters: [" + numOfCharacters + "]. Too small."));
+						} else if (numOfCharacters > 10) {
+							showError(new Exception(
+									"Bad input for number of new characters: [" + numOfCharacters + "]. Too big."));
 						} else {
-							getTableModel().addCharacter(name);
+							if (numOfCharacters > 1) {
+								for (int currCharacter = 1; currCharacter <= numOfCharacters; currCharacter++) {
+									getTableModel().addCharacter(name + " " + currCharacter, initiativeRoll);
+								}
+							} else {
+								getTableModel().addCharacter(name, initiativeRoll);
+							}
 						}
+					} catch (final NumberFormatException iException) {
+						showError(iException);
 					}
-				} catch (final NumberFormatException iException) {
-					showError(iException);
+				} else {
+					showError(new Exception("Bad input for number of new characters: " + numOfCharactersString));
 				}
 			} else {
-				showError(new Exception(
-						"Bad input for number of new characters"));
+				showError(new Exception("Bad input for initiative roll: " + initiativeRoll));
 			}
 		} else {
-			showError(new Exception("Bad name input for new character"));
+			showError(new Exception("Bad name input for new character: " + name));
 		}
 	}
+
+	/**
+	 * @param initiativeRoll
+	 *            initiative roll string to check
+	 * @return true if the given string is a valid initiative roll for this
+	 *         game.
+	 */
+	protected abstract boolean validInitiativeRollString(String initiativeRoll);
+
+	/**
+	 * @return default initiative object for the table.
+	 */
+	protected abstract Object getDefaultInitiative();
 
 	/**
 	 * Load log file.
@@ -351,15 +357,12 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 				// log file exists
 				// offer to load or overwrite
 				final int result = JOptionPane.showConfirmDialog(null,
-						"Log file [" + logFile.getName() + "] found. Load?",
-						"Load existing log file?",
-						JOptionPane.OK_CANCEL_OPTION,
-						JOptionPane.QUESTION_MESSAGE);
+						"Log file [" + logFile.getName() + "] found. Load?", "Load existing log file?",
+						JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 				if (result == JOptionPane.OK_OPTION) {
 					// load
-					final BufferedReader logFileReader = new BufferedReader(
-							new FileReader(logFile));
+					final BufferedReader logFileReader = new BufferedReader(new FileReader(logFile));
 					String line = logFileReader.readLine();
 					while (line != null) {
 						getMemoTextArea().append(line + "\n");
@@ -435,8 +438,7 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 	 * @param iIsCombatMemo
 	 *            whether or not the memo is related to combat.
 	 */
-	protected abstract void appendMemo(final String iMemoText,
-			final boolean iIsCombatMemo);
+	protected abstract void appendMemo(final String iMemoText, final boolean iIsCombatMemo);
 
 	/**
 	 * @return memo field.
@@ -465,13 +467,10 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 
 		if (!logFileSaved || !tableFileSaved) {
 			// something wasn't saved
-			JOptionPane.showMessageDialog(null,
-					"Saving unsuccessful. Log file saved: [" + logFileSaved
-							+ "]. Table file saved: [" + tableFileSaved + "].",
-					"Error saving", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Saving unsuccessful. Log file saved: [" + logFileSaved
+					+ "]. Table file saved: [" + tableFileSaved + "].", "Error saving", JOptionPane.ERROR_MESSAGE);
 		} else {
-			JOptionPane.showMessageDialog(null, "Saved!", "Save successful",
-					JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Saved!", "Save successful", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 
@@ -483,14 +482,12 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 	protected final boolean saveLogFile() {
 		boolean logFileSaved = false;
 		try {
-			final File logFile = new File(getScenarioName()
-					+ CSV_EXTENSION_STRING);
+			final File logFile = new File(getScenarioName() + CSV_EXTENSION_STRING);
 			// remake file
 			logFile.delete();
 			logFile.createNewFile();
 
-			final BufferedWriter logFileWriter = new BufferedWriter(
-					new FileWriter(logFile));
+			final BufferedWriter logFileWriter = new BufferedWriter(new FileWriter(logFile));
 
 			logFileWriter.write(getMemoTextArea().getText());
 
@@ -512,21 +509,19 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 	protected final boolean saveTableFile() {
 		boolean oTableFileSaved = false;
 		try {
-			final File tableFile = new File(getScenarioName()
-					+ TXT_EXTENSION_STRING);
+			final File tableFile = new File(getScenarioName() + TXT_EXTENSION_STRING);
 			// remake file
 			tableFile.delete();
 			tableFile.createNewFile();
 
-			final BufferedWriter tableFileWriter = new BufferedWriter(
-					new FileWriter(tableFile));
+			final BufferedWriter tableFileWriter = new BufferedWriter(new FileWriter(tableFile));
 
 			// write table
 			for (int currRow = 0; currRow < getTableModel().getRowCount(); currRow++) {
 				final StringBuilder lineToWrite = new StringBuilder();
 				for (int currCol = 0; currCol < getTableModel().getNumOfCols(); currCol++) {
-					lineToWrite.append(getTableModel().getValueAt(currRow,
-							currCol).toString());
+					lineToWrite.append(getTableModel().getValueAt(currRow, currCol).toString());
+					// TODO change delimiter
 					lineToWrite.append(TABLE_DELIMITER);
 				}
 				lineToWrite.append("\n");
@@ -549,8 +544,7 @@ public abstract class AbstractScenarioTracking extends JFrame implements
 	 * Confirm exit.
 	 */
 	protected final void confirmExit() {
-		final int reply = JOptionPane.showConfirmDialog(this,
-				"Are you sure you wish to exit?", EXIT_STRING,
+		final int reply = JOptionPane.showConfirmDialog(this, "Are you sure you wish to exit?", EXIT_STRING,
 				JOptionPane.YES_NO_OPTION);
 
 		if (reply == JOptionPane.YES_OPTION) {

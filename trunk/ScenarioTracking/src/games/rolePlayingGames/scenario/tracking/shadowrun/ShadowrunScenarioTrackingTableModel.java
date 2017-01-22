@@ -9,8 +9,7 @@ import games.rolePlayingGames.scenario.tracking.CharacterStatus;
  * @author Andrew
  *
  */
-public final class ShadowrunScenarioTrackingTableModel extends
-		AbstractScenarioTrackingTableModel {
+public final class ShadowrunScenarioTrackingTableModel extends AbstractScenarioTrackingTableModel {
 
 	/**
 	 * Serial ID.
@@ -20,11 +19,10 @@ public final class ShadowrunScenarioTrackingTableModel extends
 	/**
 	 * Table columns. 0 is acted on the pass, 1 is initiative, 2 is name, 3 is
 	 * physical damage, 4 is stun damage, 5 is matrix damage, 6 is notes, 7 is
-	 * status.
+	 * initiative roll, 8 is status.
 	 */
-	private static final String[] TRACKING_COLUMN_NAMES = { "Acted",
-			"Initiative", "Name", "Physical", "Stun", "Matrix", "Note",
-			"Status" };
+	private static final String[] TRACKING_COLUMN_NAMES = { "Acted", "Init", "Name", "Physical", "Stun", "Matrix",
+			"Note", "InitRoll", "Status" };
 
 	/**
 	 * Column index of "acted" flag.
@@ -62,21 +60,26 @@ public final class ShadowrunScenarioTrackingTableModel extends
 	private static final int NOTE_COL_INDEX = 6;
 
 	/**
+	 * Column index of initiative roll.
+	 */
+	private static final int INITIATIVE_ROLL_COL_INDEX = 7;
+
+	/**
 	 * Column index of status.
 	 */
-	private static final int STATUS_COL_INDEX = 7;
+	private static final int STATUS_COL_INDEX = 8;
 
 	/**
 	 * Number of columns.
 	 */
-	private static final int NUM_OF_COLS = 8;
+	private static final int NUM_OF_COLS = 9;
 
 	/**
 	 * Constructor.
 	 */
 	public ShadowrunScenarioTrackingTableModel() {
-		super(ACTED_COL_INDEX, INITIATIVE_COL_INDEX, NAME_COL_INDEX,
-				NOTE_COL_INDEX, STATUS_COL_INDEX, NUM_OF_COLS);
+		super(ACTED_COL_INDEX, INITIATIVE_COL_INDEX, NAME_COL_INDEX, NOTE_COL_INDEX, STATUS_COL_INDEX,
+				INITIATIVE_ROLL_COL_INDEX, NUM_OF_COLS);
 		setColumnIdentifiers(TRACKING_COLUMN_NAMES);
 	}
 
@@ -87,10 +90,8 @@ public final class ShadowrunScenarioTrackingTableModel extends
 		for (int currRow = 0; currRow < getRowCount(); currRow++) {
 			final int currInitiative;
 
-			final Object currInitiativeObject = getValueAt(currRow,
-					INITIATIVE_COL_INDEX);
-			if ((currInitiativeObject == null)
-					|| !(currInitiativeObject instanceof Integer)) {
+			final Object currInitiativeObject = getValueAt(currRow, INITIATIVE_COL_INDEX);
+			if ((currInitiativeObject == null) || !(currInitiativeObject instanceof Integer)) {
 				currInitiative = 0;
 			} else {
 				currInitiative = (int) currInitiativeObject;
@@ -124,6 +125,9 @@ public final class ShadowrunScenarioTrackingTableModel extends
 		case NOTE_COL_INDEX:
 			// Note
 			return String.class;
+		case INITIATIVE_ROLL_COL_INDEX:
+			// initiative roll
+			return String.class;
 		case STATUS_COL_INDEX:
 			// Status
 			return CharacterStatus.class;
@@ -133,7 +137,7 @@ public final class ShadowrunScenarioTrackingTableModel extends
 	}
 
 	@Override
-	public void addCharacter(final String iName) {
+	public void addCharacter(final String iName, final String iRoll) {
 		final Object[] colData = new Object[NUM_OF_COLS];
 
 		colData[ACTED_COL_INDEX] = Boolean.FALSE;
@@ -143,6 +147,7 @@ public final class ShadowrunScenarioTrackingTableModel extends
 		colData[NOTE_COL_INDEX] = "";
 		colData[PHYS_DAM_COL_INDEX] = "";
 		colData[STATUS_COL_INDEX] = CharacterStatus.OK;
+		colData[INITIATIVE_ROLL_COL_INDEX] = iRoll;
 		colData[STUN_DAM_COL_INDEX] = "";
 
 		addRow(colData);
