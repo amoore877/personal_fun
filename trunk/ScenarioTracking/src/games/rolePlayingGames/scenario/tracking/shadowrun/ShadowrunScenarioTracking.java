@@ -281,8 +281,8 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 
 		final JButton nextTurnButton = new JButton(NEXT_TURN_STRING);
 		nextTurnButton.addActionListener(this);
-		nextTurnButton.setToolTipText(
-				"Sets all initiatives to 0 and unchecks \"Acted\" flag for all. Sets initiative pass to 1.");
+		nextTurnButton
+				.setToolTipText("Reroll initiative and unchecks \"Acted\" flag for all. Sets initiative pass to 1.");
 		nextTurnButton.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		nextTurnButton.setMinimumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 		nextTurnButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
@@ -905,7 +905,10 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 			// show turn info
 			setTurnInfoFieldText();
 
-			// TODO roll initiative for all
+			// roll initiative for all
+			for (int currRow = 0; currRow < trackingTableModel.getRowCount(); currRow++) {
+				rollInitiative(trackingTableModel, currRow);
+			}
 		}
 	}
 
@@ -1052,7 +1055,11 @@ public final class ShadowrunScenarioTracking extends AbstractScenarioTracking {
 			}
 		} else {
 			// assume regular, constant number
-			tableModel.setValueAt(roll, currRow, tableModel.getInitiativeColIndex());
+			try {
+				tableModel.setValueAt(Integer.parseInt(roll), currRow, tableModel.getInitiativeColIndex());
+			} catch (NumberFormatException e) {
+				showError(new Exception("Constant initiative: [" + roll + "] is not a number."));
+			}
 		}
 	}
 }
