@@ -78,7 +78,7 @@ public abstract class AbstractScenarioTracking extends JFrame implements ActionL
 	/**
 	 * Table delimiter.
 	 */
-	protected static final String TABLE_DELIMITER = ",";
+	protected static final String TABLE_DELIMITER = "##";
 	/**
 	 * Story note log string.
 	 */
