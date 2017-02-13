@@ -36,6 +36,12 @@ public abstract class AbstractScenarioTracking extends JFrame implements ActionL
 	private static final long serialVersionUID = 1585991091065566250L;
 
 	/**
+	 * Number of characters to display per line on confirmation/warning
+	 * messages.
+	 */
+	private static final int CHAR_PER_MESS_LINE = 5;
+
+	/**
 	 * Exit string.
 	 */
 	protected static final String EXIT_STRING = "Exit";
@@ -205,13 +211,25 @@ public abstract class AbstractScenarioTracking extends JFrame implements ActionL
 			selectedModelRowsInt[rowToConvert++] = getTrackingTable().convertRowIndexToModel(currRow);
 		}
 
-		final StringBuilder message = new StringBuilder("Are you sure you wish to remove the following characters:");
+		final StringBuilder message = new StringBuilder("Are you sure you wish to remove the following characters:\n");
 
+		int numOnLine = 0;
+		boolean firstInLine = true;
 		for (final int currRow : selectedModelRowsInt) {
 			try {
-				message.append(
-						"\n" + getTableModel().getValueAt(currRow, getTableModel().getNameColumnIndex()).toString());
-
+				if (firstInLine) {
+					message.append("\n").append(
+							getTableModel().getValueAt(currRow, getTableModel().getNameColumnIndex()).toString());
+					firstInLine = false;
+				} else {
+					message.append(",").append(
+							getTableModel().getValueAt(currRow, getTableModel().getNameColumnIndex()).toString());
+				}
+				numOnLine++;
+				if (numOnLine >= CHAR_PER_MESS_LINE) {
+					firstInLine = true;
+					numOnLine = 0;
+				}
 			} catch (final ArrayIndexOutOfBoundsException iException) {
 				showError(iException);
 			}
@@ -249,11 +267,23 @@ public abstract class AbstractScenarioTracking extends JFrame implements ActionL
 		final StringBuilder message = new StringBuilder(
 				"Are you sure you wish to set initiative for the following characters:");
 
+		int numOnLine = 0;
+		boolean firstInLine = true;
 		for (final int currRow : selectedModelRowsInt) {
 			try {
-				message.append(
-						"\n" + getTableModel().getValueAt(currRow, getTableModel().getNameColumnIndex()).toString());
-
+				if (firstInLine) {
+					message.append("\n").append(
+							getTableModel().getValueAt(currRow, getTableModel().getNameColumnIndex()).toString());
+					firstInLine = false;
+				} else {
+					message.append(",").append(
+							getTableModel().getValueAt(currRow, getTableModel().getNameColumnIndex()).toString());
+				}
+				numOnLine++;
+				if (numOnLine >= CHAR_PER_MESS_LINE) {
+					firstInLine = true;
+					numOnLine = 0;
+				}
 			} catch (final ArrayIndexOutOfBoundsException iException) {
 				showError(iException);
 			}
