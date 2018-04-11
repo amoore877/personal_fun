@@ -1,5 +1,23 @@
 package games.rolePlayingGames.shadowrun.tracking.control;
 
+import java.awt.GridLayout;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.text.NumberFormatter;
+
 import games.rolePlayingGames.shadowrun.tracking.trackables.INonPlayer;
 import games.rolePlayingGames.shadowrun.tracking.trackables.IPlayer;
 import games.rolePlayingGames.shadowrun.tracking.trackables.IShadowrunCombatTrackable;
@@ -19,32 +37,13 @@ import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.matrix.Agen
 import games.rolePlayingGames.shadowrun.tracking.trackables.xml.jaxb.matrix.AutoPilotDeviceJAXB;
 import games.rolePlayingGames.tracking.control.AbstractTrackingControl;
 
-import java.awt.GridLayout;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.text.NumberFormatter;
-
 /**
  * Shadowrun tracking control.
  * 
  * @author Andrew
  *
  */
-public final class ShadowrunTrackingControl extends
-		AbstractTrackingControl<IShadowrunCombatTrackable> {
+public final class ShadowrunTrackingControl extends AbstractTrackingControl<IShadowrunCombatTrackable> {
 	/**
 	 * Theoretical maximum (all 6's on 5 dice + 12 on both initiative-related
 	 * attributes = 54).
@@ -108,8 +107,7 @@ public final class ShadowrunTrackingControl extends
 		// set default to new trackable
 		newButton.setSelected(true);
 
-		final int result = JOptionPane.showConfirmDialog(null, dialogPanel,
-				"Add Trackable, new or existing?",
+		final int result = JOptionPane.showConfirmDialog(null, dialogPanel, "Add Trackable, new or existing?",
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
@@ -199,8 +197,7 @@ public final class ShadowrunTrackingControl extends
 			timedItemButton.setEnabled(false);
 		}
 
-		final int result = JOptionPane.showConfirmDialog(null, dialogPanel,
-				"Add Trackable, NPC or PC controlled?",
+		final int result = JOptionPane.showConfirmDialog(null, dialogPanel, "Add Trackable, NPC or PC controlled?",
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
 		ArrayList<IShadowrunCombatTrackable> oTrackablesToAdd = null;
@@ -215,6 +212,7 @@ public final class ShadowrunTrackingControl extends
 				oTrackablesToAdd = addNewNPCTrackable();
 			} else {
 				// New, timed item
+				// TODO null here
 				oTrackablesToAdd.add(addNewTimedItem());
 			}
 		} else if (result == JOptionPane.CANCEL_OPTION) {
@@ -248,15 +246,13 @@ public final class ShadowrunTrackingControl extends
 		final JPanel dialogPanel = new JPanel(new GridLayout(0, 1));
 
 		final JComboBox<Object> npcCombox = new JComboBox<Object>();
-		for (final CharacterJAXB character : JAXBtoJava.getInstance()
-				.getCharacters()) {
+		for (final CharacterJAXB character : JAXBtoJava.getInstance().getCharacters()) {
 			npcCombox.addItem(character);
 		}
 		for (final HackerJAXB hacker : JAXBtoJava.getInstance().getHackers()) {
 			npcCombox.addItem(hacker);
 		}
-		for (final TechnomancerJAXB technomancer : JAXBtoJava.getInstance()
-				.getTechnomancers()) {
+		for (final TechnomancerJAXB technomancer : JAXBtoJava.getInstance().getTechnomancers()) {
 			npcCombox.addItem(technomancer);
 		}
 		for (final SpiritJAXB spirit : JAXBtoJava.getInstance().getSpirits()) {
@@ -265,24 +261,20 @@ public final class ShadowrunTrackingControl extends
 		for (final AgentJAXB agent : JAXBtoJava.getInstance().getAgents()) {
 			npcCombox.addItem(agent);
 		}
-		for (final AutoPilotDeviceJAXB autoPilotDevice : JAXBtoJava
-				.getInstance().getAutoPilots()) {
+		for (final AutoPilotDeviceJAXB autoPilotDevice : JAXBtoJava.getInstance().getAutoPilots()) {
 			npcCombox.addItem(autoPilotDevice);
 		}
 
 		dialogPanel.add(npcCombox);
 
-		final NumberFormatter numberFormatter = new NumberFormatter(
-				NumberFormat.getIntegerInstance());
+		final NumberFormatter numberFormatter = new NumberFormatter(NumberFormat.getIntegerInstance());
 		numberFormatter.setMinimum(1);
-		final JFormattedTextField numOfTrackablesField = new JFormattedTextField(
-				numberFormatter);
+		final JFormattedTextField numOfTrackablesField = new JFormattedTextField(numberFormatter);
 		numOfTrackablesField.setValue(1);
 
 		dialogPanel.add(numOfTrackablesField);
 
-		final int result = JOptionPane.showConfirmDialog(null, dialogPanel,
-				"Which NPC trackable to add, and how many?",
+		final int result = JOptionPane.showConfirmDialog(null, dialogPanel, "Which NPC trackable to add, and how many?",
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
 		final ArrayList<IShadowrunCombatTrackable> oTrackables = new ArrayList<IShadowrunCombatTrackable>();
@@ -293,8 +285,7 @@ public final class ShadowrunTrackingControl extends
 				// number of instances to generate
 				int tempInstances = 1;
 				try {
-					tempInstances = Integer.parseInt(numOfTrackablesField
-							.getValue().toString());
+					tempInstances = Integer.parseInt(numOfTrackablesField.getValue().toString());
 				} catch (final NumberFormatException iException) {
 					iException.printStackTrace();
 				}
@@ -303,53 +294,41 @@ public final class ShadowrunTrackingControl extends
 
 				if (selectedObject instanceof TechnomancerJAXB) {
 					for (int instanceCount = 1; instanceCount <= instances; instanceCount++) {
-						final NonPlayerTechnomancer newNPC = JAXBtoJava
-								.getInstance().getTechnomancer(
-										(TechnomancerJAXB) selectedObject);
-						newNPC.setName(newNPC.getName() + " " + myAlphabetTag
-								+ instanceCount);
+						final NonPlayerTechnomancer newNPC = JAXBtoJava.getInstance()
+								.getTechnomancer((TechnomancerJAXB) selectedObject);
+						newNPC.setName(newNPC.getName() + " " + myAlphabetTag + instanceCount);
 						oTrackables.add(newNPC);
 					}
 				} else if (selectedObject instanceof HackerJAXB) {
 					for (int instanceCount = 1; instanceCount <= instances; instanceCount++) {
-						final NonPlayerHacker newNPC = JAXBtoJava.getInstance()
-								.getHacker((HackerJAXB) selectedObject);
-						newNPC.setName(newNPC.getName() + " " + myAlphabetTag
-								+ instanceCount);
+						final NonPlayerHacker newNPC = JAXBtoJava.getInstance().getHacker((HackerJAXB) selectedObject);
+						newNPC.setName(newNPC.getName() + " " + myAlphabetTag + instanceCount);
 						oTrackables.add(newNPC);
 					}
 				} else if (selectedObject instanceof CharacterJAXB) {
 					for (int instanceCount = 1; instanceCount <= instances; instanceCount++) {
-						final NonPlayerCharacter newNPC = JAXBtoJava
-								.getInstance().getCharacter(
-										(CharacterJAXB) selectedObject);
-						newNPC.setName(newNPC.getName() + " " + myAlphabetTag
-								+ instanceCount);
+						final NonPlayerCharacter newNPC = JAXBtoJava.getInstance()
+								.getCharacter((CharacterJAXB) selectedObject);
+						newNPC.setName(newNPC.getName() + " " + myAlphabetTag + instanceCount);
 						oTrackables.add(newNPC);
 					}
 				} else if (selectedObject instanceof SpiritJAXB) {
 					for (int instanceCount = 1; instanceCount <= instances; instanceCount++) {
-						final NonPlayerSpirit newNPC = JAXBtoJava.getInstance()
-								.getSpirit((SpiritJAXB) selectedObject);
-						newNPC.setName(newNPC.getName() + " " + myAlphabetTag
-								+ instanceCount);
+						final NonPlayerSpirit newNPC = JAXBtoJava.getInstance().getSpirit((SpiritJAXB) selectedObject);
+						newNPC.setName(newNPC.getName() + " " + myAlphabetTag + instanceCount);
 						oTrackables.add(newNPC);
 					}
 				} else if (selectedObject instanceof AutoPilotDeviceJAXB) {
 					for (int instanceCount = 1; instanceCount <= instances; instanceCount++) {
-						final NonPlayerAutoPilotDevice newNPC = JAXBtoJava
-								.getInstance().getAutoPilotDevice(
-										(AutoPilotDeviceJAXB) selectedObject);
-						newNPC.setName(newNPC.getName() + " " + myAlphabetTag
-								+ instanceCount);
+						final NonPlayerAutoPilotDevice newNPC = JAXBtoJava.getInstance()
+								.getAutoPilotDevice((AutoPilotDeviceJAXB) selectedObject);
+						newNPC.setName(newNPC.getName() + " " + myAlphabetTag + instanceCount);
 						oTrackables.add(newNPC);
 					}
 				} else if (selectedObject instanceof AgentJAXB) {
 					for (int instanceCount = 1; instanceCount <= instances; instanceCount++) {
-						final NonPlayerAgent newNPC = JAXBtoJava.getInstance()
-								.getAgent((AgentJAXB) selectedObject);
-						newNPC.setName(newNPC.getName() + " " + myAlphabetTag
-								+ instanceCount);
+						final NonPlayerAgent newNPC = JAXBtoJava.getInstance().getAgent((AgentJAXB) selectedObject);
+						newNPC.setName(newNPC.getName() + " " + myAlphabetTag + instanceCount);
 						oTrackables.add(newNPC);
 					}
 				}
@@ -397,15 +376,13 @@ public final class ShadowrunTrackingControl extends
 
 		dialogPanel.add(existingTrackablesCombox);
 
-		final int result = JOptionPane.showConfirmDialog(null, dialogPanel,
-				"Existing trackable to add?", JOptionPane.OK_CANCEL_OPTION,
-				JOptionPane.PLAIN_MESSAGE);
+		final int result = JOptionPane.showConfirmDialog(null, dialogPanel, "Existing trackable to add?",
+				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
 		IShadowrunCombatTrackable oTrackableToAdd = null;
 
 		if (result == JOptionPane.OK_OPTION) {
-			oTrackableToAdd = (IShadowrunCombatTrackable) existingTrackablesCombox
-					.getSelectedItem();
+			oTrackableToAdd = (IShadowrunCombatTrackable) existingTrackablesCombox.getSelectedItem();
 		} else if (result == JOptionPane.CLOSED_OPTION) {
 			System.out.println("Cancel selected");
 		} else {
@@ -432,9 +409,8 @@ public final class ShadowrunTrackingControl extends
 	@Override
 	public void startCombat() {
 		// confirmation
-		final int result = JOptionPane.showConfirmDialog(null,
-				"Are you sure you want to start combat?", "Start combat?",
-				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+		final int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to start combat?",
+				"Start combat?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
 			// add all PCs to combat
@@ -451,23 +427,17 @@ public final class ShadowrunTrackingControl extends
 
 			for (final IShadowrunCombatTrackable trackable : getAllCombatTrackables()) {
 				if (trackable instanceof INonPlayer) {
-					final JCheckBox npcCheckbox = new JCheckBox(
-							trackable.toString(), true);
+					final JCheckBox npcCheckbox = new JCheckBox(trackable.toString(), true);
 					npcAdditionPanel.add(npcCheckbox);
-					nonPlayerCheckBoxMap.put(npcCheckbox,
-							(INonPlayer) trackable);
+					nonPlayerCheckBoxMap.put(npcCheckbox, (INonPlayer) trackable);
 				}
 			}
 			if (!nonPlayerCheckBoxMap.isEmpty()) {
-				final int addResult = JOptionPane
-						.showConfirmDialog(null, npcAdditionPanel,
-								"Which NPCs should be added?",
-								JOptionPane.OK_CANCEL_OPTION,
-								JOptionPane.PLAIN_MESSAGE);
+				final int addResult = JOptionPane.showConfirmDialog(null, npcAdditionPanel,
+						"Which NPCs should be added?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
 				if (addResult == JOptionPane.OK_OPTION) {
-					for (final Entry<JCheckBox, INonPlayer> entry : nonPlayerCheckBoxMap
-							.entrySet()) {
+					for (final Entry<JCheckBox, INonPlayer> entry : nonPlayerCheckBoxMap.entrySet()) {
 						final JCheckBox checkbox = entry.getKey();
 						if (checkbox.isSelected()) {
 							addCombatTrackable(entry.getValue());
@@ -495,8 +465,7 @@ public final class ShadowrunTrackingControl extends
 	@Override
 	public void endCombat() {
 		// confirmation
-		final int result = JOptionPane.showConfirmDialog(null,
-				"Are you sure you want to end combat?", "End combat?",
+		final int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to end combat?", "End combat?",
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
 		if (result == JOptionPane.OK_OPTION) {
@@ -507,23 +476,17 @@ public final class ShadowrunTrackingControl extends
 
 			for (final IShadowrunCombatTrackable trackable : getAllCombatTrackables()) {
 				if (trackable instanceof INonPlayer) {
-					final JCheckBox npcCheckbox = new JCheckBox(
-							trackable.toString(), true);
+					final JCheckBox npcCheckbox = new JCheckBox(trackable.toString(), true);
 					npcRemovalPanel.add(npcCheckbox);
-					nonPlayerCheckBoxMap.put(npcCheckbox,
-							(INonPlayer) trackable);
+					nonPlayerCheckBoxMap.put(npcCheckbox, (INonPlayer) trackable);
 				}
 			}
 			if (!nonPlayerCheckBoxMap.isEmpty()) {
-				final int removeResult = JOptionPane
-						.showConfirmDialog(null, npcRemovalPanel,
-								"Which NPCs should be removed?",
-								JOptionPane.OK_CANCEL_OPTION,
-								JOptionPane.PLAIN_MESSAGE);
+				final int removeResult = JOptionPane.showConfirmDialog(null, npcRemovalPanel,
+						"Which NPCs should be removed?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
 				if (removeResult == JOptionPane.OK_OPTION) {
-					for (final Entry<JCheckBox, INonPlayer> entry : nonPlayerCheckBoxMap
-							.entrySet()) {
+					for (final Entry<JCheckBox, INonPlayer> entry : nonPlayerCheckBoxMap.entrySet()) {
 						final JCheckBox checkbox = entry.getKey();
 						if (checkbox.isSelected()) {
 							removeTrackable(entry.getValue());
@@ -580,11 +543,8 @@ public final class ShadowrunTrackingControl extends
 			boolean validEntry = false;
 			while (!validEntry) {
 				try {
-					penalty = Integer.parseInt(JOptionPane.showInputDialog(
-							null,
-							"Initiative penalties for: "
-									+ iTrackable.toFullString(),
-							getLateJoinPenalty()));
+					penalty = Integer.parseInt(JOptionPane.showInputDialog(null,
+							"Initiative penalties for: " + iTrackable.toFullString(), getLateJoinPenalty()));
 					validEntry = true;
 				} catch (final Exception iException) {
 					// specific exceptions
@@ -599,12 +559,8 @@ public final class ShadowrunTrackingControl extends
 			boolean validEntry = false;
 			while (!validEntry) {
 				try {
-					tempInitiative = Integer.parseInt(JOptionPane
-							.showInputDialog(
-									null,
-									"Initiative for timed item: "
-											+ iTrackable.toString(),
-									tempInitiative));
+					tempInitiative = Integer.parseInt(JOptionPane.showInputDialog(null,
+							"Initiative for timed item: " + iTrackable.toString(), tempInitiative));
 					validEntry = true;
 				} catch (final Exception iException) {
 					// specific exceptions
@@ -620,10 +576,8 @@ public final class ShadowrunTrackingControl extends
 			boolean validEntry = false;
 			while (!validEntry) {
 				try {
-					tempInitiative = Integer.parseInt(JOptionPane
-							.showInputDialog(null, "Initiative for: "
-									+ iTrackable.toString(),
-									-getLateJoinPenalty()));
+					tempInitiative = Integer.parseInt(JOptionPane.showInputDialog(null,
+							"Initiative for: " + iTrackable.toString(), -getLateJoinPenalty()));
 					validEntry = true;
 				} catch (final Exception iException) {
 					// specific exceptions
@@ -687,8 +641,7 @@ public final class ShadowrunTrackingControl extends
 	 * @param iTrackables
 	 *            trackables to act.
 	 */
-	private void displayActingForTrackables(
-			final Collection<IShadowrunCombatTrackable> iTrackables) {
+	private void displayActingForTrackables(final Collection<IShadowrunCombatTrackable> iTrackables) {
 		for (final IShadowrunCombatTrackable trackable : iTrackables) {
 			displayActingForTrackable(trackable);
 		}
@@ -700,8 +653,7 @@ public final class ShadowrunTrackingControl extends
 	 * @param iTrackable
 	 *            trackable to act.
 	 */
-	private void displayActingForTrackable(
-			final IShadowrunCombatTrackable iTrackable) {
+	private void displayActingForTrackable(final IShadowrunCombatTrackable iTrackable) {
 		// TODO Auto-generated method stub
 		// TODO non-modal
 	}
